@@ -5,10 +5,13 @@
  */
 "use strict";
 
+const GitHub = require("github");
+
 const { loadConfig } = require("./lib/config");
 
 loadConfig("config.json").then((config) => {
     for(const project of config) {
+        const ghClient = new GitHub(project.github);
         void(project);
     }
 });
