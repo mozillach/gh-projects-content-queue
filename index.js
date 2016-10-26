@@ -11,7 +11,10 @@ const { loadConfig } = require("./lib/config");
 
 loadConfig("config.json").then((config) => {
     for(const project of config) {
-        const ghClient = new GitHub(project.github);
-        void(project);
+        const ghClient = new GitHub();
+        ghClient.authenticate({
+            type: "token",
+            token: project.githubToken
+        });
     }
 });

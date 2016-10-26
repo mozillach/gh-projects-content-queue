@@ -1,12 +1,19 @@
 import test from 'ava';
 import { validateConfig } from '../lib/config';
 
+//TODO actually validate we get the correct exception.
 const TEST_DATA = [
     {
         valid: true,
         config: [
-            {},
-            {}
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum"
+            },
+            {
+                repo: "lorem/ipsum",
+                githubToken: "fooBar"
+            }
         ],
         name: "valid config"
     },
@@ -58,6 +65,69 @@ const TEST_DATA = [
             null
         ],
         name: "invalid project config type"
+    },
+    {
+        valid: false,
+        config: [
+            {}
+        ],
+        name: "invalid project without repo field"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: null
+            }
+        ],
+        name: "invalid project with repo field of wrong type"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: ""
+            }
+        ],
+        name: "invalid project with empty repo name"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo"
+            }
+        ],
+        name: "invalid repo name when not in format user/reponame"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar"
+            }
+        ],
+        name: "invalid project without githubToken"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: null
+            }
+        ],
+        name: "invalid project with githubToken of wrong type"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: ""
+            }
+        ],
+        name: "invalud project with empty githubToken"
     }
 ];
 
