@@ -8,6 +8,7 @@
 const GitHub = require("github");
 
 const { loadConfig } = require("./lib/config");
+const ContentQueue = require("./lib/content-queue");
 
 loadConfig("config.json").then((config) => {
     for(const project of config) {
@@ -16,5 +17,7 @@ loadConfig("config.json").then((config) => {
             type: "token",
             token: project.githubToken
         });
+
+        new ContentQueue(ghClient, {}, project);
     }
 });

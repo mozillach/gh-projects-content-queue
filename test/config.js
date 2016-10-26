@@ -8,11 +8,11 @@ const TEST_DATA = [
         config: [
             {
                 repo: "foo/bar",
-                githubToken: "loremIpsum"
-            },
-            {
-                repo: "lorem/ipsum",
-                githubToken: "fooBar"
+                githubToken: "loremIpsum",
+                board: {
+                    name: "Tweets",
+                    columns: {}
+                }
             }
         ],
         name: "valid config"
@@ -128,6 +128,38 @@ const TEST_DATA = [
             }
         ],
         name: "invalud project with empty githubToken"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum"
+            }
+        ],
+        name: "invalid project without board config"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum",
+                board: "baz"
+            }
+        ],
+        name: "invalid project with board config of wrong type"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum",
+                board: null
+            }
+        ],
+        name: "invalid project with board config that is null"
     }
 ];
 
