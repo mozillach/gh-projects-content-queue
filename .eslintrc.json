@@ -1,0 +1,32 @@
+{
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "plugins": [
+    "node"
+  ],
+  "rules": {
+    "valid-jsdoc": 1,
+    "indent": ["error", 2],
+    "prefer-const": 1,
+    "strict": 2,
+    "no-loop-func": 1,
+    "no-tabs": 2,
+    "no-eval": 1,
+    "prefer-arrow-callback": 2,
+    "no-use-before-define": 2,
+    "block-scoped-var": 2,
+    "no-extra-label": 2,
+    "no-implied-eval": 2,
+    "no-invalid-this": 2,
+    "yoda": 1,
+    "eol-last": 2,
+    "no-trailing-spaces": 2,
+    "one-var-declaration-per-line": 2
+  },
+  "extends": [ "eslint:recommended", "plugin:node/recommended" ]
+}
