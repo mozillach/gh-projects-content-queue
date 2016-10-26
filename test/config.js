@@ -59,3 +59,5 @@ const testConfig = (t, data) => {
 TEST_DATA.forEach((data) => {
     test(data.name, testConfig, data);
 });
+
+test.todo("loadConfig can read files and validates them");
