@@ -1,0 +1,4 @@
+sudo: false
+language: node
+node_js: stable
+after_success: npm run coverage
