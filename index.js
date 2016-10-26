@@ -5,4 +5,10 @@
  */
 "use strict";
 
-const config = require("./lib/config");
+const { loadConfig } = require("./lib/config");
+
+loadConfig("config.json").then((config) => {
+    for(const project of config) {
+        void(project);
+    }
+});

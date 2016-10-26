@@ -1,0 +1,13 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 2017,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "ava"
+    ],
+    "rules": {
+        "node/no-unsupported-features": 0
+    },
+    "extends": [ "plugin:ava/recommended" ]
+}
