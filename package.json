@@ -4,7 +4,9 @@
   "description": "A Twitter content curation queue based on GitHub projects",
   "main": "index.js",
   "scripts": {
-    "test": "eslint index.js lib/ test/ && nyc ava"
+    "test": "npm run lint && nyc ava",
+    "lint": "eslint index.js lib/ test/",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "repository": {
     "type": "git",
