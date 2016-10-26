@@ -44,6 +44,20 @@ const TEST_DATA = [
         valid: false,
         config: null,
         name: "invalid null config"
+    },
+    {
+        valid: false,
+        config: [
+            "string, because why not"
+        ],
+        name: "invalid project config type"
+    },
+        {
+        valid: false,
+        config: [
+            null
+        ],
+        name: "invalid project config type"
     }
 ];
 
