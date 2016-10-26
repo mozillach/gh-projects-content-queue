@@ -52,7 +52,7 @@ const TEST_DATA = [
         ],
         name: "invalid project config type"
     },
-        {
+    {
         valid: false,
         config: [
             null
