@@ -9,10 +9,8 @@ const TEST_DATA = [
             {
                 repo: "foo/bar",
                 githubToken: "loremIpsum",
-                board: {
-                    name: "Tweets",
-                    columns: {}
-                }
+                projectName: "Tweets",
+                columns: {}
             }
         ],
         name: "valid config"
@@ -137,7 +135,7 @@ const TEST_DATA = [
                 githubToken: "loremIpsum"
             }
         ],
-        name: "invalid project without board config"
+        name: "invalid project with no board name"
     },
     {
         valid: false,
@@ -145,10 +143,10 @@ const TEST_DATA = [
             {
                 repo: "foo/bar",
                 githubToken: "loremIpsum",
-                board: "baz"
+                projectName: null
             }
         ],
-        name: "invalid project with board config of wrong type"
+        name: "inavlid project with board name of wrong type"
     },
     {
         valid: false,
@@ -156,10 +154,10 @@ const TEST_DATA = [
             {
                 repo: "foo/bar",
                 githubToken: "loremIpsum",
-                board: null
+                projectName: ""
             }
         ],
-        name: "invalid project with board config that is null"
+        name: "invalid project with empty board name"
     }
 ];
 

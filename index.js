@@ -6,12 +6,13 @@
 "use strict";
 
 const GitHub = require("github");
+const path = require("path");
 
 const { loadConfig } = require("./lib/config");
 const ContentQueue = require("./lib/content-queue");
 
-loadConfig("config.json").then((config) => {
-    for(const project of config) {
+loadConfig(path.join(__dirname, "./config.json")).then((config) => {
+    for(const project of Object.values(config)) {
         const ghClient = new GitHub();
         ghClient.authenticate({
             type: "token",
@@ -20,4 +21,4 @@ loadConfig("config.json").then((config) => {
 
         new ContentQueue(ghClient, {}, project);
     }
-});
+}).catch((e) => console.error(e));

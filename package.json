@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/mozillach/gh-projects-content-queue#readme",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=7.0.0"
   },
   "devDependencies": {
     "ava": "^0.16.0",
@@ -37,6 +37,7 @@
     "nyc": "^8.3.2"
   },
   "dependencies": {
+    "co": "^4.6.0",
     "github": "^5.3.3",
     "mz": "^2.4.0"
   }
