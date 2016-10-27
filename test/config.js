@@ -10,7 +10,13 @@ const TEST_DATA = [
                 repo: "foo/bar",
                 githubToken: "loremIpsum",
                 projectName: "Tweets",
-                columns: {}
+                columns: {
+                    ideas: "Backlog",
+                    reactions: "Reaction needed",
+                    events: "Event Backlog",
+                    toTweet: "Ready",
+                    tweeted: "Done"
+                }
             }
         ],
         name: "valid config"
@@ -158,6 +164,48 @@ const TEST_DATA = [
             }
         ],
         name: "invalid project with empty board name"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum",
+                projectName: "baz",
+                columns: {
+                    what: "no"
+                }
+            }
+        ],
+        name: "invalid project with unknown column"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum",
+                projectName: "baz",
+                columns: {
+                    events: null
+                }
+            }
+        ],
+        name: "invalid project with invalid readable column name"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum",
+                projectName: "baz",
+                columns: {
+                    events: ""
+                }
+            }
+        ],
+        name: "invalid project with empty readable column name"
     }
 ];
 
