@@ -5,7 +5,7 @@
  */
 "use strict";
 
-const GitHub = require("github");
+const pGitHub = require("./lib/promised-github");
 const path = require("path");
 
 const { loadConfig } = require("./lib/config");
@@ -13,12 +13,7 @@ const ContentQueue = require("./lib/content-queue");
 
 loadConfig(path.join(__dirname, "./config.json")).then((config) => {
     for(const project of Object.values(config)) {
-        const ghClient = new GitHub();
-        ghClient.authenticate({
-            type: "token",
-            token: project.githubToken
-        });
-
+        const ghClient = pGitHub(project.githubToken, "repos");
         new ContentQueue(ghClient, {}, project);
     }
 }).catch((e) => console.error(e));
