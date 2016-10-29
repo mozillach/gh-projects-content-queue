@@ -3,8 +3,38 @@
 
 A Twitter content curation queue based on GitHub projects.
 
+## Features
+
+
 ## Set up a repo for use with this tool
+
+### Requirements
+ - GitHub user auth token
+    - Needs the repo:write scope
 
 ### Issue template
 
 ### Configuration
+
+#### Example
+```json
+[
+    {
+        "githubToken": "asdfASDF",
+        "repo": "mozillach/twitter",
+        "projectName": "Tweets",
+        "columns": {
+            "ideas": "Ideas",
+            "reactions": "Need Reaction",
+            "events": "Events",
+            "toTweet": "Ready for Twitter",
+            "tweeted": "Tweeted"
+        },
+        "labels": {
+            "retweet": "Retweet",
+            "ready": "ready",
+            "invalid": "invalid"
+        }
+    }
+]
+```
