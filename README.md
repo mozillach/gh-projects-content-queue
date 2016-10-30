@@ -34,6 +34,17 @@ A Twitter content curation queue based on GitHub projects.
             "retweet": "Retweet",
             "ready": "ready",
             "invalid": "invalid"
+        },
+        "modules": {
+            "twitter-reaction": {},
+            "twitter-tweet": {},
+            "reminder": {
+                "intervals": [
+                    "1w",
+                    "2d",
+                    "24h"
+                ]
+            }
         }
     }
 ]
