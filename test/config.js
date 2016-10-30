@@ -1,5 +1,6 @@
 import test from 'ava';
-import { validateConfig } from '../lib/config';
+import { validateConfig, loadConfig } from '../lib/config';
+import tempWrite from 'temp-write';
 
 //TODO actually validate we get the correct exception.
 const TEST_DATA = [
@@ -287,15 +288,32 @@ const TEST_DATA = [
 
 const testConfig = (t, data) => {
     if(data.valid) {
-        t.notThrows(() => validateConfig(data.config));
+        t.notThrows(() => {
+            const c = validateConfig(data.config);
+            t.deepEqual(c, data.config);
+        });
     }
     else {
         t.throws(() => validateConfig(data.config));
     }
 };
+testConfig.title = (providedTitle) => `Validating config that is ${providedTitle}`;
 
-TEST_DATA.forEach((data) => {
+const testLoadConfig = async (t, data, i) => {
+    const path = await tempWrite(JSON.stringify(data.config), `config${i}.json`);
+    if(data.valid) {
+        return t.notThrows(async () => {
+            const config = await loadConfig(path);
+            t.deepEqual(config, data.config);
+        });
+    }
+    else {
+        return t.throws(loadConfig(path));
+    }
+};
+testLoadConfig.title = (providedTitle) => `Loading config that is ${providedTitle}`;
+
+TEST_DATA.forEach((data, i) => {
     test(data.name, testConfig, data);
+    test(data.name, testLoadConfig, data, i);
 });
-
-test.todo("loadConfig can read files and validates them");
