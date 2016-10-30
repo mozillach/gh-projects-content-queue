@@ -16,7 +16,17 @@ const TEST_DATA = [
                     events: "Event Backlog",
                     toTweet: "Ready",
                     tweeted: "Done"
+                },
+                labels: {
+                    retweet: "RT",
+                    ready: "valid",
+                    invalid: "invalid"
                 }
+            },
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum",
+                projectName: "baz"
             }
         ],
         name: "valid config"
@@ -172,6 +182,18 @@ const TEST_DATA = [
                 repo: "foo/bar",
                 githubToken: "loremIpsum",
                 projectName: "baz",
+                columns: null
+            }
+        ],
+        name: "invalid project with null columns"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum",
+                projectName: "baz",
                 columns: {
                     what: "no"
                 }
@@ -206,6 +228,60 @@ const TEST_DATA = [
             }
         ],
         name: "invalid project with empty readable column name"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum",
+                projectName: "baz",
+                labels: null
+            }
+        ],
+        name: "invalid project with null labels"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum",
+                projectName: "baz",
+                labels: {
+                    what: "no"
+                }
+            }
+        ],
+        name: "inavlid project with unknown label"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum",
+                projectName: "baz",
+                labels: {
+                    retweet: null
+                }
+            }
+        ],
+        name: "inavlid project with lable with invalid name"
+    },
+    {
+        valid: false,
+        config: [
+            {
+                repo: "foo/bar",
+                githubToken: "loremIpsum",
+                projectName: "baz",
+                labels: {
+                    retweet: ""
+                }
+            }
+        ],
+        name: "inavlid project with lable with empty name"
     }
 ];
 
