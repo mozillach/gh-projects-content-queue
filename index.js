@@ -13,7 +13,7 @@ const ContentQueue = require("./lib/content-queue");
 
 loadConfig(path.join(__dirname, "./config.json")).then((config) => {
     for(const project of Object.values(config)) {
-        const ghClient = getPromisifedClient(project.githubToken, "repos");
+        const ghClient = getPromisifedClient(project.githubToken);
         new ContentQueue(ghClient, {}, project);
     }
 }).catch((e) => console.error(e));
