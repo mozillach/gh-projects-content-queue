@@ -1,5 +1,5 @@
 # {repo}
-Tis repo is used to plan the tweets for [@{twitterName}]{https://twitter.com/{twitterName}}.
+This repo is used to plan the tweets for [@{twitterName}](https://twitter.com/{twitterName}).
 All the planing happens in the project board.
 
 ## Credits
