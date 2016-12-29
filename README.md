@@ -20,7 +20,7 @@ A Twitter content curation queue based on GitHub projects.
 ```json
 [
     {
-        "githubToken": "asdfASDF",
+        "githubToken": "",
         "repo": "mozillach/twitter",
         "projectName": "Tweets",
         "columns": {
@@ -35,16 +35,16 @@ A Twitter content curation queue based on GitHub projects.
             "ready": "ready",
             "invalid": "invalid"
         },
-        "modules": {
-            "twitter-reaction": {},
-            "twitter-tweet": {},
-            "reminder": {
-                "intervals": [
-                    "1w",
-                    "2d",
-                    "24h"
-                ]
-            }
+        "schedulingTime": {
+            "format": "DD.MM.YYYY HH:mm",
+            "zone": 1
+        },
+        "twitter": {
+            "user": "mozillach",
+            "consumer_key": "",
+            "consumer_secret": "",
+            "access_token": "",
+            "access_token_secret": ""
         }
     }
 ]
