@@ -17,7 +17,7 @@ test("Create card", (t) => {
     t.is(meta, card.getSection(META_SECTION));
     t.false(card.isRetweet);
     t.true(card.hasSection(TweetCardContent.TWEET_CONTENT));
-    t.false(card.isValid());
+    t.false(card.isValid);
 });
 
 test("Retweet", (t) => {
@@ -28,7 +28,7 @@ test("Retweet", (t) => {
     t.is(meta, card.getSection(META_SECTION));
     t.true(card.isRetweet);
     t.true(card.hasSection(TweetCardContent.RETWEET));
-    t.false(card.isValid());
+    t.false(card.isValid;
 });
 
 test.todo("Test setSection");
