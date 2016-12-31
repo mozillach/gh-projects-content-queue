@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "co": "^4.6.0",
-    "github": "^6.0.1",
+    "github": "^7.2.0",
     "mz": "^2.4.0",
     "twitter": "^1.7.0",
     "twitter-text": "^1.14.0"

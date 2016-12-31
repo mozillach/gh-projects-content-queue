@@ -43,7 +43,7 @@ A Twitter content curation queue based on GitHub projects.
             "user": "mozillach",
             "consumer_key": "",
             "consumer_secret": "",
-            "access_token": "",
+            "access_token_key": "",
             "access_token_secret": ""
         }
     }
