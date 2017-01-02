@@ -15,7 +15,7 @@ const ContentQueue = require("./lib/content-queue");
 loadConfig(path.join(__dirname, "./config.json")).then((config) => {
     for(const project of Object.values(config)) {
         const ghClient = getPromisifedClient(project.githubToken);
-        const twitterClient = new Twitter(config.twitter);
+        const twitterClient = new Twitter(project.twitter);
         new ContentQueue(ghClient, twitterClient, project);
     }
 }).catch((e) => console.error(e));
