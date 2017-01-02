@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "ava": "^0.16.0",
+    "babel-preset-es2017": "^6.16.0",
     "codecov": "^1.0.1",
     "eslint": "^3.8.1",
     "eslint-plugin-ava": "^3.1.1",
@@ -44,5 +45,15 @@
     "mz": "^2.4.0",
     "twitter": "^1.7.0",
     "twitter-text": "^1.14.0"
+  },
+  "babel": {
+    "presets": [
+      "es2017"
+    ]
+  },
+  "ava": {
+    "require": [
+      "babel-register"
+    ]
   }
 }
