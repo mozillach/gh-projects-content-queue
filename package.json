@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npm run lint && nyc ava",
     "lint": "eslint index.js lib/ test/",
-    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "start": "node --harmony index.js"
   },
   "repository": {
     "type": "git",

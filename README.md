@@ -11,8 +11,11 @@ A Twitter content curation queue based on GitHub projects.
 ### Requirements
  - GitHub user auth token
     - Needs the repo:write scope
+ - Twitter API credentials incl. OAuth tokens and secret
+ - Node >= 7
 
 ### Issue template
+An issue template is generated in the repository if none is found.
 
 ### Configuration
 
@@ -49,3 +52,6 @@ A Twitter content curation queue based on GitHub projects.
     }
 ]
 ```
+
+### Run the tool
+The tool can be executed with `npm start`. Note that you should first run `npm install`.
