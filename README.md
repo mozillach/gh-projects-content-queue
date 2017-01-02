@@ -48,6 +48,11 @@ An issue template is generated in the repository if none is found.
             "consumer_secret": "",
             "access_token_key": "",
             "access_token_secret": ""
+        },
+        "sources": {
+            "ideas": {
+                "columns": ["Ideas"]
+            }
         }
     }
 ]
