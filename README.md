@@ -52,6 +52,9 @@ An issue template is generated in the repository if none is found.
         "sources": {
             "ideas": {
                 "columns": ["Ideas"]
+            },
+            "mentions": {
+                "columns": ["Needs Reaction"]
             }
         }
     }
