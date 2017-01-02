@@ -40,7 +40,7 @@ An issue template is generated in the repository if none is found.
         },
         "schedulingTime": {
             "format": "DD.MM.YYYY HH:mm",
-            "zone": 1
+            "timezone": 1
         },
         "twitter": {
             "user": "mozillach",
