@@ -26,13 +26,6 @@ An issue template is generated in the repository if none is found.
         "githubToken": "",
         "repo": "mozillach/twitter",
         "projectName": "Tweets",
-        "columns": {
-            "ideas": "Ideas",
-            "reactions": "Need Reaction",
-            "events": "Events",
-            "toTweet": "Ready for Twitter",
-            "tweeted": "Tweeted"
-        },
         "labels": {
             "retweet": "Retweet",
             "ready": "ready",
@@ -54,6 +47,12 @@ An issue template is generated in the repository if none is found.
             },
             "mentions": {
                 "columns": ["Needs Reaction"]
+            },
+            "tweeting": {
+                "columns": [
+                    "To Tweet",
+                    "Tweeted"
+                ]
             }
         }
     }
