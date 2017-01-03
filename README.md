@@ -43,14 +43,13 @@ An issue template is generated in the repository if none is found.
             "timezone": 1
         },
         "twitter": {
-            "user": "mozillach",
             "consumer_key": "",
             "consumer_secret": "",
             "access_token_key": "",
             "access_token_secret": ""
         },
         "sources": {
-            "ideas": {
+            "issues": {
                 "columns": ["Ideas"]
             },
             "mentions": {
