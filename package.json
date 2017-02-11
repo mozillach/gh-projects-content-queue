@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run lint && nyc -r lcov -r text ava",
     "lint": "eslint index.js lib/ test/",
-    "coverage": "codecov",
+    "coverage": "codecov --disable=gcov",
     "start": "node --harmony index.js"
   },
   "repository": {
