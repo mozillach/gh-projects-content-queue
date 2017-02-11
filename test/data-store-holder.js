@@ -18,3 +18,4 @@ test('update updates data stores', async (t) => {
 });
 
 test.todo('update fires updated event');
+test.todo('defined properties are magic stores that return a promise');

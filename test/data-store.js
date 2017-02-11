@@ -31,3 +31,5 @@ test.serial.todo('get data from cache');
 test.serial.todo('get data from expired cache');
 test.serial.todo('cache expired true');
 test.serial.todo('cache expired false');
+
+test.todo('fetch callback only gets called once while loading data');
