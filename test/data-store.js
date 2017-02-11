@@ -23,7 +23,11 @@ test('constructor', (t) => {
     t.is(ds.fetch, fetcher);
 });
 
+test.todo('cache expired without any fetched data');
+
 test.todo('get data without cache');
 // These tests are serial since they rely on clock behaviour for cache invalidation.
 test.serial.todo('get data from cache');
 test.serial.todo('get data from expired cache');
+test.serial.todo('cache expired true');
+test.serial.todo('cache expired false');
