@@ -4,7 +4,7 @@
   "description": "A Twitter content curation queue based on GitHub projects",
   "main": "index.js",
   "scripts": {
-    "test": "npm run lint && nyc -r lcov -r text ava",
+    "test": "npm run lint && nyc -r lcov -r text node --harmony-async-await ./node_modules/.bin/ava NODE_ENV=test test.js test-*.js test/**/*.js **/__tests__/**/*.js **/*.test.js",
     "lint": "eslint index.js lib/ test/",
     "coverage": "codecov --disable=gcov",
     "start": "node --harmony index.js"
@@ -31,7 +31,6 @@
   },
   "devDependencies": {
     "ava": "^0.18.1",
-    "babel-preset-es2017": "^6.16.0",
     "codecov": "^1.0.1",
     "eslint": "^3.8.1",
     "eslint-plugin-ava": "^4.1.0",
@@ -46,15 +45,5 @@
     "mz": "^2.4.0",
     "twitter": "^1.7.0",
     "twitter-text": "^1.14.0"
-  },
-  "babel": {
-    "presets": [
-      "es2017"
-    ]
-  },
-  "ava": {
-    "require": [
-      "babel-register"
-    ]
   }
 }

@@ -5,7 +5,7 @@ import sinon from 'sinon';
 test.todo('constructor');
 
 test('update updates data stores', async (t) => {
-    const updateStore = sinon.spy();
+    const updateStore = sinon.spy(() => Promise.resolve());
     const h = new DataStoreHolder({
         store: updateStore
     });
