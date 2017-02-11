@@ -27,7 +27,15 @@
     "eol-last": 2,
     "no-trailing-spaces": 2,
     "one-var-declaration-per-line": 2,
-    "no-console": 0
+    "no-console": 0,
+    "node/no-unsupported-features": [
+      "error",
+      {
+        "ignores": [
+          "asyncAwait"
+        ]
+      }
+    ]
   },
   "extends": [ "eslint:recommended", "plugin:node/recommended" ]
 }
