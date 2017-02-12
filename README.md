@@ -22,6 +22,7 @@ An issue template is generated in the repository if none is found.
 ### Configuration
 
 #### Example
+See also [`config.default.json`](config.default.json) and the [schema](templates/config.schema.json).
 ```json
 [
     {
@@ -61,5 +62,9 @@ An issue template is generated in the repository if none is found.
 ]
 ```
 
-### Run the tool
+### Run
+#### The tool
 The tool can be executed with `npm start`. Note that you should first run `npm install`.
+
+#### The tests
+The testsuite can be ran with the default `npm test`. It includes linting of the code using eslint and unit tests with ava.
