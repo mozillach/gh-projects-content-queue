@@ -48,7 +48,8 @@
                         "minimum": -11,
                         "maximum": 13
                     }
-                }
+                },
+                "additionalProperties": false
             },
             "twitter": {
                 "type": "object",
