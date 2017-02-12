@@ -98,7 +98,16 @@ const TEST_DATA = [
     {
         valid: false,
         config: [
-            {}
+            {
+                githubToken: "loremIpsum",
+                projectName: "foo bar",
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
+            }
         ],
         name: "invalid project without repo field"
     },
@@ -106,7 +115,15 @@ const TEST_DATA = [
         valid: false,
         config: [
             {
-                repo: null
+                repo: null,
+                githubToken: "loremIpsum",
+                projectName: "foo bar",
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
             }
         ],
         name: "invalid project with repo field of wrong type"
@@ -115,7 +132,15 @@ const TEST_DATA = [
         valid: false,
         config: [
             {
-                repo: ""
+                repo: "",
+                githubToken: "loremIpsum",
+                projectName: "foo bar",
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
             }
         ],
         name: "invalid project with empty repo name"
@@ -124,7 +149,15 @@ const TEST_DATA = [
         valid: false,
         config: [
             {
-                repo: "foo"
+                repo: "foo",
+                githubToken: "loremIpsum",
+                projectName: "foo bar",
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
             }
         ],
         name: "invalid repo name when not in format user/reponame"
@@ -133,7 +166,14 @@ const TEST_DATA = [
         valid: false,
         config: [
             {
-                repo: "foo/bar"
+                repo: "foo/bar",
+                projectName: "foo bar",
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
             }
         ],
         name: "invalid project without githubToken"
@@ -143,7 +183,14 @@ const TEST_DATA = [
         config: [
             {
                 repo: "foo/bar",
-                githubToken: null
+                githubToken: null,
+                projectName: "foo bar",
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
             }
         ],
         name: "invalid project with githubToken of wrong type"
@@ -153,7 +200,14 @@ const TEST_DATA = [
         config: [
             {
                 repo: "foo/bar",
-                githubToken: ""
+                githubToken: "",
+                projectName: "foo bar",
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
             }
         ],
         name: "invalud project with empty githubToken"
@@ -163,7 +217,13 @@ const TEST_DATA = [
         config: [
             {
                 repo: "foo/bar",
-                githubToken: "loremIpsum"
+                githubToken: "loremIpsum",
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
             }
         ],
         name: "invalid project with no board name"
@@ -174,7 +234,13 @@ const TEST_DATA = [
             {
                 repo: "foo/bar",
                 githubToken: "loremIpsum",
-                projectName: null
+                projectName: null,
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
             }
         ],
         name: "inavlid project with board name of wrong type"
@@ -185,7 +251,13 @@ const TEST_DATA = [
             {
                 repo: "foo/bar",
                 githubToken: "loremIpsum",
-                projectName: ""
+                projectName: "",
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
             }
         ],
         name: "invalid project with empty board name"
@@ -197,7 +269,13 @@ const TEST_DATA = [
                 repo: "foo/bar",
                 githubToken: "loremIpsum",
                 projectName: "baz",
-                columns: null
+                columns: null,
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
             }
         ],
         name: "invalid project with null columns"
@@ -211,6 +289,12 @@ const TEST_DATA = [
                 projectName: "baz",
                 columns: {
                     what: "no"
+                },
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
                 }
             }
         ],
@@ -225,6 +309,12 @@ const TEST_DATA = [
                 projectName: "baz",
                 columns: {
                     events: null
+                },
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
                 }
             }
         ],
@@ -239,6 +329,12 @@ const TEST_DATA = [
                 projectName: "baz",
                 columns: {
                     events: ""
+                },
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
                 }
             }
         ],
@@ -251,7 +347,13 @@ const TEST_DATA = [
                 repo: "foo/bar",
                 githubToken: "loremIpsum",
                 projectName: "baz",
-                labels: null
+                labels: null,
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
             }
         ],
         name: "invalid project with null labels"
@@ -265,6 +367,12 @@ const TEST_DATA = [
                 projectName: "baz",
                 labels: {
                     what: "no"
+                },
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
                 }
             }
         ],
@@ -279,6 +387,12 @@ const TEST_DATA = [
                 projectName: "baz",
                 labels: {
                     retweet: null
+                },
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
                 }
             }
         ],
@@ -293,6 +407,12 @@ const TEST_DATA = [
                 projectName: "baz",
                 labels: {
                     retweet: ""
+                },
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
                 }
             }
         ],
