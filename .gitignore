@@ -40,3 +40,5 @@ jspm_packages
 coverage
 .nyc_output
 coverage.lcov
+
+config.json

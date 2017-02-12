@@ -24,12 +24,24 @@ const TEST_DATA = [
                     retweet: "RT",
                     ready: "valid",
                     invalid: "invalid"
+                },
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
                 }
             },
             {
                 repo: "foo/bar",
                 githubToken: "loremIpsum",
-                projectName: "baz"
+                projectName: "baz",
+                twitter: {
+                    access_token_key: "asdf",
+                    access_token_secret: "asdf",
+                    consumer_key: "asdf",
+                    consumer_secret: "asdf"
+                }
             }
         ],
         name: "valid config"
@@ -323,7 +335,7 @@ TEST_DATA.forEach((data, i) => {
 test('load default config', async (t) => {
     const readConfig = await loadConfig(path.join(__dirname, "../config.default.json"));
     t.deepEqual(readConfig, DEFAULT_CONFIG);
-})
+});
 
 test('parse default config', (t) => {
     const c = validateConfig(DEFAULT_CONFIG);

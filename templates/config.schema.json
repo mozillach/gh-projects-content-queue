@@ -1,0 +1,93 @@
+{
+    "title": "Content Queue Config Schema",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "repo": {
+                "type": "string",
+                "pattern": "^[^/]+/[^/]+$"
+            },
+            "githubToken": {
+                "type": "string",
+                "minLength": 3
+            },
+            "projectName": {
+                "type": "string",
+                "minLength": 1
+            },
+            "columns": {
+                "type": "object",
+                "patternProperties": {
+                    "^(ideas|reactions|events|toTweet|tweeted)$": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                }
+            },
+            "labels": {
+                "type": "object",
+                "patternProperties": {
+                    "^(retweet|ready|invalid)$": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                }
+            },
+            "schedulingTime": {
+                "type": "object",
+                "properties": {
+                    "format": {
+                        "type": "string",
+                        "pattern": "[YMDHmTZ :.-]+"
+                    },
+                    "timezone": {
+                        "type": "number",
+                        "minimum": -11,
+                        "maximum": 13
+                    }
+                }
+            },
+            "twitter": {
+                "type": "object",
+                "patternProperties": {
+                    "^(consumer_(key|secret)|access_token_(key|secret))$": {
+                        "type": "string",
+                        "minLength": 3
+                    }
+                },
+                "required": [
+                    "consumer_key",
+                    "consumer_secret",
+                    "access_token_key",
+                    "access_token_secret"
+                ]
+            },
+            "sources": {
+                "type": "object",
+                "patternProperties": {
+                    "^(issues|mentions|tweeting)$": {
+                        "type": "object",
+                        "properties": {
+                            "columns": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "minItems": 1,
+                                "uniqueItems": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "required": [
+            "repo",
+            "githubToken",
+            "projectName",
+            "twitter"
+        ]
+    }
+}
