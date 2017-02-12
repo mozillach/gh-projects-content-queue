@@ -1,0 +1,36 @@
+[
+    {
+        "githubToken": "yourGithubToken",
+        "repo": "your/repo",
+        "projectName": "Tweets",
+        "labels": {
+            "retweet": "Retweet",
+            "ready": "ready",
+            "invalid": "invalid"
+        },
+        "schedulingTime": {
+            "format": "DD.MM.YYYY HH:mm",
+            "timezone": 1
+        },
+        "twitter": {
+            "consumer_key": "yourTwitterConsumerKey",
+            "consumer_secret": "yourTwitterConsumerSecret",
+            "access_token_key": "yourTwitterAccessToken",
+            "access_token_secret": "yourTwitterAccessTokenSecret"
+        },
+        "sources": {
+            "issues": {
+                "columns": ["Ideas"]
+            },
+            "mentions": {
+                "columns": ["Needs Reaction"]
+            },
+            "tweeting": {
+                "columns": [
+                    "To Tweet",
+                    "Tweeted"
+                ]
+            }
+        }
+    }
+]

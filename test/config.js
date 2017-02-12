@@ -1,6 +1,8 @@
 import test from 'ava';
 import { validateConfig, loadConfig } from '../lib/config';
 import tempWrite from 'temp-write';
+import DEFAULT_CONFIG from '../config.default.json';
+import path from 'path';
 
 //TODO actually validate we get the correct exception.
 const TEST_DATA = [
@@ -316,4 +318,14 @@ testLoadConfig.title = (providedTitle) => `Loading config that is ${providedTitl
 TEST_DATA.forEach((data, i) => {
     test(data.name, testConfig, data);
     test(data.name, testLoadConfig, data, i);
+});
+
+test('load default config', async (t) => {
+    const readConfig = await loadConfig(path.join(__dirname, "../config.default.json"));
+    t.deepEqual(readConfig, DEFAULT_CONFIG);
+})
+
+test('parse default config', (t) => {
+    const c = validateConfig(DEFAULT_CONFIG);
+    t.deepEqual(c, DEFAULT_CONFIG);
 });
