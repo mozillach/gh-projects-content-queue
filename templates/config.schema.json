@@ -1,7 +1,10 @@
 {
+    "$schema": "http://json-schema.org/schema#",
+    "id": "https://mozilla.ch/schemas/content-queue-config.json",
     "title": "Content Queue Config Schema",
     "type": "array",
     "items": {
+        "title": "Instances of the tool",
         "type": "object",
         "properties": {
             "repo": {
@@ -18,26 +21,63 @@
             },
             "columns": {
                 "type": "object",
-                "patternProperties": {
-                    "^(ideas|reactions|events|toTweet|tweeted)$": {
+                "properties": {
+                    "ideas": {
                         "type": "string",
-                        "minLength": 1
+                        "minLength": 1,
+                        "default": "Ideas"
+                    },
+                    "reactions": {
+                        "type": "string",
+                        "minLength": 1,
+                        "default": "Needs Reaction"
+                    },
+                    "events": {
+                        "type": "string",
+                        "minLength": 1,
+                        "default": "Events"
+                    },
+                    "toTweet": {
+                        "type": "string",
+                        "minLength": 1,
+                        "default": "To Tweet"
+                    },
+                    "tweeted": {
+                        "type": "string",
+                        "minLength": 1,
+                        "default": "Tweeted"
                     }
                 },
                 "additionalProperties": false
             },
             "labels": {
+                "title": "Label names for labels used by the queue",
                 "type": "object",
-                "patternProperties": {
-                    "^(retweet|ready|invalid)$": {
+                "properties": {
+                    "retweet": {
                         "type": "string",
-                        "minLength": 1
+                        "minLength": 1,
+                        "default": "Reweet",
+                        "title": "Label on issues that are retweets"
+                    },
+                    "ready": {
+                        "type": "string",
+                        "minLength": 1,
+                        "default": "ready",
+                        "title": "Label on issues that can be tweeted"
+                    },
+                    "invalid": {
+                        "type": "string",
+                        "minLength": 1,
+                        "default": "invalid",
+                        "title": "Label on issues that can not be tweeted"
                     }
                 },
                 "additionalProperties": false
             },
             "schedulingTime": {
                 "type": "object",
+                "description": "If left out the dates for scheduling will not work, but the configuration is not required",
                 "properties": {
                     "format": {
                         "type": "string",
@@ -46,9 +86,14 @@
                     "timezone": {
                         "type": "number",
                         "minimum": -11,
-                        "maximum": 13
+                        "maximum": 13,
+                        "title": "Offset to UTC of dates in issues"
                     }
                 },
+                "required": [
+                    "format",
+                    "timezone"
+                ],
                 "additionalProperties": false
             },
             "twitter": {
