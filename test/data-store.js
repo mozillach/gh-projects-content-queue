@@ -38,6 +38,7 @@ test('get data without cache', async (t) => {
 
     const p = await ds.getData();
     t.true(fetcher.calledOnce);
+    t.is(fetcher.lastCall.args[0], undefined);
     t.is(p, DATA);
 });
 
@@ -72,6 +73,7 @@ test.serial('get data from expired cache', async (t) => {
 
     const q = await ds.getData();
     t.true(fetcher.calledTwice);
+    t.is(fetcher.lastCall.args[0], DATA);
     t.is(q, DATA);
 });
 
