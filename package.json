@@ -4,10 +4,10 @@
   "description": "A Twitter content curation queue based on GitHub projects",
   "main": "index.js",
   "scripts": {
-    "test": "npm run lint && nyc -r lcov -r text node --harmony-async-await ./node_modules/.bin/ava NODE_ENV=test test.js test-*.js test/**/*.js **/__tests__/**/*.js **/*.test.js",
+    "test": "npm run lint && nyc -r lcov -r text ava",
     "lint": "eslint index.js lib/ test/",
     "coverage": "codecov --disable=gcov",
-    "start": "node --harmony index.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/mozillach/gh-projects-content-queue#readme",
   "engines": {
-    "node": ">=7.0.0"
+    "node": ">=7.7.1"
   },
   "devDependencies": {
     "ava": "^0.18.1",
