@@ -5,7 +5,7 @@
  */
 "use strict";
 
-const { getPromisifedClient } = require("./lib/promised-github");
+const GitHub = require("github");
 const Twitter = require("twitter");
 const path = require("path");
 
@@ -14,7 +14,14 @@ const ContentQueue = require("./lib/content-queue");
 
 loadConfig(path.join(__dirname, "./config.json")).then((config) => {
     for(const project of Object.values(config)) {
-        const ghClient = getPromisifedClient(project.githubToken);
+        const ghClient = new GitHub({
+            Promise: Promise,
+            protocol: "https"
+        });
+        ghClient.authenticate({
+            type: "token",
+            token: project.githubToken
+        });
         const twitterClient = new Twitter(project.twitter);
         new ContentQueue(ghClient, twitterClient, project);
     }
