@@ -30,7 +30,7 @@
     "node": ">=7.7.1"
   },
   "devDependencies": {
-    "ava": "^0.18.1",
+    "ava": "^0.19.0",
     "codecov": "^2.0.1",
     "eslint": "^3.8.1",
     "eslint-plugin-ava": "^4.1.0",
