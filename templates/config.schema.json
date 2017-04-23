@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema#",
-    "id": "https://mozilla.ch/schemas/content-queue-config.json",
+    "$id": "https://mozilla.ch/schemas/content-queue-config.json",
     "title": "Content Queue Config Schema",
     "type": "array",
     "items": {
