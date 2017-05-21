@@ -2,19 +2,20 @@ import test from 'ava';
 import ScheduledDate from '../lib/scheduled-date';
 import sinon from 'sinon';
 
-let clock;
-
-test.before(() => {
-    clock = sinon.useFakeTimers();
-});
+const clock = sinon.useFakeTimers();
 test.after(() => {
     clock.restore();
 });
 
+const globalDate = new Date();
+const tzOffset = globalDate.getTimezoneOffset() / 60;
+
 test('constructor with invalid date', (t) => {
     const date = new ScheduledDate('', {
-        format: '',
-        timezone: 0
+        schedulingTime: {
+            format: '',
+            timezone: 0
+        }
     });
 
     t.true(date instanceof Date);
@@ -24,13 +25,91 @@ test('constructor with invalid date', (t) => {
     t.false(date.valid);
 });
 
-test.todo('constructor with valid formatted date');
+test('constructor with valid formatted date', (t) => {
+    const dateString = '2099.01.05 04:00';
+    const date = new ScheduledDate(dateString, {
+        schedulingTime: {
+            format: 'YYYY.MM.DD HH:mm',
+            timezone: -tzOffset
+        }
+    });
+    const referenceDate = new Date(2099, 0, 5, 4, 0);
 
-// these should both be able to use the same reference date formats and patterns.
-// Should probably use ava macros (see config tests).
-test.todo('split date formats');
-test.todo('split date patterns')
-test.todo('format date');
+    t.true(date instanceof Date);
+    t.is(date.rawDate, dateString);
+    t.true(date.valid);
+    t.is(date.getTime(), referenceDate.getTime());
+});
+
+const FORMAT_DATA = [
+    {
+        pattern: 'YYYY.MM.DD HH:mm',
+        date: '2017.01.02 03:04',
+        result: new Date(2017, 0, 2, 3, 4)
+    },
+    {
+        pattern: 'YYYYa',
+        date: '2017a',
+        result: undefined // invalid pattern
+    },
+    {
+        pattern: 'YYYY',
+        date: '2017.01.02',
+        result: new Date() // invalid date
+    }
+];
+
+const VALID_PARTS = [
+    "YYYY",
+    "MM",
+    "DD",
+    "HH",
+    "mm"
+];
+const patternTest = (t, data) => {
+    const splitPattern = ScheduledDate.split(data.pattern);
+
+    if(data.result !== undefined) {
+        for(const p of splitPattern) {
+            t.true(VALID_PARTS.includes(p));
+        }
+    }
+    else {
+        t.true(splitPattern.some((p) => !VALID_PARTS.includes(p)));
+    }
+};
+patternTest.title = (title, data) => `${title} for ${data.pattern}`;
+
+const dateTest = (t, data) => {
+    const date = new ScheduledDate(data.date, {
+        schedulingTime: {
+            format: data.pattern,
+            timezone: -tzOffset
+        }
+    });
+    console.log(data.date, data.result.getTimezoneOffset(), date.getTimezoneOffset());
+
+    t.is(date.getTime(), data.result.getTime());
+};
+dateTest.title = (title, data) => `${title} for ${data.date}`;
+
+const dateFormatTest = (t, data) => {
+    const formatted = ScheduledDate.formatDate(data.result, data.pattern);
+
+    t.is(formatted, data.date);
+};
+dateFormatTest.title = (title, data) => `${title} as ${data.date}`;
+
+for(const data of FORMAT_DATA) {
+    test('split date patterns', patternTest, data);
+    if(data.result !== undefined) {
+        test('split date', dateTest, data);
+        if(data.result.getTime() != Date.now()) {
+            test('format date', dateFormatTest, data);
+        }
+    }
+}
+
 test.todo('valid date pattern');
 test.todo('valid date format')
 
