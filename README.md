@@ -153,4 +153,4 @@ Integer offset from UTC of the machine the tool is running on.
 The tool can be executed with `npm start`. Note that you should first run `npm install`.
 
 #### The tests
-The testsuite can be ran with the default `npm test`. It includes linting of the code using eslint and unit tests with ava.
+The testsuite can be ran with the default `npm test`. It includes linting of the code using eslint and unit tests with ava. Tests require no prior config other than runnimg `npm install` and that all files from this repo be present.
