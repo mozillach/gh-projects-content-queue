@@ -1,7 +1,7 @@
 [
     {
         "githubToken": "yourGithubToken",
-        "repo": "your/repo",
+        "repo": "yourUserName/yourRepoName",
         "projectName": "Tweets",
         "labels": {
             "retweet": "Retweet",

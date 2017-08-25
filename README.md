@@ -28,15 +28,24 @@ creation, improves collaboration and gives better control over content quality.
 
 ### Requirements
  - GitHub user auth token (will use that to create issues and comment on them etc.)
-    - Needs the repo:write scope
+    - Log in with your GitHub user
+    - Go to your settings
+    - Go to "Personal access token" and go click on the "Generate new token" button
+    - Select the "public_repo" scope and click save
+    - Add the resulting token to the `config.json` file (`githubToken` property)
  - Twitter API credentials incl. OAuth tokens and secret (will tweet to this account)
+    - Create a new App through [apps.twitter.com](https://apps.twitter.com/)
+    - There is no need to define a redirect URL, just leave the field blank
+    - Copy the consumer key and secret to the fields in the `config.json` file
+    - Click on "Create access token"
+    - Copy the access token key and secret to the fields in the `config.json` file
  - Node >= 7.7.1
 
 ### Issue template
 An issue template is generated in the repository if none is found. See the documentation for GitHub issue templates.
 
 ### Configuration
-The configuration is defined with JSON in the file `config.json` in the root directory of the project. It is validated against the [config schema](templates/config.schema.json). The default config can be found in [`config.default.json`](config.default.json). Note that this is not a working config, as invalid values are provided for the authentication credentials for Twitter and GitHub.
+The configuration is defined with JSON in the file `config.json` in the root directory of the project. This file does not exist by default. It is validated against the [config schema](templates/config.schema.json). The default config can be found in [`config.default.json`](config.default.json). Note that this is not a working config, as invalid values are provided for the authentication credentials for Twitter and GitHub. You can copy the [`config.default.json`](config.default.json) to `config.json` and edit it.
 
 #### Basic anatomy
 The configuration consists of an array of repositories to run the tool on. Each repository has its entirely separate configuration.
