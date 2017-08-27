@@ -121,6 +121,16 @@ test("mkohler date", (t) => {
     t.is(date.getTime(), 1503707700000);
 });
 
+test("inverse mkohler date", (t) => {
+    const date = new ScheduledDate("25.08.2017 22:35", {
+        schedulingTime: {
+            format: defaultConfig[0].schedulingTime.format,
+            timezone: -2
+        }
+    });
+    t.is(date.getTime(), 1503707700000);
+});
+
 test.todo('valid date pattern');
 test.todo('valid date format')
 
