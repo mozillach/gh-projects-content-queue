@@ -1,6 +1,7 @@
 import test from 'ava';
 import ScheduledDate from '../lib/scheduled-date';
 import sinon from 'sinon';
+import defaultConfig from '../config.default.json';
 
 const clock = sinon.useFakeTimers();
 test.after(() => {
@@ -109,6 +110,16 @@ for(const data of FORMAT_DATA) {
         }
     }
 }
+
+test("mkohler date", (t) => {
+    const date = new ScheduledDate("26.08.2017 02:35", {
+        schedulingTime: {
+            format: defaultConfig[0].schedulingTime.format,
+            timezone: 2
+        }
+    });
+    t.is(date.getTime(), 1503707700000);
+});
 
 test.todo('valid date pattern');
 test.todo('valid date format')
