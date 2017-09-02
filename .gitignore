@@ -45,3 +45,4 @@ coverage
 coverage.lcov
 
 config.json
+out
