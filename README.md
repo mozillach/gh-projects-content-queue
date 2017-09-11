@@ -77,15 +77,8 @@ There are currently three stable sources:
  - **mentions**: Opens issues for new mentions on Twitter.
  - **tweeting**: Tweets valid issues from the To tweet column and moves them to tweeted and closes them.
 
-##### columns
-Adjust the names of the columns the tool uses. Built in column identifiers:
- - `ideas`
- - `reactions`
- - `events`
- - `toTweet`
- - `tweeted`
-
-(To be deprecated and moved to sources)
+###### columns
+Specifies the column names of columns the source should use. Is a key-value map with the key being a column identifier from the source and the value the name of the column.
 
 ##### labels
 Adjust the names of the labels the tool uses. Built in label identifiers:

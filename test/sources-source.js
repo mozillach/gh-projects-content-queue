@@ -14,3 +14,5 @@ test('required columns', (t) => {
     t.true(Array.isArray(Source.requiredColumns));
     t.is(Source.requiredColumns.length, 0);
 });
+
+test.todo('getColumn');

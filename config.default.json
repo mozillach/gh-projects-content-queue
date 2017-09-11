@@ -20,16 +20,21 @@
         },
         "sources": {
             "issues": {
-                "columns": ["Ideas"]
+                "columns": {
+                    "target": "Ideas",
+                    "ignored": "Tweeted"
+                }
             },
             "mentions": {
-                "columns": ["Needs Reaction"]
+                "columns": {
+                    "target": "Needs Reaction"
+                }
             },
             "tweeting": {
-                "columns": [
-                    "To Tweet",
-                    "Tweeted"
-                ]
+                "columns": {
+                    "source": "To Tweet",
+                    "target": "Tweeted"
+                }
             }
         }
     }

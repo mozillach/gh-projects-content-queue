@@ -19,37 +19,6 @@
                 "type": "string",
                 "minLength": 1
             },
-            "columns": {
-                "type": "object",
-                "properties": {
-                    "ideas": {
-                        "type": "string",
-                        "minLength": 1,
-                        "default": "Ideas"
-                    },
-                    "reactions": {
-                        "type": "string",
-                        "minLength": 1,
-                        "default": "Needs Reaction"
-                    },
-                    "events": {
-                        "type": "string",
-                        "minLength": 1,
-                        "default": "Events"
-                    },
-                    "toTweet": {
-                        "type": "string",
-                        "minLength": 1,
-                        "default": "To Tweet"
-                    },
-                    "tweeted": {
-                        "type": "string",
-                        "minLength": 1,
-                        "default": "Tweeted"
-                    }
-                },
-                "additionalProperties": false
-            },
             "labels": {
                 "title": "Label names for labels used by the queue",
                 "type": "object",
@@ -119,13 +88,12 @@
                         "type": "object",
                         "properties": {
                             "columns": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "minLength": 1
-                                },
-                                "minItems": 1,
-                                "uniqueItems": true
+                                "type": "object",
+                                "patternProperties": {
+                                    "^(source|target)$": {
+                                        "type": "string"
+                                    }
+                                }
                             }
                         }
                     }

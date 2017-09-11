@@ -13,13 +13,6 @@ const TEST_DATA = [
                 repo: "foo/bar",
                 githubToken: "loremIpsum",
                 projectName: "Tweets",
-                columns: {
-                    ideas: "Backlog",
-                    reactions: "Reaction needed",
-                    events: "Event Backlog",
-                    toTweet: "Ready",
-                    tweeted: "Done"
-                },
                 labels: {
                     retweet: "RT",
                     ready: "valid",
@@ -261,84 +254,6 @@ const TEST_DATA = [
             }
         ],
         name: "invalid project with empty board name"
-    },
-    {
-        valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                projectName: "baz",
-                columns: null,
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
-                }
-            }
-        ],
-        name: "invalid project with null columns"
-    },
-    {
-        valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                projectName: "baz",
-                columns: {
-                    what: "no"
-                },
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
-                }
-            }
-        ],
-        name: "invalid project with unknown column"
-    },
-    {
-        valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                projectName: "baz",
-                columns: {
-                    events: null
-                },
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
-                }
-            }
-        ],
-        name: "invalid project with invalid readable column name"
-    },
-    {
-        valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                projectName: "baz",
-                columns: {
-                    events: ""
-                },
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
-                }
-            }
-        ],
-        name: "invalid project with empty readable column name"
     },
     {
         valid: false,
