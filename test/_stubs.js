@@ -1,12 +1,16 @@
 import sinon from 'sinon';
 
-const getIssue = (content = 'lorem ipsum') => ({
-    content,
-    addLabel: sinon.spy(),
-    hasLabel: sinon.stub(),
-    removeLabel: sinon.spy(),
-    comment: sinon.spy()
-});
+const getIssue = (content = 'lorem ipsum') => {
+    //TODO should use an actual issue instance instead with a no-op github client.
+    const labels = new Set();
+    return {
+        content,
+        addLabel: sinon.spy((label) => labels.add(label)),
+        hasLabel: sinon.spy((label) => labels.has(label)),
+        removeLabel: sinon.spy((label) => labels.delete(label)),
+        comment: sinon.spy()
+    };
+};
 
 const getConfig = () => ({
     schedulingTime: {
