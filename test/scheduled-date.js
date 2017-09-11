@@ -88,7 +88,6 @@ const dateTest = (t, data) => {
             timezone: -tzOffset
         }
     });
-    console.log(data.date, data.result.getTimezoneOffset(), date.getTimezoneOffset());
 
     t.is(date.getTime(), data.result.getTime());
 };
