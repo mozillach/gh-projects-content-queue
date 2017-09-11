@@ -1,4 +1,5 @@
 import sinon from 'sinon';
+import config from '../config.default.json';
 
 const getIssue = (content = 'lorem ipsum') => {
     //TODO should use an actual issue instance instead with a no-op github client.
@@ -12,17 +13,7 @@ const getIssue = (content = 'lorem ipsum') => {
     };
 };
 
-const getConfig = () => ({
-    schedulingTime: {
-        format: "DD.MM.YYYY HH:mm",
-        timezone: 0
-    },
-    labels: {
-        retweet: 'retweet',
-        ready: 'ready',
-        invalid: 'invalid'
-    }
-});
+const getConfig = () => config[0];
 
 export {
     getIssue,
