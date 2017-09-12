@@ -80,6 +80,9 @@ There are currently three stable sources:
 ###### columns
 Specifies the column names of columns the source should use. Is a key-value map with the key being a column identifier from the source and the value the name of the column.
 
+###### squad
+List for users that should handle new mentions for the **mentions** source. The array should hold usernames of all users to cycle through.
+
 ##### labels
 Adjust the names of the labels the tool uses. Built in label identifiers:
  - `retweet`
