@@ -28,7 +28,8 @@
             "mentions": {
                 "columns": {
                     "target": "Needs Reaction"
-                }
+                },
+                "squad": []
             },
             "tweeting": {
                 "columns": {
