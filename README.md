@@ -1,7 +1,7 @@
 # gh-projects-content-queue
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/mozillach/gh-projects-content-queue.svg)](https://greenkeeper.io/)
-[![Build Status](https://travis-ci.org/mozillach/gh-projects-content-queue.svg?branch=master)](https://travis-ci.org/mozillach/gh-projects-content-queue) [![codecov](https://codecov.io/gh/mozillach/gh-projects-content-queue/branch/master/graph/badge.svg)](https://codecov.io/gh/mozillach/gh-projects-content-queue)
+[![Build Status](https://travis-ci.org/mozillach/gh-projects-content-queue.svg?branch=master)](https://travis-ci.org/mozillach/gh-projects-content-queue) [![codecov](https://codecov.io/gh/mozillach/gh-projects-content-queue/branch/master/graph/badge.svg)](https://codecov.io/gh/mozillach/gh-projects-content-queue) [![docker hub](https://img.shields.io/docker/build/mozillach/content-queue.svg)](https://hub.docker.com/r/mozillach/content-queue/builds)
 
 A Twitter content curation queue based on GitHub projects. Crowd sources tweet
 creation, improves collaboration and gives better control over content quality.
@@ -14,11 +14,11 @@ creation, improves collaboration and gives better control over content quality.
  - Auto tweet issues from a column in the dedicated board
  - Validate issue content to be valid for tweeting
  - Scheduling of tweets to an exact time
+ - Reaction squad system to ping people to react to a mention
 
 ### Planned
  - Auto tweeting tweets from a column in certain spacing (à la buffer)
  - Reminder system for tweets that are due but not ready
- - Reaction squad system to ping people to react to a mention
  - Auto create tweets for events on Mozilla Reps for a given query
  - Tweet pinning management
  - Auto create tweets for new discourse threads
@@ -51,7 +51,7 @@ The configuration is defined with JSON in the file `config.json` in the root dir
 You could also provide the configuartion via the environment, but if a config.json is present it will be preferred.
 
 ### Running with Docker
-[Official Docker container](https://hub.docker.com/r/mozilla.ch/content-queue)
+[Official Docker container](https://hub.docker.com/r/mozillach/content-queue)
 
 The latest tag corresponds to the master branch in this repository.
 
