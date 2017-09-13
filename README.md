@@ -51,7 +51,9 @@ The configuration is defined with JSON in the file `config.json` in the root dir
 You could also provide the configuartion via the environment, but if a config.json is present it will be preferred.
 
 ### Running with Docker
-There is a docker component available of this service.
+[Official Docker container](https://hub.docker.com/r/mozilla.ch/content-queue)
+
+The latest tag corresponds to the master branch in this repository.
 
 #### Configuration
 Configuration of the docker container is done via environment variables:
