@@ -164,8 +164,6 @@ Integer offset from UTC of the machine the tool is running on.
 The tool can be executed with `npm start`. Note that you should first run `npm install`.
 
 #### The docker container
-
-### Running with Docker
 [Official Docker container](https://hub.docker.com/r/mozillach/content-queue)
 
 The latest tag corresponds to the master branch in this repository. Note that the docker container can only be configured via env. Don't forget to also set `NODE_ENV` to `production`.
