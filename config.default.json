@@ -35,7 +35,8 @@
                 "columns": {
                     "source": "To Tweet",
                     "target": "Tweeted"
-                }
+                },
+                "schedule": []
             }
         }
     }

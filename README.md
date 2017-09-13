@@ -15,9 +15,9 @@ creation, improves collaboration and gives better control over content quality.
  - Validate issue content to be valid for tweeting
  - Scheduling of tweets to an exact time
  - Reaction squad system to ping people to react to a mention
+ - Auto tweeting tweets from a column in certain spacing (à la buffer)
 
 ### Planned
- - Auto tweeting tweets from a column in certain spacing (à la buffer)
  - Reminder system for tweets that are due but not ready
  - Auto create tweets for events on Mozilla Reps for a given query
  - Tweet pinning management
@@ -89,6 +89,9 @@ Specifies the column names of columns the source should use. Is a key-value map 
 ###### squad
 List for users that should handle new mentions for the **mentions** source. The array should hold usernames of all users to cycle through.
 
+###### schedule
+A schedule of slots for the tweeting source. Takes a time in the format of `hh:mm`. The field is fully optional. If not provided tweets are instantly sent out unless scheduled. This does not use the timezone of the schedulingTime but UTC.
+
 ##### labels
 Adjust the names of the labels the tool uses. Built in label identifiers:
  - `retweet`
@@ -120,44 +123,7 @@ Date format for scheduling tweets.
 Integer offset from UTC of the machine the tool is running on.
 
 #### Example
-```json
-[
-    {
-        "githubToken": "",
-        "repo": "mozillach/twitter",
-        "projectName": "Tweets",
-        "labels": {
-            "retweet": "Retweet",
-            "ready": "ready",
-            "invalid": "invalid"
-        },
-        "schedulingTime": {
-            "format": "DD.MM.YYYY HH:mm",
-            "timezone": 1
-        },
-        "twitter": {
-            "consumer_key": "",
-            "consumer_secret": "",
-            "access_token_key": "",
-            "access_token_secret": ""
-        },
-        "sources": {
-            "issues": {
-                "columns": ["Ideas"]
-            },
-            "mentions": {
-                "columns": ["Needs Reaction"]
-            },
-            "tweeting": {
-                "columns": [
-                    "To Tweet",
-                    "Tweeted"
-                ]
-            }
-        }
-    }
-]
-```
+See [config.default.json](./config.default.json)
 
 ### Run
 #### The tool
