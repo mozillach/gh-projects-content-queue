@@ -166,7 +166,7 @@ The tool can be executed with `npm start`. Note that you should first run `npm i
 #### The docker container
 [Official Docker container](https://hub.docker.com/r/mozillach/content-queue)
 
-The latest tag corresponds to the master branch in this repository. Note that the docker container can only be configured via env. Don't forget to also set `NODE_ENV` to `production`.
+The latest tag corresponds to the master branch in this repository. Note that the docker container can only be configured via env. Don't forget to also set `NODE_ENV` to `production`. The `--init` parameter should be set when running with Docker 1.13 and later.
 
 #### The tests
 The testsuite can be ran with the default `npm test`. It includes linting of the code using eslint and unit tests with ava. Tests require no prior config other than runnimg `npm install` and that all files from this repo be present.
