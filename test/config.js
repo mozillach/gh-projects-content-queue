@@ -376,3 +376,16 @@ test('parse default config', (t) => {
     const c = validateConfig(DEFAULT_CONFIG);
     t.deepEqual(c, DEFAULT_CONFIG);
 });
+
+test.serial('load env config', async (t) => {
+    process.env.CQ_CONFIG = JSON.stringify(DEFAULT_CONFIG);
+    const c = await loadConfig();
+    t.deepEqual(c, DEFAULT_CONFIG);
+    delete process.env.CQ_CONFIG;
+});
+
+test('no env config to load', (t) => {
+    return t.throws(loadConfig());
+});
+
+test.todo('prefers file over env');

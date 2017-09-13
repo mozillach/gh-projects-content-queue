@@ -44,8 +44,20 @@ creation, improves collaboration and gives better control over content quality.
 ### Issue template
 An issue template is generated in the repository if none is found. See the documentation for GitHub issue templates.
 
-### Configuration
+### Running without Docker
+#### Configuration
 The configuration is defined with JSON in the file `config.json` in the root directory of the project. This file does not exist by default. It is validated against the [config schema](templates/config.schema.json). The default config can be found in [`config.default.json`](config.default.json). Note that this is not a working config, as invalid values are provided for the authentication credentials for Twitter and GitHub. You can copy the [`config.default.json`](config.default.json) to `config.json` and edit it.
+
+You could also provide the configuartion via the environment, but if a config.json is present it will be preferred.
+
+### Running with Docker
+There is a docker component available of this service.
+
+#### Configuration
+Configuration of the docker container is done via environment variables:
+
+ - `NODE_ENV`: Should be set to `production`
+ - `CQ_CONFIG`: A stringified version of the JSON configuration.
 
 #### Basic anatomy
 The configuration consists of an array of repositories to run the tool on. Each repository has its entirely separate configuration.
