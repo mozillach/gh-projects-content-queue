@@ -44,22 +44,14 @@ creation, improves collaboration and gives better control over content quality.
 ### Issue template
 An issue template is generated in the repository if none is found. See the documentation for GitHub issue templates.
 
-### Running without Docker
-#### Configuration
+### Configuration
+#### By file
 The configuration is defined with JSON in the file `config.json` in the root directory of the project. This file does not exist by default. It is validated against the [config schema](templates/config.schema.json). The default config can be found in [`config.default.json`](config.default.json). Note that this is not a working config, as invalid values are provided for the authentication credentials for Twitter and GitHub. You can copy the [`config.default.json`](config.default.json) to `config.json` and edit it.
 
 You could also provide the configuartion via the environment, but if a config.json is present it will be preferred.
 
-### Running with Docker
-[Official Docker container](https://hub.docker.com/r/mozillach/content-queue)
-
-The latest tag corresponds to the master branch in this repository.
-
-#### Configuration
-Configuration of the docker container is done via environment variables:
-
- - `NODE_ENV`: Should be set to `production`
- - `CQ_CONFIG`: A stringified version of the JSON configuration.
+#### By environment variables
+The `CQ_CONFIG` environment vairable should be set to a stringified version of the JSON configuration.
 
 #### Basic anatomy
 The configuration consists of an array of repositories to run the tool on. Each repository has its entirely separate configuration.
@@ -170,6 +162,13 @@ Integer offset from UTC of the machine the tool is running on.
 ### Run
 #### The tool
 The tool can be executed with `npm start`. Note that you should first run `npm install`.
+
+#### The docker container
+
+### Running with Docker
+[Official Docker container](https://hub.docker.com/r/mozillach/content-queue)
+
+The latest tag corresponds to the master branch in this repository. Note that the docker container can only be configured via env. Don't forget to also set `NODE_ENV` to `production`.
 
 #### The tests
 The testsuite can be ran with the default `npm test`. It includes linting of the code using eslint and unit tests with ava. Tests require no prior config other than runnimg `npm install` and that all files from this repo be present.
