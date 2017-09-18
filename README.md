@@ -16,10 +16,10 @@ creation, improves collaboration and gives better control over content quality.
  - Scheduling of tweets to an exact time
  - Reaction squad system to ping people to react to a mention
  - Auto tweeting tweets from a column in certain spacing (à la buffer)
-
-### Planned
  - Reminder system for tweets that are due but not ready
  - Auto create tweets for events on Mozilla Reps for a given query
+
+### Planned
  - Tweet pinning management
  - Auto create tweets for new discourse threads
  - See all the issues with the enhancement tag...
@@ -79,18 +79,24 @@ Name of the GitHub project board to run the tool in.
 Sources to run on the board. You need to declare these, else none are loaded. The sources are a key on an object, where their value currently is just an empty object, but will eventually hold source configuration.
 
 There are currently three stable sources:
- - **issues**: Adds open issues to the Ideas column.
+ - **issues**: Adds open issues to an ideas column.
  - **mentions**: Opens issues for new mentions on Twitter.
  - **tweeting**: Tweets valid issues from the To tweet column and moves them to tweeted and closes them.
+ - **squad**: Assigns users from a list to new issues in a column.
+ - **events**: Opens new issues for new events on reps.mozilla.org with a specific query.
+ - **reminder**: Reminds assignees and people following an issue when it's due but not ready.
 
 ###### columns
 Specifies the column names of columns the source should use. Is a key-value map with the key being a column identifier from the source and the value the name of the column.
 
 ###### squad
-List for users that should handle new mentions for the **mentions** source. The array should hold usernames of all users to cycle through.
+List for users that should handle new mentions for the **squad** source. The array should hold usernames of all users to cycle through.
 
 ###### schedule
 A schedule of slots for the tweeting source. Takes a time in the format of `hh:mm`. The field is fully optional. If not provided tweets are instantly sent out unless scheduled. This does not use the timezone of the schedulingTime but UTC.
+
+###### query
+The search query for the **events** source.
 
 ##### labels
 Adjust the names of the labels the tool uses. Built in label identifiers:

@@ -46,7 +46,7 @@
                 "columns": {
                     "target": "Events"
                 },
-                "query": "swizerland"
+                "query": "switzerland"
             },
             "reminder": {
                 "columns": {
