@@ -47,6 +47,11 @@
                     "target": "Events"
                 },
                 "query": "swizerland"
+            },
+            "reminder": {
+                "columns": {
+                    "target": "To Tweet"
+                }
             }
         }
     }

@@ -84,7 +84,7 @@
             "sources": {
                 "type": "object",
                 "patternProperties": {
-                    "^(issues|mentions|tweeting|events|squad)$": {
+                    "^(issues|mentions|tweeting|events|squad|reminder)$": {
                         "type": "object",
                         "properties": {
                             "columns": {
