@@ -27,6 +27,11 @@
             "mentions": {
                 "columns": {
                     "target": "Needs Reaction"
+                }
+            },
+            "squad": {
+                "columns": {
+                    "target": "Needs Reaction"
                 },
                 "squad": []
             },
