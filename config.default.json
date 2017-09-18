@@ -21,8 +21,7 @@
         "sources": {
             "issues": {
                 "columns": {
-                    "target": "Ideas",
-                    "ignored": "Tweeted"
+                    "target": "Ideas"
                 }
             },
             "mentions": {
