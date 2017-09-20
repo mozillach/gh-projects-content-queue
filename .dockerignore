@@ -1,6 +1,8 @@
 node_modules
-.nyc_output
+.*
 coverage
 config.json
 test
-.eslintrc
+out
+LICENSE
+README.md
