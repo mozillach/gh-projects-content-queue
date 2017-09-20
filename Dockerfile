@@ -1,4 +1,4 @@
 FROM node:latest
 COPY . .
-RUN npm i
+RUN npm i --no-save --production
 USER node
