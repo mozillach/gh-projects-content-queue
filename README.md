@@ -93,7 +93,7 @@ Specifies the column names of columns the source should use. Is a key-value map 
 List for users that should handle new mentions for the **squad** source. The array should hold usernames of all users to cycle through.
 
 ###### schedule
-A schedule of slots for the tweeting source. Takes a time in the format of `hh:mm`. The field is fully optional. If not provided tweets are instantly sent out unless scheduled. This does not use the timezone of the schedulingTime but UTC.
+A schedule of slots for the **tweeting** source. Takes a time in the format of `hh:mm`. The field is fully optional. If not provided tweets are instantly sent out unless scheduled. This does not use the timezone of the `schedulingTime` and is in UTC+0.
 
 ###### query
 The search query for the **events** source.
@@ -126,7 +126,7 @@ Date format for scheduling tweets.
  - `-`
 
 ###### timezone
-Integer offset from UTC of the machine the tool is running on.
+Integer offset from UTC of the machine the tool is running on in hours.
 
 #### Example
 See [config.default.json](./config.default.json)
