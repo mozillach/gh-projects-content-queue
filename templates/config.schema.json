@@ -82,23 +82,32 @@
                 "additionalProperties": false
             },
             "sources": {
-                "type": "object",
-                "patternProperties": {
-                    "^(issues|mentions|tweeting|events|squad|reminder|discourse)$": {
-                        "type": "object",
-                        "properties": {
-                            "columns": {
-                                "type": "object",
-                                "patternProperties": {
-                                    "^(source|target)$": {
-                                        "type": "string"
-                                    }
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "columns": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^(source|target)$": {
+                                    "type": "string"
                                 }
                             }
+                        },
+                        "type": {
+                            "enum": [
+                                "issues",
+                                "mentions",
+                                "tweeting",
+                                "events",
+                                "squad",
+                                "reminder",
+                                "discourse"
+                            ]
                         }
                     }
                 },
-                "additionalProperties": false
+                "uniqueItems": true
             }
         },
         "required": [

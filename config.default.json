@@ -18,50 +18,57 @@
             "access_token_key": "yourTwitterAccessToken",
             "access_token_secret": "yourTwitterAccessTokenSecret"
         },
-        "sources": {
-            "issues": {
+        "sources": [
+            {
                 "columns": {
                     "target": "Ideas"
-                }
+                },
+                "type": "issues"
             },
-            "mentions": {
-                "columns": {
-                    "target": "Needs Reaction"
-                }
-            },
-            "squad": {
+            {
                 "columns": {
                     "target": "Needs Reaction"
                 },
+                "type": "mentions"
+            },
+            {
+                "columns": {
+                    "target": "Needs Reaction"
+                },
+                "type": "squad",
                 "squad": []
             },
-            "tweeting": {
+            {
                 "columns": {
                     "source": "To Tweet",
                     "target": "Tweeted"
                 },
+                "type": "tweeting",
                 "schedule": []
             },
-            "events": {
+            {
                 "columns": {
                     "target": "Events"
                 },
+                "type": "events",
                 "query": "switzerland"
             },
-            "reminder": {
+            {
                 "columns": {
                     "target": "To Tweet"
-                }
+                },
+                "type": "reminder"
             },
-            "discourse": {
+            {
                 "columns": {
                     "target": "New Posts"
                 },
+                "type": "discourse",
                 "forum": "communities/switzerland",
                 "apiKey": "yourDiscourseAPIKey",
                 "apiUrl": "https://discourse.mozilla.org",
                 "username": "yourUserName"
             }
-        }
+        ]
     }
 ]

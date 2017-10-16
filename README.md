@@ -76,9 +76,9 @@ Name of the GitHub project board to run the tool in.
 #### Additional properties
 
 ##### sources
-Sources to run on the board. You need to declare these, else none are loaded. The sources are a key on an object, where their value currently is just an empty object, but will eventually hold source configuration.
+Sources to run on the board. You need to declare these, else none are loaded. The sources are in an array of objects, where each object defines the source and its parameters. This means you can have multiple instances of one sources, though the same source should never run multiple times on the same column. The tool currently doesn't check that.
 
-There are currently three stable sources:
+There are currently seven stable sources:
  - **issues**: Adds open issues to an ideas column.
  - **mentions**: Opens issues for new mentions on Twitter.
  - **tweeting**: Tweets valid issues from the To tweet column and moves them to tweeted and closes them.
@@ -86,6 +86,9 @@ There are currently three stable sources:
  - **events**: Opens new issues for new events on reps.mozilla.org with a specific query.
  - **reminder**: Reminds assignees and people following an issue when it's due but not ready.
  - **discourse**: Opens an issue for each new discourse thread in a given discourse category.
+
+###### type
+A string describing the type of the source. Should be one of the available source names.
 
 ###### columns
 Specifies the column names of columns the source should use. Is a key-value map with the key being a column identifier from the source and the value the name of the column.
@@ -96,8 +99,8 @@ List for users that should handle new mentions for the **squad** source. The arr
 ###### schedule
 A schedule of slots for the **tweeting** source. Takes a time in the format of `hh:mm`. The field is fully optional. If not provided tweets are instantly sent out unless scheduled. This does not use the timezone of the `schedulingTime` and is in UTC+0.
 
-###### discourse
-This source requires four configuration keys:
+###### discourse properties
+The discourse source requires four configuration keys:
  - `forum`: Slug of the category to watch threads of.
  - `apiUrl`: URL of the API of the discourse instance.
  - `apiKey`: API Key for the discourse instance.
