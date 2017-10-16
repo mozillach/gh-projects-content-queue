@@ -52,6 +52,15 @@
                 "columns": {
                     "target": "To Tweet"
                 }
+            },
+            "discourse": {
+                "columns": {
+                    "target": "New Posts"
+                },
+                "forum": "communities/switzerland",
+                "apiKey": "yourDiscourseAPIKey",
+                "apiUrl": "https://discourse.mozilla.org",
+                "username": "yourUserName"
             }
         }
     }
