@@ -18,10 +18,10 @@ creation, improves collaboration and gives better control over content quality.
  - Auto tweeting tweets from a column in certain spacing (à la buffer)
  - Reminder system for tweets that are due but not ready
  - Auto create tweets for events on Mozilla Reps for a given query
+ - Auto create tweets for new discourse threads
 
 ### Planned
  - Tweet pinning management
- - Auto create tweets for new discourse threads
  - See all the issues with the enhancement tag...
 
 ## Set up a repo for use with this tool
@@ -85,6 +85,7 @@ There are currently three stable sources:
  - **squad**: Assigns users from a list to new issues in a column.
  - **events**: Opens new issues for new events on reps.mozilla.org with a specific query.
  - **reminder**: Reminds assignees and people following an issue when it's due but not ready.
+ - **discourse**: Opens an issue for each new discourse thread in a given discourse category.
 
 ###### columns
 Specifies the column names of columns the source should use. Is a key-value map with the key being a column identifier from the source and the value the name of the column.
@@ -94,6 +95,13 @@ List for users that should handle new mentions for the **squad** source. The arr
 
 ###### schedule
 A schedule of slots for the **tweeting** source. Takes a time in the format of `hh:mm`. The field is fully optional. If not provided tweets are instantly sent out unless scheduled. This does not use the timezone of the `schedulingTime` and is in UTC+0.
+
+###### discourse
+This source requires four configuration keys:
+ - `forum`: Slug of the category to watch threads of.
+ - `apiUrl`: URL of the API of the discourse instance.
+ - `apiKey`: API Key for the discourse instance.
+ - `username`: Username for the discourse instance.
 
 ###### query
 The search query for the **events** source.
