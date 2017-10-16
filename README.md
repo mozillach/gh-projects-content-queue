@@ -31,7 +31,7 @@ creation, improves collaboration and gives better control over content quality.
     - Log in with your GitHub user
     - Go to your settings
     - Go to "Personal access token" and go click on the "Generate new token" button
-    - Select the "public_repo" scope and click save
+    - Select the "public_repo" scope and if you are using it with an organization "read:org" and click save
     - Add the resulting token to the `config.json` file (`githubToken` property)
  - Twitter API credentials incl. OAuth tokens and secret (will tweet to this account)
     - Create a new App through [apps.twitter.com](https://apps.twitter.com/)
