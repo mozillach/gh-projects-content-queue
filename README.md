@@ -94,13 +94,16 @@ A string describing the type of the source. Should be one of the available sourc
 Specifies the column names of columns the source should use. Is a key-value map with the key being a column identifier from the source and the value the name of the column.
 
 ###### squad
-List for users that should handle new mentions for the **squad** source. The array should hold usernames of all users to cycle through.
+List for users that should handle new mentions for the **squad** source. The array should hold usernames of all users to cycle through. Is preferred over the `squadTeam` config.
+
+###### squadTeam
+Name of a team that should be the source to the reaction squad for the **squad** source. Should be the name of the team.
 
 ###### schedule
 A schedule of slots for the **tweeting** source. Takes a time in the format of `hh:mm`. The field is fully optional. If not provided tweets are instantly sent out unless scheduled. This does not use the timezone of the `schedulingTime` and is in UTC+0.
 
 ###### discourse properties
-The discourse source requires four configuration keys:
+The **discourse** source requires four configuration keys:
  - `forum`: Slug of the category to watch threads of.
  - `apiUrl`: URL of the API of the discourse instance.
  - `apiKey`: API Key for the discourse instance.
