@@ -51,12 +51,45 @@ const FORMAT_DATA = [
     {
         pattern: 'YYYYa',
         date: '2017a',
+        invalidDate: true,
         result: undefined // invalid pattern
     },
     {
         pattern: 'YYYY',
         date: '2017.01.02',
         result: new Date() // invalid date
+    },
+    {
+        pattern: 2017,
+        date: '2017',
+        result: undefined
+    },
+    {
+        pattern: '',
+        date: '2017.01.02 03:04',
+        result: undefined
+    },
+    {
+        pattern: '      ',
+        date: '       ',
+        invalidDate: true,
+        result: undefined
+    },
+    {
+        pattern: 'YYYY.MM.DDTHH:mmZ',
+        date: '17.01.02T03:04Z',
+        result: new Date()
+    },
+    {
+        pattern: 'YYYY.MM.DD HH:mm',
+        date: '2017-01-02 03 04',
+        result: new Date()
+    },
+    {
+        pattern: 'YYYY.MM.DD HH:mm',
+        date: 'YYYY.MM.DD HH:mm',
+        result: new Date(),
+        invalidDate: true
     }
 ];
 
@@ -75,8 +108,11 @@ const patternTest = (t, data) => {
             t.true(VALID_PARTS.includes(p));
         }
     }
-    else {
+    else if(data.pattern.trim().length > 0){
         t.true(splitPattern.some((p) => !VALID_PARTS.includes(p)));
+    }
+    else {
+        t.is(splitPattern.length, 0);
     }
 };
 patternTest.title = (title, data) => `${title} for ${data.pattern}`;
@@ -97,16 +133,68 @@ const dateFormatTest = (t, data) => {
     const formatted = ScheduledDate.formatDate(data.result, data.pattern);
 
     t.is(formatted, data.date);
+
+    const date = new ScheduledDate(data.date, {
+        schedulingTime: {
+            format: data.pattern,
+            timezone: -tzOffset
+        }
+    });
+    t.true(date.valid);
+
+    t.true(ScheduledDate.isValid(data.pattern, true));
+    t.true(ScheduledDate.matchesPattern(data.date, data.pattern));
+    t.true(ScheduledDate.isValid(data.date));
 };
 dateFormatTest.title = (title, data) => `${title} as ${data.date}`;
 
+const dateInvalidTest = (t, data) => {
+    const date = new ScheduledDate(data.date,  {
+        schedulingTime: {
+            format: data.pattern,
+            timezone: -tzOffset
+        }
+    });
+
+    t.false(date.valid);
+};
+dateInvalidTest.title = (title, data) => `${title} with ${data.date}`;
+
+const patternInvalidTest = (t, data) => {
+    t.false(ScheduledDate.isValid(data.pattern, true));
+};
+patternInvalidTest.title = (title, data) => `${title} with ${data.date}`;
+
+const mismatchTest = (t, data) => {
+    t.false(ScheduledDate.matchesPattern(data.date, data.pattern));
+};
+mismatchTest.title = (title, data) => `${title} with ${data.date}`;
+
+const invalidDateFormatTest = (t, data) => {
+    t.false(ScheduledDate.isValid(data.date));
+};
+invalidDateFormatTest.title = (title, data) => `${title} with ${data.date}`;
+
 for(const data of FORMAT_DATA) {
-    test('split date patterns', patternTest, data);
+    if(typeof data.pattern === "string") {
+        test('split date patterns', patternTest, data);
+    }
     if(data.result !== undefined) {
         test('split date', dateTest, data);
         if(data.result.getTime() != Date.now()) {
             test('format date', dateFormatTest, data);
         }
+        else {
+            test('ensure invalid', dateInvalidTest, data);
+            test('date and pattern mismatch', mismatchTest, data);
+        }
+    }
+    else {
+        test('ensure invalid', dateInvalidTest, data);
+        test('pattern is invalid', patternInvalidTest, data);
+    }
+    if(data.invalidDate) {
+        test('date invalid', invalidDateFormatTest, data);
     }
 }
 
@@ -130,11 +218,7 @@ test("inverse mkohler date", (t) => {
     t.is(date.getTime(), 1503707700000);
 });
 
-test.todo('valid date pattern');
-test.todo('valid date format')
-
-test.todo('non-string date format invalid');
-test.todo('empty string date format invalid');
-test.todo('only whitespace invalid date format');
-
-test.todo('is the scheduled date instance valid');
+test('formatDate with a non-date', (t) => {
+    const res = ScheduledDate.formatDate('foo', '');
+    t.is(res, 'foo');
+});
