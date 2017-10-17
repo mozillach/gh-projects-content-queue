@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import config from '../config.default.json';
 import DataStoreHolder from '../lib/data-store-holder';
-export { getGithubClient } from './_github-client';
+import getGithubClient from './_github-client';
 
 const getIssue = (content = 'lorem ipsum') => {
     //TODO should use an actual issue instance instead with a no-op github client.
@@ -48,5 +48,6 @@ export {
     getIssue,
     getConfig,
     getDataStoreHolder,
+    getGithubClient,
     getIssueData
 };
