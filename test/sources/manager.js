@@ -94,10 +94,11 @@ test('get source factory', (t) => {
 test('can not get invalid source factories', (t) => {
     const manager = new SourceManager({});
 
-    t.throws(manager.getSourceFactory('manager'));
-    t.throws(manager.getSourceFactory('source'));
+    t.throws(() => manager.getSourceFactory('manager'));
+    t.throws(() => manager.getSourceFactory('source'));
 });
 
+// Also needs pre-loading or some similar hack.
 test.todo('check source config');
 
 // Pre-load sourceFactory that is used in construction
