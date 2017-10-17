@@ -121,3 +121,18 @@ test('fetch callback only gets called once while loading data', async (t) => {
 
     t.true(fetcher.calledOnce);
 });
+
+test('Throwing fetcher aborts current loading', async (t) => {
+    const fetcher = sinon.stub();
+    fetcher.rejects();
+
+    const ds = new DataStore(fetcher);
+
+    await t.throws(ds.getData());
+    t.true(fetcher.calledOnce);
+
+    fetcher.resolves();
+
+    await t.notThrows(ds.getData());
+    t.true(fetcher.calledTwice);
+});
