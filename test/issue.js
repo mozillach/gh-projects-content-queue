@@ -143,7 +143,7 @@ test('close', async (t) => {
 
     t.true(t.context.issue.state);
 
-    await t.context.issue.close();
+    const ret = await t.context.issue.close();
 
     t.true(t.context.gh.issues.edit.calledOnce);
     t.deepEqual(t.context.gh.issues.edit.lastCall.args[0], {
@@ -153,6 +153,7 @@ test('close', async (t) => {
         state: 'closed'
     });
     t.false(t.context.issue.state);
+    t.is(ret, 'asdf');
 
     await t.context.issue.close();
     t.true(t.context.gh.issues.edit.calledOnce);
