@@ -40,7 +40,7 @@ test.serial("setInterval doesn't replace existing interval", (t) => {
     UpdateManager.interval = undefined;
 });
 
-test.serial("register adds datastore to the update manager", (t) => {
+test.serial("register adds data store holder to the update manager", (t) => {
     const dsh = getDataStoreHolder();
 
     t.is(UpdateManager.targets.size, 0);
@@ -57,7 +57,23 @@ test.serial("register adds datastore to the update manager", (t) => {
     UpdateManager.interval = undefined;
 });
 
-test.serial("register doesn't acept non-datastores", (t) => {
+test.serial("register accepts data-store-holder-likes", (t) => {
+    const dsh = {
+        update: sinon.spy()
+    };
+
+    UpdateManager.register(dsh);
+
+    t.not(UpdateManager.interval, undefined);
+    t.is(UpdateManager.targets.size, 1);
+    t.true(UpdateManager.targets.has(dsh));
+
+    UpdateManager.targets.clear();
+    clearInterval(UpdateManager.interval);
+    UpdateManager.interval = undefined;
+});
+
+test.serial("register doesn't accept non-data-store-holders", (t) => {
     const notDsh = {};
 
     t.throws(() => UpdateManager.register(notDsh), TypeError);
