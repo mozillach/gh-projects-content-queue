@@ -16,3 +16,4 @@ test('required columns', (t) => {
 });
 
 test.todo('getColumn');
+test.todo('static props');
