@@ -1,5 +1,5 @@
 import test from 'ava';
-import Source from '../lib/sources/source';
+import Source from '../../lib/sources/source';
 
 test('constructor', (t) => {
     const repo = 'a';
