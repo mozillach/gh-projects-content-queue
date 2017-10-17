@@ -54,4 +54,12 @@ test('clear', (t) => {
     t.is(list.size, 0);
 });
 
-test.todo('No item is skipped when removing an item');
+test('No item is skipped when removing an item', (t) => {
+    const arg =  [ 0, 1, 2 ];
+    const list = new RotatingList(arg);
+
+    t.is(list.getNext(), 0);
+    list.delete(0);
+    t.is(list.getNext(), 1);
+    t.is(list.getNext(), 2);
+});
