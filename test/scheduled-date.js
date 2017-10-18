@@ -222,3 +222,17 @@ test('formatDate with a non-date', (t) => {
     const res = ScheduledDate.formatDate('foo', '');
     t.is(res, 'foo');
 });
+
+test('format date formats to the proper timezone', (t) => {
+    const date = new Date(1503707700000);
+    const formatted = ScheduledDate.formatDate(date, defaultConfig[0].schedulingTime.format, 2);
+
+    t.is(formatted, "26.08.2017 02:35");
+});
+
+test('format date formats to the proper timezone reverse', (t) => {
+    const date = new Date(1503707700000);
+    const formatted = ScheduledDate.formatDate(date, defaultConfig[0].schedulingTime.format, -2);
+
+    t.is(formatted, "25.08.2017 22:35");
+});
