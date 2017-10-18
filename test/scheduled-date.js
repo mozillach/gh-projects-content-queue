@@ -130,7 +130,7 @@ const dateTest = (t, data) => {
 dateTest.title = (title, data) => `${title} for ${data.date}`;
 
 const dateFormatTest = (t, data) => {
-    const formatted = ScheduledDate.formatDate(data.result, data.pattern);
+    const formatted = ScheduledDate.formatDate(data.result, data.pattern, -tzOffset);
 
     t.is(formatted, data.date);
 
