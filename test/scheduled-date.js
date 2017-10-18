@@ -236,3 +236,11 @@ test('format date formats to the proper timezone reverse', (t) => {
 
     t.is(formatted, "25.08.2017 22:35");
 });
+
+test('format date with and without timezone is the same for the local tz', (t) => {
+    const date = new Date();
+    const formattedWithout = ScheduledDate.formatDate(date, defaultConfig[0].schedulingTime.format);
+    const formattedWith = ScheduledDate.formatDate(date, defaultConfig[0].schedulingTime.format, -tzOffset);
+
+    t.is(formattedWithout, formattedWith);
+})
