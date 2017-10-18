@@ -2,18 +2,7 @@ import sinon from 'sinon';
 import config from '../config.default.json';
 import DataStoreHolder from '../lib/data-store-holder';
 import getGithubClient from './_github-client';
-
-const getIssue = (content = 'lorem ipsum') => {
-    //TODO should use an actual issue instance instead with a no-op github client.
-    const labels = new Set();
-    return {
-        content,
-        addLabel: sinon.spy((label) => labels.add(label)),
-        hasLabel: sinon.spy((label) => labels.has(label)),
-        removeLabel: sinon.spy((label) => labels.delete(label)),
-        comment: sinon.spy()
-    };
-};
+import Source from '../lib/sources/source';
 
 const getConfig = () => config[0];
 
@@ -44,10 +33,75 @@ const getIssueData = () => ({
     state: true
 });
 
+const getSource = () => new Source();
+
+const allCards = new Map();
+
+const getColumn = (id, name) => ({
+    id,
+    name,
+    allCards,
+    issues: {},
+    cards: new Set(),
+    config: getConfig(),
+    githubClient: getGithubClient()
+});
+
+const getColumns = (columns) => {
+    const columnInstances = {};
+    for(const columnName in columns) {
+        columnInstances[columns[columnName]] = getColumn(columns[columnName], columnName);
+    }
+    return columnInstances;
+};
+
+const getBoard = (columns) => ({
+    cards: allCards,
+    ready: Promise.resolve(),
+    columns: Promise.resolve(getColumns(columns)),
+    columnIds: Promise.resolve(columns),
+    config: getConfig(),
+    githubClient: getGithubClient()
+});
+
+const getIssue = (content = 'lorem ipsum') => {
+    //TODO should use an actual issue instance instead with a no-op github client.
+    const labels = new Set();
+    return {
+        content,
+        addLabel: sinon.spy((label) => labels.add(label)),
+        hasLabel: sinon.spy((label) => labels.has(label)),
+        removeLabel: sinon.spy((label) => labels.delete(label)),
+        comment: sinon.spy()
+    };
+};
+
+const getIssues = () => ({
+    firstRun: false,
+    ready: Promise.resolve(),
+    issues: Promise.resolve(new Map()),
+    closedIssues: Promise.resolve(new Map()),
+    config: getConfig(),
+    githubClient: getGithubClient()
+});
+
+const getRepo = (columns) => ({
+    ready: Promise.resolve(),
+    board: getBoard(columns),
+    issues: getIssues(),
+    config: getConfig(),
+    githubClient: getGithubClient()
+});
+
 export {
-    getIssue,
     getConfig,
     getDataStoreHolder,
     getGithubClient,
-    getIssueData
+    getIssueData,
+    getSource,
+    getColumn,
+    getBoard,
+    getIssue,
+    getIssues,
+    getRepo
 };
