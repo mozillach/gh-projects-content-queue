@@ -38,15 +38,95 @@ test('don\'t get a tweet id from a non-tweet url', (t) => {
 });
 
 // getRemainingChars()
-test.todo('remaining characters with a too long tweet');
-test.todo('remaining characters for short text tweet');
-test.todo('remaining characters with mention at start');
-test.todo('remaining characters with link');
+const getTweet = (length) => {
+    const content = new Array(length);
+    return content.fill('a').join("");
+};
+test('remaining characters with a too long tweet', (t) => {
+    t.is(TwitterAccount.getRemainingChars(getTweet(144)), -4);
+});
+
+test('remaining characters for short text tweet', (t) => {
+    t.is(TwitterAccount.getRemainingChars(getTweet(23)), 117);
+});
+
+test('remaining characters with mention at start', (t) => {
+    t.is(TwitterAccount.getRemainingChars(`@mention ${getTweet(23)}`), 108);
+});
+
+test('remaining characters with link', (t) => {
+    t.is(TwitterAccount.getRemainingChars(`${getTweet(23)} https://example.com`), 93);
+});
 
 // tweetTooLong()
-test.todo('tweet not too long just text');
-test.todo('tweet too long with just text');
-test.todo('tweet not too long with link');
-test.todo('tweet too long with link');
-test.todo('reply not too long');
-test.todo('reply too long');
+test('tweet not too long just text', (t) => {
+    t.false(TwitterAccount.tweetTooLong(getTweet(139)));
+});
+
+test('tweet too long with just text', (t) => {
+    t.true(TwitterAccount.tweetTooLong(getTweet(144)));
+});
+
+test('tweet not too long with link', (t) => {
+    t.false(TwitterAccount.tweetTooLong(`${getTweet(116)} https://example.com`));
+});
+
+test('tweet too long with link', (t) => {
+    t.true(TwitterAccount.tweetTooLong(`${getTweet(140)} https://example.com`));
+});
+
+test('reply not too long', (t) => {
+    t.false(TwitterAccount.tweetTooLong(`@user ${getTweet(133)}`));
+});
+
+test('reply too long', (t) => {
+    t.true(TwitterAccount.tweetTooLong(`@user ${getTweet(135)}`));
+});
+
+test('get media and content', (t) => {
+    const text = 'Lorem ipsum dolor sit amet';
+    const mediaURL = "https://example.com/image.png";
+    const content = `${text}
+![](${mediaURL})`;
+
+    const [ pureTweet, media ] = TwitterAccount.getMediaAndContent(content);
+
+    t.is(pureTweet, text);
+    t.is(media.length, 1);
+    t.is(media[0], mediaURL);
+});
+
+test('get media and content with alt text', (t) => {
+    const text = 'Lorem ipsum dolor sit amet';
+    const mediaURL = "https://example.com/image.png";
+    const content = `${text}
+![foo bar](${mediaURL})`;
+
+    const [ pureTweet, media ] = TwitterAccount.getMediaAndContent(content);
+
+    t.is(pureTweet, text);
+    t.is(media.length, 1);
+    t.is(media[0], mediaURL);
+});
+
+test('get content with no media', (t) => {
+    const text = "Lorem ipsum dolor sit amet [test](link that isn't one)";
+
+    const [ pureTweet, media ] = TwitterAccount.getMediaAndContent(text);
+
+    t.is(pureTweet, text);
+    t.is(media.length, 0);
+});
+
+test('too much media throws', (t) => {
+    const content = `Lorem ipsum
+![test](https://example.com/image1.png)
+![](https://example.com/image2.png)
+![](https://example.com/image3.png)
+![](https://example.com/image4.png)
+![foo](https://example.com/image-too-much.png)`;
+
+    t.throws(() => TwitterAccount.getMediaAndContent(content), Error);
+    t.throws(() => TwitterAccount.tweetTooLong(content), Error);
+    t.throws(() => TwitterAccount.getRemainingChars(content), Error);
+});
