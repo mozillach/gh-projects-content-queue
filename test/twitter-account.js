@@ -63,6 +63,10 @@ test('tweet not too long just text', (t) => {
     t.false(TwitterAccount.tweetTooLong(getTweet(139)));
 });
 
+test('140 chars fit into a tweet', (t) => {
+    t.false(TwitterAccount.tweetTooLong(getTweet(140)));
+})
+
 test('tweet too long with just text', (t) => {
     t.true(TwitterAccount.tweetTooLong(getTweet(144)));
 });
