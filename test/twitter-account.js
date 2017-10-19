@@ -1,5 +1,23 @@
 import test from 'ava';
 import TwitterAccount from '../lib/twitter-account';
+import { getTwitterClient } from './_stubs';
+import UpdateManager from '../lib/update-manager';
+import sinon from 'sinon';
+
+// Ensure update manager never calls update during tests unless we explicitly want it to.
+let clock;
+test.before(() => {
+    clock = sinon.useFakeTimers();
+});
+
+test.afterEach(() => {
+    clearInterval(UpdateManager.interval);
+    UpdateManager.targets.clear();
+});
+
+test.after(() => {
+    clock.restore();
+});
 
 // getTweetIDFromURL()
 test('get tweet id from url with http', (t) => {
@@ -134,3 +152,348 @@ test('too much media throws', (t) => {
     t.throws(() => TwitterAccount.tweetTooLong(content), Error);
     t.throws(() => TwitterAccount.getRemainingChars(content), Error);
 });
+
+test('construction', (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({});
+    const account = new TwitterAccount(client);
+
+    t.is(account._twitterClient, client);
+    t.true("then" in account.ready);
+    t.true("lastMention" in account);
+    t.true("tweets" in account);
+});
+
+test('construction ready rejected', (t) => {
+    const client = getTwitterClient();
+    client.get.rejects(new Error());
+    const account = new TwitterAccount(client);
+
+    return t.throws(account.ready, Error);
+})
+
+test.todo('uploadMedia');
+
+test('tweet', async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        screen_name: 'test'
+    });
+    const account = new TwitterAccount(client);
+    const tweet = 'lorem ipsum';
+
+    client.post.resolves({
+        id_str: 'foo'
+    });
+
+    const url = await account.tweet(tweet);
+
+    t.true(client.post.calledOnce);
+    t.true(client.post.calledWith('statuses/update', {
+        status: tweet
+    }));
+    t.is(url, 'https://twitter.com/test/status/foo');
+});
+
+test('too long tweet', (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        screen_name: 'test'
+    });
+    const account = new TwitterAccount(client);
+    const tweet = getTweet(144);
+
+    client.post.resolves({
+        id_str: 'foo'
+    });
+
+    return t.throws(account.tweet(tweet));
+});
+
+test('tweet with media', async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        screen_name: 'test'
+    });
+    const account = new TwitterAccount(client);
+    const tweet = 'lorem ipsum';
+    const media = 'foo bar';
+
+    client.post.resolves({
+        id_str: 'foo'
+    });
+
+    const url = await account.tweet(tweet, media);
+
+    t.true(client.post.calledOnce);
+    t.true(client.post.calledWith('statuses/update', {
+        status: tweet,
+        media_ids: media
+    }));
+    t.is(url, 'https://twitter.com/test/status/foo');
+});
+
+test("tweet reply that can't be replied to", async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        screen_name: 'test'
+    });
+    const account = new TwitterAccount(client);
+    const tweet = 'lorem ipsum';
+    const reply = 'foo bar';
+
+    client.post.resolves({
+        id_str: 'foo'
+    });
+
+    const url = await account.tweet(tweet, '', reply);
+
+    t.true(client.post.calledOnce);
+    t.true(client.post.calledWith('statuses/update', {
+        status: tweet
+    }));
+    t.is(url, 'https://twitter.com/test/status/foo');
+});
+
+test("tweet reply", async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        screen_name: 'test'
+    });
+    const account = new TwitterAccount(client);
+    const tweet = 'lorem ipsum';
+    const reply = 'https://twitter.com/baz/status/1234';
+
+    client.post.resolves({
+        id_str: 'foo'
+    });
+
+    const url = await account.tweet(tweet, '', reply);
+
+    t.true(client.post.calledOnce);
+    t.true(client.post.calledWith('statuses/update', {
+        status: tweet,
+        in_reply_to_status_id: '1234'
+    }));
+    t.is(url, 'https://twitter.com/test/status/foo');
+});
+
+test('retweet', async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({});
+    const account = new TwitterAccount(client);
+    const retweet = 'https://twitter.com/baz/status/1234';
+
+    client.post.resolves({});
+
+    const url = await account.retweet(retweet);
+
+    t.is(url, retweet);
+    t.true(client.post.calledOnce);
+    t.true(client.post.calledWith('statuses/retweet/1234'));
+});
+
+test('check login', async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        screen_name: 'test',
+        id_str: '1234'
+    });
+    const account = new TwitterAccount(client);
+
+    client.get.resetHistory();
+
+    await account.checkLogin();
+
+    t.is(account.username, 'test');
+    t.is(account.id, '1234');
+    t.true(client.get.calledOnce);
+});
+
+test('get username', async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        screen_name: 'test'
+    });
+    const account = new TwitterAccount(client);
+
+    const username = await account.getUsername();
+
+    t.is(username, account.username);
+    t.is(username, 'test');
+});
+
+test('get ID', async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        screen_name: 'test',
+        id_str: '1234'
+    });
+    const account = new TwitterAccount(client);
+
+    const id = await account.getID();
+
+    t.is(id, account.id);
+    t.is(id, '1234');
+});
+
+test('tweets', async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        id_str: '1234'
+    });
+    const account = new TwitterAccount(client);
+
+    const tweets = [
+        'tweet1',
+        'tweet2',
+        'tweet3'
+    ];
+
+    client.get.reset();
+    client.get.resolves(tweets)
+
+    const allTweets = await account.tweets;
+
+    t.deepEqual(allTweets, tweets);
+    t.true(client.get.calledOnce);
+    t.true(client.get.calledWith('statuses/user_timeline', sinon.match({
+        user_id: '1234'
+    })));
+});
+
+test.serial('tweets with existing tweets stored', async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        id_str: '1234'
+    });
+    const account = new TwitterAccount(client);
+
+    const tweets = [
+        {
+            id_str: 'foo'
+        },
+        {
+            id_str: 'bar'
+        }
+    ];
+
+    client.get.reset();
+    client.get.resolves(tweets)
+
+    await account.tweets;
+
+    const newerTweets = [
+        {
+            id_str: 'baz'
+        }
+    ];
+    client.get.resolves(newerTweets);
+    clock.tick(UpdateManager.UPDATE_INTERVAL + 1);
+
+    // Update manager updates the data store.
+
+    const allTweets = await account.tweets;
+
+    t.deepEqual(allTweets, newerTweets.concat(tweets));
+    t.true(client.get.calledThrice);
+    t.true(client.get.calledWith('statuses/user_timeline', sinon.match({
+        user_id: '1234',
+        since_id: 'foo'
+    })));
+});
+
+test('tweets without any results', async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        id_str: '1234'
+    });
+    const account = new TwitterAccount(client);
+
+    const tweets = [];
+
+    client.get.reset();
+    client.get.resolves(tweets)
+
+    const allTweets = await account.tweets;
+
+    t.deepEqual(allTweets, tweets);
+    t.is(allTweets.length, 0);
+    t.true(client.get.calledOnce);
+    t.true(client.get.calledWith('statuses/user_timeline', sinon.match({
+        user_id: '1234'
+    })));
+});
+
+test('last mention', async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        id_str: '1234'
+    });
+    const account = new TwitterAccount(client);
+
+    const tweets = [];
+    client.get.resolves(tweets)
+
+    await account.tweets;
+
+    client.get.reset();
+    client.get.resolves([
+        {
+            in_reply_to_status_id_str: 'asdf',
+            id_str: '1234'
+        },
+        {
+            in_reply_to_status_id_str: 'qwer',
+            id_str: '5678'
+        }
+    ]);
+
+    const lastMention = await account.lastMention;
+
+    t.is(lastMention, '1234');
+    t.true(client.get.calledWith('statuses/mentions_timeline', {
+        count: 200
+    }));
+});
+
+test('last mention second run', async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        id_str: '1234'
+    });
+    const account = new TwitterAccount(client);
+
+    const tweets = [];
+    client.get.resolves(tweets)
+
+    await account.tweets;
+
+    client.get.resolves([
+        {
+            in_reply_to_status_id_str: 'asdf',
+            id_str: '1234'
+        },
+        {
+            in_reply_to_status_id_str: 'qwer',
+            id_str: '5678'
+        }
+    ]);
+
+    await account.lastMention;
+
+    client.get.reset();
+    client.get.resolves([]);
+    clock.tick(UpdateManager.UPDATE_INTERVAL + 1);
+
+    const lastMention = await account.lastMention;
+
+    t.is(lastMention, '1234');
+    t.true(client.get.calledWith('statuses/mentions_timeline', {
+        count: 200,
+        since_id: lastMention
+    }));
+});
+
+test.todo('last mention event');
+test.todo('last mention already replied to');

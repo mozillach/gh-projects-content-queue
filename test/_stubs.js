@@ -93,6 +93,11 @@ const getRepo = (columns) => ({
     githubClient: getGithubClient()
 });
 
+const getTwitterClient = () => ({
+    get: sinon.stub(),
+    post: sinon.stub()
+});
+
 export {
     getConfig,
     getDataStoreHolder,
@@ -103,5 +108,6 @@ export {
     getBoard,
     getIssue,
     getIssues,
-    getRepo
+    getRepo,
+    getTwitterClient
 };
