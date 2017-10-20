@@ -6,7 +6,9 @@ const getGithubClient = () => ({
         removeLabel: sinon.stub(),
         createComment: sinon.stub(),
         edit: sinon.stub(),
-        addAssigneesToIssue: sinon.stub()
+        addAssigneesToIssue: sinon.stub(),
+        getForRepo: sinon.stub(),
+        create: sinon.stub()
     },
     hasNextPage: sinon.stub(),
     getNextPage: sinon.stub()

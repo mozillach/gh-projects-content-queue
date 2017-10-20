@@ -4,6 +4,10 @@ import DataStoreHolder from '../lib/data-store-holder';
 import getGithubClient from './_github-client';
 import Source from '../lib/sources/source';
 
+const [ owner, repo ] = config[0].repo.split("/");
+config[0].owner = owner;
+config[0].repo = repo;
+
 const getConfig = () => config[0];
 
 const getDataStoreHolder = () => {
