@@ -134,7 +134,29 @@ test('api object', (t) => {
     });
 });
 
-test.todo('test optional api object props');
+test('test optional api object props', async (t) => {
+    t.context.gh.issues.addAssigneesToIssue.resolves();
+    t.context.gh.issues.addLabels.resolves();
+
+    const expected = {
+        title: t.context.data.title,
+        body: t.context.data.content,
+        labels: [
+            'foo',
+            'bar'
+        ],
+        assignee: 'test'
+    };
+
+    for(const label of expected.labels) {
+        await t.context.issue.addLabel(label);
+    }
+    await t.context.issue.assign(expected.assignee);
+
+    const apiObject = t.context.issue.toAPIObject();
+
+    t.deepEqual(apiObject, expected);
+});
 
 test('close', async (t) => {
     t.context.gh.issues.edit.resolves({
