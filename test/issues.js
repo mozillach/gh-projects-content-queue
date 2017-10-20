@@ -294,4 +294,7 @@ test('fetch issues with old issue that is not updated', async (t) => {
 });
 
 test.todo('open issues');
+test.todo('opened event for new open issues');
+test.todo('updated event from open issues');
 test.todo('closed issues');
+test.todo('closed event for new closed issues');
