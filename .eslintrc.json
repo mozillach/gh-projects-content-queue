@@ -46,5 +46,9 @@
           }
       }
   },
-  "extends": [ "eslint:recommended", "plugin:node/recommended" ]
+  "extends": [
+      "eslint:recommended",
+      "plugin:node/recommended",
+      "plugin:array-func/recommended"
+  ]
 }

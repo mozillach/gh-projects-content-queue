@@ -36,6 +36,7 @@
     "codecov": "^2.3.1",
     "dockerlint": "^0.3.1",
     "eslint": "^4.9.0",
+    "eslint-plugin-array-func": "^1.0.2",
     "eslint-plugin-ava": "^4.2.2",
     "eslint-plugin-node": "^5.2.0",
     "nyc": "^11.2.1",
