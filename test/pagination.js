@@ -50,7 +50,6 @@ test('twitter pagination', async (t) => {
     const result = await pagination.twitter(method, params);
 
     t.deepEqual(result, firstPage);
-    console.log(method.lastCall.args);
     t.true(method.calledWith(sinon.match({
         max_id: '1233'
     })));

@@ -16,7 +16,10 @@ const getGithubClient = () => ({
         createProjectColumn: sinon.stub(),
         createProjectCard: sinon.stub(),
         deleteProjectCard: sinon.stub(),
-        moveProjectCard: sinon.stub()
+        moveProjectCard: sinon.stub(),
+        getRepoProjects: sinon.stub(),
+        createRepoProject: sinon.stub(),
+        getProjectColumns: sinon.stub()
     },
     hasNextPage: sinon.stub(),
     getNextPage: sinon.stub()
