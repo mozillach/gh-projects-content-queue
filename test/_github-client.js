@@ -10,6 +10,14 @@ const getGithubClient = () => ({
         getForRepo: sinon.stub(),
         create: sinon.stub()
     },
+    projects: {
+        moveProjectColumn: sinon.stub(),
+        getProjectCards: sinon.stub(),
+        createProjectColumn: sinon.stub(),
+        createProjectCard: sinon.stub(),
+        deleteProjectCard: sinon.stub(),
+        moveProjectCard: sinon.stub()
+    },
     hasNextPage: sinon.stub(),
     getNextPage: sinon.stub()
 });
