@@ -48,7 +48,9 @@ const getColumn = (id, name) => ({
     issues: {},
     cards: new Set(),
     config: getConfig(),
-    githubClient: getGithubClient()
+    githubClient: getGithubClient(),
+    addCard: sinon.stub(),
+    removeCard: sinon.stub()
 });
 
 const getColumns = (columns) => {
