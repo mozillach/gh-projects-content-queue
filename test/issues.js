@@ -178,7 +178,6 @@ test('fetch issues', async (t) => {
             state: 'open'
         }
     ];
-    issueData.meta = {};
     client.issues.getForRepo.resolves({
         data: issueData
     });
@@ -217,7 +216,6 @@ test('fetch issues with old issues', async (t) => {
             state: 'open'
         }
     ];
-    issueData.meta = {};
     client.issues.getForRepo.resolves({
         data: issueData
     });
@@ -269,7 +267,6 @@ test('fetch issues with old issue that is not updated', async (t) => {
             state: 'open'
         }
     ];
-    issueData.meta = {};
     client.issues.getForRepo.resolves({
         data: issueData
     });
