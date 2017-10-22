@@ -150,7 +150,7 @@ See [config.default.json](./config.default.json)
 The tool can be executed with `npm start`. Note that you should first run `npm install`.
 
 #### The docker container
-[Official Docker container](https://hub.docker.com/r/mozillach/content-queue)
+Official Docker container: [`mozillach/content-queue`](https://hub.docker.com/r/mozillach/content-queue)
 
 The latest tag corresponds to the master branch in this repository. Note that the docker container can only be configured via environment.
 
