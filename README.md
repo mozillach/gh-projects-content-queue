@@ -140,7 +140,7 @@ Date format for scheduling tweets.
  - `-`
 
 ###### timezone
-Integer offset from UTC of the machine the tool is running on in hours.
+Integer offset from UTC the tool should treat dates in issues as.
 
 #### Example
 See [config.default.json](./config.default.json)
