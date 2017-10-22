@@ -54,5 +54,15 @@
     "tweet.md": "^2.0.0",
     "twitter": "^1.7.1",
     "twitter-text": "^1.14.7"
+  },
+  "nyc": {
+    "exclude": [
+      "**/node_modules/",
+      "test"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ]
   }
 }
