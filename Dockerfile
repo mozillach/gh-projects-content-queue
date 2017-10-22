@@ -1,5 +1,6 @@
 FROM node:latest
+RUN npm install pm2 -g
 COPY . .
 RUN npm i --no-save --production
 USER node
-CMD [ "npm", "start", "--production" ]
+CMD [ "pm2-docker", "index.js" ]
