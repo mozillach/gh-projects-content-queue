@@ -97,7 +97,7 @@ Specifies the column names of columns the source should use. Is a key-value map 
 List for users that should handle new mentions for the **squad** source. The array should hold usernames of all users to cycle through. Is preferred over the `squadTeam` config.
 
 ###### squadTeam
-Name of a team that should be the source to the reaction squad for the **squad** source. Should be the name of the team.
+Name of an organization team that should be the source to the reaction squad for the **squad** source. Should be the name of the team.
 
 ###### schedule
 A schedule of slots for the **tweeting** source. Per slot one tweet is sent out, including scheduled tweets. Takes an array of strings, containing the desired time in the format of `hh:mm`. The field is fully optional. If not provided tweets are instantly sent out unless scheduled. This does not use the timezone of the `schedulingTime` and is in UTC+0.
