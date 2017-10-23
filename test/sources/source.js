@@ -1,13 +1,18 @@
 import test from 'ava';
 import Source from '../../lib/sources/source';
+import { getRepo } from '../_stubs';
 
 test('constructor', (t) => {
     const repo = 'a';
     const twitterAccount = 'b';
-    const s = new Source(repo, twitterAccount);
+    const config = 'c';
+    const managedColumns = 'd';
+    const s = new Source(repo, twitterAccount, config, managedColumns);
 
     t.is(s._repo, repo);
     t.is(s._twitterAccount, twitterAccount);
+    t.is(s._config, config);
+    t.is(s._getManagedColumns, managedColumns);
 });
 
 test('required columns', (t) => {
@@ -27,4 +32,19 @@ test('managed columns', (t) => {
     t.is(Source.managedColumns.length, 0);
 });
 
-test.todo('getColumn');
+test('getColumn', async (t) => {
+    const config = {
+        columns: {
+            test: 'Foo'
+        }
+    };
+    const repo = getRepo({
+        Foo: 1
+    });
+    const source = new Source(repo, undefined, config);
+
+    const column = await source.getColumn('test');
+
+    t.is(column.name, 'Foo');
+    t.is(column.id, 1);
+});
