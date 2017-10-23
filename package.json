@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "ava": "^0.22.0",
-    "codecov": "^2.3.1",
+    "codecov": "^3.0.0",
     "dockerlint": "^0.3.1",
     "eslint": "^4.9.0",
     "eslint-plugin-array-func": "^1.0.2",
