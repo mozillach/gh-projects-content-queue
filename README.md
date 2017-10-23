@@ -100,7 +100,7 @@ List for users that should handle new mentions for the **squad** source. The arr
 Name of a team that should be the source to the reaction squad for the **squad** source. Should be the name of the team.
 
 ###### schedule
-A schedule of slots for the **tweeting** source. Takes a time in the format of `hh:mm`. The field is fully optional. If not provided tweets are instantly sent out unless scheduled. This does not use the timezone of the `schedulingTime` and is in UTC+0.
+A schedule of slots for the **tweeting** source. Per slot one tweet is sent out, including scheduled tweets. Takes an array of strings, containing the desired time in the format of `hh:mm`. The field is fully optional. If not provided tweets are instantly sent out unless scheduled. This does not use the timezone of the `schedulingTime` and is in UTC+0.
 
 ###### discourse properties
 The **discourse** source requires four configuration keys:
