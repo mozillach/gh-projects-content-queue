@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import config from '../config.default.json';
 import DataStoreHolder from '../lib/data-store-holder';
-import getGithubClient from './_github-client';
+import getGithubClient from 'github-stub';
 import Source from '../lib/sources/source';
 
 const [ owner, repo ] = config[0].repo.split("/");
@@ -104,6 +104,11 @@ const getTwitterClient = () => ({
     post: sinon.stub()
 });
 
+const getTwitterAccount = (username) => ({
+    username,
+    getUsername: sinon.spy(() => Promise.resolve(username))
+})
+
 export {
     getConfig,
     getDataStoreHolder,
@@ -115,5 +120,6 @@ export {
     getIssue,
     getIssues,
     getRepo,
-    getTwitterClient
+    getTwitterClient,
+    getTwitterAccount
 };
