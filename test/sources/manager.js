@@ -353,3 +353,20 @@ test('construction without managed columns', async (t) => {
     t.is(managedColumns.length, managedColumnsSource.length);
     t.deepEqual(managedColumns, managedColumnsSource);
 });
+
+test('load squad source without valid config', (t) => {
+    const repo = getRepo({
+        'Foo': 1
+    });
+    const source = {
+        type: 'squad',
+        columns: {
+            target: 'Foo'
+        }
+    };
+    t.throws(() => new SourceManager({
+        sources: [
+            source
+        ]
+    }, repo, 'bar'));
+});
