@@ -50,7 +50,8 @@ const getColumn = (id, name) => ({
     config: getConfig(),
     githubClient: getGithubClient(),
     addCard: sinon.stub(),
-    removeCard: sinon.stub()
+    removeCard: sinon.stub(),
+    hasIssue: sinon.stub()
 });
 
 const getColumns = (columns) => {
@@ -67,7 +68,10 @@ const getBoard = (columns) => ({
     columns: Promise.resolve(getColumns(columns)),
     columnIds: Promise.resolve(columns),
     config: getConfig(),
-    githubClient: getGithubClient()
+    githubClient: getGithubClient(),
+    cardTweeted: sinon.stub(),
+    on: sinon.stub(),
+    addCard: sinon.stub()
 });
 
 const getIssue = (content = 'lorem ipsum') => {
@@ -88,7 +92,8 @@ const getIssues = () => ({
     issues: Promise.resolve(new Map()),
     closedIssues: Promise.resolve(new Map()),
     config: getConfig(),
-    githubClient: getGithubClient()
+    githubClient: getGithubClient(),
+    on: sinon.stub()
 });
 
 const getRepo = (columns) => ({
@@ -104,10 +109,14 @@ const getTwitterClient = () => ({
     post: sinon.stub()
 });
 
-const getTwitterAccount = (username) => ({
+const getTwitterAccount = (username, tweets = []) => ({
     username,
-    getUsername: sinon.spy(() => Promise.resolve(username))
-})
+    getUsername: sinon.spy(() => Promise.resolve(username)),
+    tweets: Promise.resolve(tweets),
+    retweet: sinon.stub(),
+    tweet: sinon.stub(),
+    uploadMedia: sinon.stub()
+});
 
 export {
     getConfig,
