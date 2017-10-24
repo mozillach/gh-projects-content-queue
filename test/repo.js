@@ -109,3 +109,84 @@ test('has file', async (t) => {
 
     t.false(await repo.hasFile('foo'));
 });
+
+test('add file', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.repos.createFile.resolves();
+
+    await repo.addFile('index.js', 'void');
+
+    client.repos.createFile.argumentsValid((assertion, message) => t.true(assertion, message));
+    t.true(client.repos.createFile.calledWithMatch({
+        path: 'index.js'
+    }));
+});
+
+test('add file with custom msg', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.repos.createFile.resolves();
+
+    await repo.addFile('index.js', 'void', 'foo bar');
+
+    client.repos.createFile.argumentsValid((assertion, message) => t.true(assertion, message));
+    t.true(client.repos.createFile.calledWithMatch({
+        path: 'index.js',
+        message: 'foo bar'
+    }));
+});
+
+test('has label', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.issues.getLabel.resolves();
+
+    t.true(await repo.hasLabel('foo'));
+    client.issues.getLabel.argumentsValid((assertion, message) => t.true(assertion, message));
+    t.true(client.issues.getLabel.calledWithMatch({
+        name: 'foo'
+    }));
+});
+
+test('does not have label', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.issues.getLabel.rejects({
+        code: 404
+    });
+
+    t.false(await repo.hasLabel('foo'));
+    client.issues.getLabel.argumentsValid((assertion, message) => t.true(assertion, message));
+    t.true(client.issues.getLabel.calledWithMatch({
+        name: 'foo'
+    }));
+});
+
+test('has label network error', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.issues.getLabel.rejects({});
+
+    return t.throws(repo.hasLabel('foo'));
+});
