@@ -30,10 +30,14 @@ test.beforeEach((t) => {
         data: [
             {
                 name: t.context.config.projectName,
-                id: 1
+                id: "1"
             }
         ]
     });
+});
+
+test.afterEach((t) => {
+    t.context.gh.argumentsValid((assertion, message) => t.true(assertion, message));
 });
 
 test('constructor', (t) => {
@@ -104,7 +108,7 @@ test('get board id throws when the project does not exist', async (t) => {
         data: [
             {
                 name: t.context.config.projectName + 'foo',
-                id: 4
+                id: "4"
             }
         ]
     });
@@ -142,7 +146,7 @@ test('board exists is false if the project is not found', async (t) => {
         data: [
             {
                 name: t.context.config.projectName + 'foo',
-                id: 4
+                id: "4"
             }
         ]
     });
@@ -165,7 +169,7 @@ test('missing columns', async (t) => {
     t.context.gh.projects.getProjectColumns.resolves({
         data: [
             {
-                id: 1,
+                id: "1",
                 name: t.context.config.sources[0].columns.target
             }
         ]
@@ -192,7 +196,7 @@ test('missing columns', async (t) => {
 test('columns exist', async (t) => {
     t.context.gh.projects.createProjectColumn.resolves({
         data: {
-            id: 1
+            id: "1"
         }
     });
     const board = new Board(t.context.gh, t.context.config);
@@ -235,7 +239,7 @@ test('create column', async (t) => {
 
     t.context.gh.projects.createProjectColumn.resolves({
         data: {
-            id: 1
+            id: "1"
         }
     });
 
@@ -247,7 +251,7 @@ test('create column', async (t) => {
 
     const columnIds = await board.columnIds;
     t.true('test' in columnIds);
-    t.is(columnIds.test, 1);
+    t.is(columnIds.test, "1");
 });
 
 test.todo('setup');
@@ -256,7 +260,7 @@ test('add card', async (t) => {
     const board = new Board(t.context.gh, t.context.config);
     const column = getColumn(1, 'test');
     const card = {
-        id: 2
+        id: "2"
     };
     const issue = getIssue();
     column.addCard.resolves(card);
@@ -275,10 +279,10 @@ test('add card', async (t) => {
 test('move card to column', async (t) => {
     const board = new Board(t.context.gh, t.context.config);
     t.context.gh.projects.moveProjectCard.resolves();
-    const column = getColumn(1, 'test');
-    const newColumn = getColumn(2, 'lorem ipsum');
+    const column = getColumn("1", 'test');
+    const newColumn = getColumn("2", 'lorem ipsum');
     const card = {
-        id: 3,
+        id: "3",
         column
     };
 
@@ -303,10 +307,10 @@ test('move card to column', async (t) => {
 
 test('move card to column locally', async (t) => {
     const board = new Board(t.context.gh, t.context.config);
-    const column = getColumn(1, 'test');
-    const newColumn = getColumn(2, 'lorem ipsum');
+    const column = getColumn("1", 'test');
+    const newColumn = getColumn("2", 'lorem ipsum');
     const card = {
-        id: 3,
+        id: "3",
         column
     };
 
@@ -328,10 +332,10 @@ test('move card to column locally', async (t) => {
 test('card tweeted', async (t) => {
     const board = new Board(t.context.gh, t.context.config);
     t.context.gh.projects.moveProjectCard.resolves();
-    const column = getColumn(1, 'test');
+    const column = getColumn("1", 'test');
     const url = 'https://example.com';
     const card = {
-        id: 2,
+        id: "2",
         comment: sinon.stub(),
         issue: {
             close: sinon.stub()
@@ -356,10 +360,10 @@ test('card tweeted', async (t) => {
 test('card retweeted', async (t) => {
     const board = new Board(t.context.gh, t.context.config);
     t.context.gh.projects.moveProjectCard.resolves();
-    const column = getColumn(1, 'test');
+    const column = getColumn("1", 'test');
     const url = 'https://example.com';
     const card = {
-        id: 2,
+        id: "2",
         comment: sinon.stub(),
         issue: {
             close: sinon.stub()

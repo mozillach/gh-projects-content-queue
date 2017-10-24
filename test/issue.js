@@ -6,7 +6,11 @@ test.beforeEach((t) => {
     t.context.gh = getGithubClient();
     t.context.data = getIssueData();
     t.context.issue = new Issue(t.context.gh, t.context.data);
-})
+});
+
+test.afterEach((t) => {
+    t.context.gh.argumentsValid((assertion, message) => t.true(assertion, message));
+});
 
 test('constructor and update', (t) => {
     const issue = t.context.issue;
@@ -52,7 +56,11 @@ test('set content', async (t) => {
         body: newContent
     });
 
-    await t.context.gh.issues.edit();
+    await t.context.gh.issues.edit({
+        owner: t.context.data.owner,
+        repo: t.context.data.repo,
+        number: t.context.data.number
+    });
 
     t.is(t.context.issue.content, newContent);
     t.true(t.context.issue.lastUpdate > lastUpdate);

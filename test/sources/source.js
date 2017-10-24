@@ -39,12 +39,12 @@ test('getColumn', async (t) => {
         }
     };
     const repo = getRepo({
-        Foo: 1
+        Foo: "1"
     });
     const source = new Source(repo, undefined, config);
 
     const column = await source.getColumn('test');
 
     t.is(column.name, 'Foo');
-    t.is(column.id, 1);
+    t.is(column.id, "1");
 });

@@ -39,13 +39,13 @@
     "eslint-plugin-array-func": "^1.0.2",
     "eslint-plugin-ava": "^4.2.2",
     "eslint-plugin-node": "^5.2.1",
-    "github-stub": "^1.0.3",
+    "github-stub": "^1.1.0",
     "nyc": "^11.3.0",
     "sinon": "^4.0.0",
     "temp-write": "^3.3.0"
   },
   "dependencies": {
-    "ajv": "^5.2.4",
+    "ajv": "^5.2.5",
     "discourse-sdk": "^1.0.3",
     "fetch-base64": "^2.0.0",
     "github": "^11.0.0",

@@ -25,7 +25,7 @@ const getDataStoreHolder = () => {
 };
 
 const getIssueData = () => ({
-    id: 0,
+    id: "0",
     number: 1,
     owner: "test",
     repo: "foo",
@@ -42,7 +42,7 @@ const getSource = () => new Source();
 const allCards = new Map();
 
 const getColumn = (id, name) => ({
-    id,
+    id: `${id}`,
     name,
     allCards,
     issues: {},
