@@ -32,7 +32,7 @@
     "node": ">=7.7.1"
   },
   "devDependencies": {
-    "ava": "^0.22.0",
+    "ava": "^0.23.0",
     "codecov": "^3.0.0",
     "dockerlint": "^0.3.1",
     "eslint": "^4.9.0",
