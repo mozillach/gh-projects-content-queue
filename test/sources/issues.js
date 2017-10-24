@@ -25,11 +25,12 @@ test('columns', (t) => {
     t.true(IssuesSource.requiredColumns.includes('target'));
 });
 
-test('construction', (t) => {
+test('construction', async (t) => {
     const args = getArgs();
 
     new IssuesSource(...args);
 
+    await args[0].ready;
     t.true(args[0].issues.on.called);
 });
 
@@ -61,12 +62,12 @@ test('add issue already in column', async (t) => {
 
     const card = await source.addIssue({
         number: 1
-    }, 'foo');
+    });
 
     t.is(card, 'card');
     t.true(source._repo.board.addCard.calledWith(sinon.match({
         number: 1
-    }), targetColumn, 'foo'));
+    }), targetColumn));
 });
 
 test('add new issue', async (t) => {
@@ -77,7 +78,7 @@ test('add new issue', async (t) => {
 
     const card = await source.addIssue({
         number: 1
-    }, false, false);
+    }, false);
 
     t.is(card, 'card');
     t.true(source._repo.board.addCard.calledWith(sinon.match({
@@ -93,7 +94,7 @@ test('does not add new closed issue', async (t) => {
 
     await source.addIssue({
         number: 1
-    }, false, true);
+    }, true);
 
     t.false(source._repo.board.addCard.called);
 });

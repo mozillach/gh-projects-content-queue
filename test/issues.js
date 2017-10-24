@@ -30,25 +30,12 @@ test('constructor', (t) => {
     t.true("closedIssues" in issues);
     t.true("config" in issues);
     t.true("githubClient" in issues);
-    t.true("firstRun" in issues);
-    t.true("ready" in issues);
 
-    t.true("then" in issues.ready);
     t.true("then" in issues.issues);
     t.true("then" in issues.closedIssues);
 
     t.is(issues.githubClient, client);
     t.is(issues.config, getConfig());
-
-    return t.notThrows(issues.ready);
-});
-
-test('ready throws', (t) => {
-    const client = getGithubClient();
-    client.issues.getForRepo.rejects(new Error());
-    const issues = new Issues(client, getConfig());
-
-    return t.throws(issues.ready, Error);
 });
 
 test('getIssueInfo', (t) => {
@@ -166,7 +153,6 @@ test('fetch issues', async (t) => {
     });
     const issues = new Issues(client, getConfig());
 
-    await issues.ready;
     client.issues.getForRepo.reset();
     const issueData = [
         {
@@ -196,7 +182,6 @@ test('fetch issues with old issues', async (t) => {
     });
     const issues = new Issues(client, getConfig());
 
-    await issues.ready;
     client.issues.getForRepo.reset();
     const issueData = [
         {
@@ -247,7 +232,6 @@ test('fetch issues with old issue that is not updated', async (t) => {
     });
     const issues = new Issues(client, getConfig());
 
-    await issues.ready;
     client.issues.getForRepo.reset();
     const issueData = [
         {

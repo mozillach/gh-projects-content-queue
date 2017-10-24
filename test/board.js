@@ -40,7 +40,7 @@ test.afterEach((t) => {
     t.context.gh.argumentsValid((assertion, message) => t.true(assertion, message));
 });
 
-test('constructor', (t) => {
+test('constructor', async (t) => {
     const board = new Board(t.context.gh, t.context.config);
 
     t.true("columns" in board);
@@ -53,6 +53,10 @@ test('constructor', (t) => {
     t.true("then" in board.ready);
     t.true("then" in board.columns);
     t.true("then" in board.columnIds);
+
+    await board.ready;
+
+    UpdateManager.targets.has(board);
 });
 
 test('not ready', (t) => {
@@ -62,8 +66,6 @@ test('not ready', (t) => {
 
     return t.notThrows(board.ready);
 });
-
-test.todo('board updated event');
 
 test('get board id', async (t) => {
     const board = new Board(t.context.gh, t.context.config);

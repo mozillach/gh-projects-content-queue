@@ -1,23 +1,6 @@
 import test from 'ava';
 import Repository from '../lib/repo';
 import { getGithubClient, getTwitterAccount, getConfig } from './_stubs';
-import sinon from 'sinon';
-import UpdateManager from '../lib/update-manager';
-
-// Ensure update manager never calls update during tests unless we explicitly want it to.
-let clock;
-test.before(() => {
-    clock = sinon.useFakeTimers();
-});
-
-test.afterEach(() => {
-    clearInterval(UpdateManager.interval);
-    UpdateManager.targets.clear();
-});
-
-test.after(() => {
-    clock.restore();
-});
 
 test('replace placeholder', (t) => {
     const str = 'foo{test}bar';
@@ -91,7 +74,6 @@ test('construction ready', async (t) => {
 
     t.true("board" in repo);
     t.true("issues" in repo);
-    t.true(UpdateManager.targets.has(repo));
 });
 
 test('has file', async (t) => {

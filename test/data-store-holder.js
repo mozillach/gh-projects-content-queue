@@ -2,6 +2,7 @@ import test from 'ava';
 import DataStoreHolder from '../lib/data-store-holder';
 import AsyncEventEmitter from '../lib/async-event-emitter';
 import sinon from 'sinon';
+import UpdateManager from '../lib/update-manager';
 
 test('constructor', (t) => {
     const updateStore = sinon.spy(() => Promise.resolve());
@@ -76,3 +77,13 @@ test('defined properties are magic stores that return a promise', async (t) => {
     t.is(result2, RV);
     t.true(updateStore.calledOnce);
 });
+
+test('emits events', (t) => {
+    const store = sinon.spy();
+    store.emitsEvents = true;
+    const h = new DataStoreHolder({
+        store
+    });
+
+    t.true(UpdateManager.targets.has(h));
+})

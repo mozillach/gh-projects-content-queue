@@ -87,8 +87,6 @@ const getIssue = (content = 'lorem ipsum') => {
 };
 
 const getIssues = () => ({
-    firstRun: false,
-    ready: Promise.resolve(),
     issues: Promise.resolve(new Map()),
     closedIssues: Promise.resolve(new Map()),
     config: getConfig(),
