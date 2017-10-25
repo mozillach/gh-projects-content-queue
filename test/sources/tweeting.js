@@ -24,7 +24,8 @@ const getArgs = () => {
             columns: {
                 target: 'Foo',
                 source: 'Bar'
-            }
+            },
+            schedule: []
         },
         () => Promise.resolve([ getColumn(1, 'Foo') ])
     ];
@@ -52,5 +53,37 @@ test.todo('events');
 test.todo('init');
 test.todo('tweet');
 test.todo('separateContentAndMedia');
-test.todo('getUTCHourMinuteDate');
-test.todo('get current quota');
+test.todo('getUTCHourMinuteDate with fictures');
+
+test.serial('getUTCHourMinuteDate', (t) => {
+    const now = new Date();
+
+    t.is(TweetingSource.getUTCHourMinuteDate(now.getUTCHours(), now.getUTCMinutes()), now.getTime());
+});
+
+test('get current quota is infinite without schedule', (t) => {
+    const source = new TweetingSource(...getArgs());
+
+    source._config.schedule.length = 0;
+
+    const quota = source.getCurrentQuota();
+
+    t.is(quota, Infinity);
+});
+
+test.serial('get current quota', (t) => {
+    const source = new TweetingSource(...getArgs());
+
+    source._config.schedule.length = 0;
+    const now = new Date();
+    source._config.schedule.push(`${now.getUTCHours()}:${now.getUTCMinutes() + 1}`);
+    source._config.schedule.push(`${now.getUTCHours() + 1}:${now.getUTCMinutes()}`);
+    source._config.schedule.push(`${now.getUTCHours() - 1}:${now.getUTCMinutes()}`);
+    source._config.schedule.push(`${now.getUTCHours() - 1}:00}`);
+
+    clock.tick(3700001);
+
+    const quota = source.getCurrentQuota();
+
+    t.is(quota, 2);
+});
