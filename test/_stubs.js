@@ -99,7 +99,8 @@ const getRepo = (columns) => ({
     board: getBoard(columns),
     issues: getIssues(),
     config: getConfig(),
-    githubClient: getGithubClient()
+    githubClient: getGithubClient(),
+    getUsersInTeam: sinon.stub()
 });
 
 const getTwitterClient = () => ({
