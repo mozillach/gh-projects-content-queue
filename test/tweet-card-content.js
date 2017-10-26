@@ -98,7 +98,14 @@ lorem ipsum`);
 test('Tweet content', (t) => {
     const card = TweetCardContent.createCard('test');
     t.is(card.tweet, '_todo_');
-})
+});
 
-test.todo("Test with valid RT url");
+test('Working retweet', (t) =>  {
+    const card = TweetCardContent.createCard('foo bar', true);
+    card.setSection(TweetCardContent.RETWEET, 'https://twitter.com/mozillach/status/1234');
+
+    t.true(card.isRetweet);
+    t.true(card.isValid);
+});
+
 test.todo("Test error messages");
