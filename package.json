@@ -63,6 +63,7 @@
     "reporter": [
       "lcov",
       "text"
-    ]
+    ],
+    "sourceMap": true
   }
 }

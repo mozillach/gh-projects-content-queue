@@ -40,6 +40,8 @@ const getIssueData = () => ({
 const getSource = () => new Source();
 
 const allCards = new Map();
+allCards.ready = Promise.resolve();
+allCards.isReady = true;
 
 const getColumn = (id, name) => ({
     id: `${id}`,

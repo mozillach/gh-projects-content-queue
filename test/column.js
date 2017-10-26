@@ -79,7 +79,10 @@ test('add card localonly that does not exist remotely', async (t) => {
     client.projects.getProjectCards.resolves({
         data: []
     });
-    const column = new Column(client, 1, 'test', new Map());
+    const allCards = new Map();
+    allCards.isReady = true;
+    allCards.ready = Promise.resolve();
+    const column = new Column(client, 1, 'test', allCards);
     const card = {
         id: 1,
         issue: {
@@ -107,7 +110,10 @@ test('add card that is already assigned to the column', async (t) => {
     client.projects.getProjectCards.resolves({
         data: []
     });
-    const column = new Column(client, 1, 'test', new Map());
+    const allCards = new Map();
+    allCards.isReady = true;
+    allCards.ready = Promise.resolve();
+    const column = new Column(client, 1, 'test', allCards);
     const card = {
         id: 1,
         issue: {
@@ -152,7 +158,10 @@ test('add card remotely', async (t) => {
         }
     });
 
-    const column = new Column(client, 1, 'test', new Map());
+    const allCards = new Map();
+    allCards.ready = Promise.resolve();
+    allCards.isReady = true;
+    const column = new Column(client, 1, 'test', allCards);
     const card = {
         issue: {
             number: 3,
@@ -193,7 +202,10 @@ test('add card that is already in the column', async (t) => {
             }
         ]
     });
-    const column = new Column(client, 1, 'test', new Map());
+    const allCards = new Map();
+    allCards.ready = Promise.resolve();
+    allCards.isReady = true;
+    const column = new Column(client, 1, 'test', allCards);
     const card = {
         issue: {
             number: 3
@@ -405,3 +417,4 @@ test('issues', async (t) => {
 });
 
 test.todo('cards');
+test.todo('waits for cards to be ready');

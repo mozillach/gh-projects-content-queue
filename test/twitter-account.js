@@ -340,7 +340,8 @@ test('get ID', async (t) => {
 test('tweets', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
-        id_str: '1234'
+        id_str: '1234',
+        created_at: Date.now()
     });
     const account = new TwitterAccount(client);
 
@@ -365,16 +366,19 @@ test('tweets', async (t) => {
 test.serial('tweets with existing tweets stored', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
-        id_str: '1234'
+        id_str: '1234',
+        created_at: Date.now()
     });
     const account = new TwitterAccount(client);
 
     const tweets = [
         {
-            id_str: 'foo'
+            id_str: 'foo',
+            created_at: Date.now()
         },
         {
-            id_str: 'bar'
+            id_str: 'bar',
+            created_at: Date.now()
         }
     ];
 
@@ -385,7 +389,8 @@ test.serial('tweets with existing tweets stored', async (t) => {
 
     const newerTweets = [
         {
-            id_str: 'baz'
+            id_str: 'baz',
+            created_at: Date.now()
         }
     ];
     client.get.resolves(newerTweets);
@@ -406,7 +411,8 @@ test.serial('tweets with existing tweets stored', async (t) => {
 test('tweets without any results', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
-        id_str: '1234'
+        id_str: '1234',
+        created_at: Date.now()
     });
     const account = new TwitterAccount(client);
 
@@ -428,7 +434,8 @@ test('tweets without any results', async (t) => {
 test('last mention', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
-        id_str: '1234'
+        id_str: '1234',
+        created_at: Date.now()
     });
     const account = new TwitterAccount(client);
 
@@ -441,11 +448,13 @@ test('last mention', async (t) => {
     client.get.resolves([
         {
             in_reply_to_status_id_str: 'asdf',
-            id_str: '1234'
+            id_str: '1234',
+            created_at: Date.now()
         },
         {
             in_reply_to_status_id_str: 'qwer',
-            id_str: '5678'
+            id_str: '5678',
+            created_at: Date.now()
         }
     ]);
 
@@ -460,7 +469,8 @@ test('last mention', async (t) => {
 test('last mention second run', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
-        id_str: '1234'
+        id_str: '1234',
+        created_at: Date.now()
     });
     const account = new TwitterAccount(client);
 
@@ -472,11 +482,13 @@ test('last mention second run', async (t) => {
     client.get.resolves([
         {
             in_reply_to_status_id_str: 'asdf',
-            id_str: '1234'
+            id_str: '1234',
+            created_at: Date.now()
         },
         {
             in_reply_to_status_id_str: 'qwer',
-            id_str: '5678'
+            id_str: '5678',
+            created_at: Date.now()
         }
     ]);
 
