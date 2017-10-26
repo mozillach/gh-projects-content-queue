@@ -13,7 +13,7 @@ const { loadConfig } = require("./lib/config");
 const ContentQueue = require("./lib/content-queue");
 
 loadConfig(path.join(__dirname, "./config.json")).then((config) => {
-    for(const project of Object.values(config)) {
+    for(const project of config) {
         const ghClient = new GitHub({
             Promise: Promise,
             protocol: "https"
