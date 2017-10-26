@@ -83,7 +83,7 @@ test('tweet not too long just text', (t) => {
 
 test('140 chars fit into a tweet', (t) => {
     t.false(TwitterAccount.tweetTooLong(getTweet(140)));
-})
+});
 
 test('tweet too long with just text', (t) => {
     t.true(TwitterAccount.tweetTooLong(getTweet(144)));
@@ -170,7 +170,7 @@ test('construction ready rejected', (t) => {
     const account = new TwitterAccount(client);
 
     return t.throws(account.ready, Error);
-})
+});
 
 test.todo('uploadMedia');
 
@@ -351,7 +351,7 @@ test('tweets', async (t) => {
     ];
 
     client.get.reset();
-    client.get.resolves(tweets)
+    client.get.resolves(tweets);
 
     const allTweets = await account.tweets;
 
@@ -379,7 +379,7 @@ test.serial('tweets with existing tweets stored', async (t) => {
     ];
 
     client.get.reset();
-    client.get.resolves(tweets)
+    client.get.resolves(tweets);
 
     await account.tweets;
 
@@ -413,7 +413,7 @@ test('tweets without any results', async (t) => {
     const tweets = [];
 
     client.get.reset();
-    client.get.resolves(tweets)
+    client.get.resolves(tweets);
 
     const allTweets = await account.tweets;
 
@@ -433,7 +433,7 @@ test('last mention', async (t) => {
     const account = new TwitterAccount(client);
 
     const tweets = [];
-    client.get.resolves(tweets)
+    client.get.resolves(tweets);
 
     await account.tweets;
 
@@ -465,7 +465,7 @@ test('last mention second run', async (t) => {
     const account = new TwitterAccount(client);
 
     const tweets = [];
-    client.get.resolves(tweets)
+    client.get.resolves(tweets);
 
     await account.tweets;
 

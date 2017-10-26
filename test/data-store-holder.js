@@ -86,4 +86,4 @@ test('emits events', (t) => {
     });
 
     t.true(UpdateManager.targets.has(h));
-})
+});

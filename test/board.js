@@ -388,4 +388,4 @@ test('card retweeted', async (t) => {
 });
 
 test.todo('columns');
-test.todo('columnIds')
+test.todo('columnIds');

@@ -235,7 +235,7 @@ test('remove card locally and keep the card', async (t) => {
     t.not(card.column, column);
 
     t.false(cards.has(card));
-    t.true(allCards.has(card.id))
+    t.true(allCards.has(card.id));
 });
 
 test('remove card remotely and do not keep it', async (t) => {
@@ -401,7 +401,7 @@ test('issues', async (t) => {
     t.true('3' in issues);
     t.true('5' in issues);
     t.is(issues['3'].id, 2);
-    t.is(issues['5'].id, 4)
+    t.is(issues['5'].id, 4);
 });
 
 test.todo('cards');

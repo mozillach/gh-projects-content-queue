@@ -243,4 +243,4 @@ test('format date with and without timezone is the same for the local tz', (t) =
     const formattedWith = ScheduledDate.formatDate(date, defaultConfig[0].schedulingTime.format, -tzOffset);
 
     t.is(formattedWithout, formattedWith);
-})
+});
