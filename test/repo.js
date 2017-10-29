@@ -1,6 +1,7 @@
 import test from 'ava';
 import Repository from '../lib/repo';
 import { getGithubClient, getTwitterAccount, getConfig } from './_stubs';
+import sinon from 'sinon';
 
 test('replace placeholder', (t) => {
     const str = 'foo{test}bar';
@@ -127,6 +128,134 @@ test('add file with custom msg', async (t) => {
     }));
 });
 
+test('add readme', async (t) => {
+    const client = getGithubClient();
+    const config = getConfig();
+    client.misc.getRateLimit.rejects();
+    const twitterAccount = getTwitterAccount('test');
+    const repo = new Repository(client, twitterAccount, config);
+
+    await t.throws(repo.ready);
+
+    client.repos.createFile.resolves();
+
+    await repo.addReadme();
+
+    t.true(client.repos.createFile.calledWithMatch({
+        path: "README.md",
+        message: "Default content queue README.md"
+    }));
+    client.repos.createFile.argumentsValid((assertion, message) => t.true(assertion, message));
+    //TODO test readme content
+});
+
+test('add issue tempalte', async (t) => {
+    const client = getGithubClient();
+    const config = getConfig();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), config);
+
+    await t.throws(repo.ready);
+
+    client.repos.createFile.resolves();
+
+    await repo.addIssueTemplate();
+
+    t.true(client.repos.createFile.calledWithMatch({
+        path: "ISSUE_TEMPLATE.md",
+        message: "Issue template for content queue"
+    }));
+    client.repos.createFile.argumentsValid((assertion, message) => t.true(assertion, message));
+    //TODO test template content
+});
+
+test('add files without any content', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.repos.getContent.rejects();
+    client.repos.createFile.resolves();
+
+    await repo._addFiles();
+
+    t.true(client.repos.createFile.calledWithMatch({
+        path: "README.md"
+    }));
+    t.true(client.repos.createFile.calledWithMatch({
+        path: "ISSUE_TEMPLATE.md"
+    }));
+    client.repos.createFile.allArgumentsValid((assertion, message) => t.true(assertion, message));
+});
+
+test('add files without all content', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.repos.getContent.resolves();
+    client.repos.createFile.resolves();
+
+    await repo._addFiles();
+
+    t.false(client.repos.createFile.calledWithMatch({
+        path: "README.md"
+    }));
+    t.false(client.repos.createFile.calledWithMatch({
+        path: "ISSUE_TEMPLATE.md"
+    }));
+});
+
+test('add files with issue tempalte', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.repos.getContent.resolves();
+    client.repos.getContent.withArgs(sinon.match({
+        path: ".github/ISSUE_TEMPLATE.md"
+    })).rejects();
+    client.repos.createFile.resolves();
+
+    await repo._addFiles();
+
+    t.false(client.repos.createFile.calledWithMatch({
+        path: "README.md"
+    }));
+    t.false(client.repos.createFile.calledWithMatch({
+        path: "ISSUE_TEMPLATE.md"
+    }));
+});
+
+test('add files with .github issue tempalte', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.repos.getContent.resolves();
+    client.repos.getContent.withArgs(sinon.match({
+        path: "ISSUE_TEMPLATE.md"
+    })).rejects();
+    client.repos.createFile.resolves();
+
+    await repo._addFiles();
+
+    t.false(client.repos.createFile.calledWithMatch({
+        path: "README.md"
+    }));
+    t.false(client.repos.createFile.calledWithMatch({
+        path: "ISSUE_TEMPLATE.md"
+    }));
+});
+
 test('has label', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
@@ -172,3 +301,59 @@ test('has label network error', async (t) => {
 
     return t.throws(repo.hasLabel('foo'));
 });
+
+test('add label', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const config = getConfig();
+    const repo = new Repository(client, getTwitterAccount('test'), config);
+
+    await t.throws(repo.ready);
+
+    client.issues.createLabel.resolves();
+
+    await repo.addLabel('foo', 'ffffff');
+
+    client.issues.createLabel.argumentsValid((assertion, message) => t.true(assertion, message));
+    t.true(client.issues.createLabel.calledWithMatch({
+        owner: config.owner,
+        repo: config.repo,
+        name: 'foo',
+        color: 'ffffff'
+    }));
+});
+
+test('ensure labels', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const config = getConfig();
+    const repo = new Repository(client, getTwitterAccount('test'), config);
+
+    await t.throws(repo.ready);
+
+    client.issues.getLabel.resolves();
+    client.issues.getLabel
+        .withArgs(sinon.match({
+            name: config.labels.ready
+        }))
+        .rejects({
+            code: 404
+        });
+    client.issues.createLabel.resolves();
+
+    await repo.ensureLabels();
+
+    client.allArgumentsValid((a, m) => t.true(a, m));
+    t.true(client.issues.createLabel.calledWithMatch({
+        name: config.labels.ready
+    }));
+});
+
+test.todo('create card');
+test.todo('belongs to user');
+test.todo('get users in team');
+test.todo('add issues to board');
+test.todo('has required permissions for user');
+test.todo('has required permissions for org');
+test.todo('does not have required permissions');
+test.todo('setup');
