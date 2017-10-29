@@ -511,10 +511,245 @@ test('create card with position', async (t) => {
     t.true(column.moveCard.calledWithMatch(cardResult, 'top'));
 });
 
-test.todo('belongs to user');
-test.todo('get users in team');
+test('belongs to user', async (t) => {
+    const client = getGithubClient();
+    const config = getConfig();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), config);
+
+    await t.throws(repo.ready);
+
+    client.repos.get.resolves({
+        data: {
+            owner: {
+                type: 'User'
+            }
+        }
+    });
+
+    const isUser = await repo.belongsToUser();
+    t.true(isUser);
+    client.repos.get.argumentsValid((a, m) => t.true(a, m));
+    t.true(client.repos.get.calledWithMatch({
+        repo: config.repo,
+        owner: config.owner
+    }));
+});
+
+test('belongs to orga', async (t) => {
+    const client = getGithubClient();
+    const config = getConfig();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), config);
+
+    await t.throws(repo.ready);
+
+    client.repos.get.resolves({
+        data: {
+            owner: {
+                type: 'Organization'
+            }
+        }
+    });
+
+    const isUser = await repo.belongsToUser();
+    t.false(isUser);
+    client.repos.get.argumentsValid((a, m) => t.true(a, m));
+    t.true(client.repos.get.calledWithMatch({
+        repo: config.repo,
+        owner: config.owner
+    }));
+});
+
+test('get users in team', async (t) => {
+    const client = getGithubClient();
+    const config = getConfig();
+    client.misc.getRateLimit.rejects();
+
+    const repo = new Repository(client, getTwitterAccount('test'), config);
+
+    await t.throws(repo.ready);
+
+    const team = 'baz';
+    const member = 'lorem';
+    const teamId = '1';
+
+    client.repos.get.resolves({
+        data: {
+            owner: {
+                type: 'Organization'
+            }
+        }
+    });
+    client.orgs.getTeams.resolves({
+        data: [
+            {
+                name: 'owners',
+                id: '9999'
+            },
+            {
+                name: team,
+                id: teamId
+            }
+        ]
+    });
+    client.orgs.getTeamMembers.resolves({
+        data: [
+            {
+                login: member
+            }
+        ]
+    });
+
+    const users = await repo.getUsersInTeam(team);
+
+    t.is(users.length, 1);
+    t.true(users.includes(member));
+
+    client.argumentsValid((a, m) => t.true(a, m));
+
+    t.true(client.orgs.getTeams.calledWithMatch({
+        org: config.owner
+    }));
+    t.true(client.orgs.getTeamMembers.calledWithMatch({
+        id: teamId
+    }));
+});
+
+test('get users of team that does not exist', async (t) => {
+    const client = getGithubClient();
+    const config = getConfig();
+    client.misc.getRateLimit.rejects();
+
+    const repo = new Repository(client, getTwitterAccount('test'), config);
+
+    await t.throws(repo.ready);
+
+    const team = 'baz';
+
+    client.repos.get.resolves({
+        data: {
+            owner: {
+                type: 'Organization'
+            }
+        }
+    });
+    client.orgs.getTeams.resolves({
+        data: []
+    });
+    client.orgs.getTeamMembers.rejects();
+
+    await t.throws(repo.getUsersInTeam(team), Error);
+
+    client.argumentsValid((a, m) => t.true(a, m));
+    t.true(client.orgs.getTeams.calledWithMatch({
+        org: config.owner
+    }));
+    t.false(client.orgs.getTeamMembers.called);
+});
+
+test('can not get team members if repo belongs to user', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.repos.get.resolves({
+        data: {
+            owner: {
+                type: 'User'
+            }
+        }
+    });
+    client.orgs.getTeams.rejects();
+
+    await t.throws(repo.getUsersInTeam('baz'));
+
+    client.argumentsValid((a, m) => t.true(a, m));
+    t.false(client.orgs.getTeams.called);
+});
+
+test('has required permissions for user', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.misc.getRateLimit.resolves({
+        meta: {
+            'x-oauth-scopes': 'public_repo'
+        }
+    });
+    client.repos.get.resolves({
+        data: {
+            owner: {
+                type: 'User'
+            }
+        }
+    });
+
+    const hasPermissions = await repo.hasRequiredPermissions();
+
+    t.true(hasPermissions);
+    t.true(client.misc.getRateLimit.called);
+    client.argumentsValid((a, m) => t.true(a, m));
+});
+
+test('has required permissions for org', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.misc.getRateLimit.resolves({
+        meta: {
+            'x-oauth-scopes': 'public_repo, read:org'
+        }
+    });
+    client.repos.get.resolves({
+        data: {
+            owner: {
+                type: 'Organization'
+            }
+        }
+    });
+
+    const hasPermissions = await repo.hasRequiredPermissions();
+
+    t.true(hasPermissions);
+    t.true(client.misc.getRateLimit.called);
+    client.argumentsValid((a, m) => t.true(a, m));
+});
+
+test('does not have required permissions', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    client.misc.getRateLimit.resolves({
+        meta: {
+            'x-oauth-scopes': 'repo'
+        }
+    });
+    client.repos.get.resolves({
+        data: {
+            owner: {
+                type: 'Organization'
+            }
+        }
+    });
+
+    const hasPermissions = await repo.hasRequiredPermissions();
+
+    t.false(hasPermissions);
+    t.true(client.misc.getRateLimit.called);
+    client.argumentsValid((a, m) => t.true(a, m));
+});
+
 test.todo('add issues to board');
-test.todo('has required permissions for user');
-test.todo('has required permissions for org');
-test.todo('does not have required permissions');
 test.todo('setup');
