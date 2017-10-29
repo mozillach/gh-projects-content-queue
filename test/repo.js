@@ -1,6 +1,6 @@
 import test from 'ava';
 import Repository from '../lib/repo';
-import { getGithubClient, getTwitterAccount, getConfig, getColumn } from './_stubs';
+import { getGithubClient, getTwitterAccount, getConfig, getColumn, getBoard } from './_stubs';
 import sinon from 'sinon';
 
 test('replace placeholder', (t) => {
@@ -751,5 +751,80 @@ test('does not have required permissions', async (t) => {
     client.argumentsValid((a, m) => t.true(a, m));
 });
 
-test.todo('add issues to board');
+test('add issues to board', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    repo.board = getBoard({
+        Test: '1',
+        Other: '2'
+    });
+    repo.board.addCard.resolves();
+    const columns = await repo.board.columns;
+    const issues = new Map();
+
+    for(const column of Object.values(columns)) {
+        column.hasIssue.resolves(false);
+    }
+
+    const issueFixtures = [
+        {
+            number: 4,
+            column: '1'
+        },
+        {
+            number: 5,
+            column: '1'
+        },
+        {
+            number: 6,
+            column: '2'
+        },
+        {
+            number: 10,
+            column: '2'
+        }
+    ];
+
+    for(const issue of issueFixtures) {
+        issues.set(issue.number, {
+            number: issue.number
+        });
+        columns[issue.column].hasIssue.withArgs(issue.number).resolves(true);
+    }
+
+    await repo.addIssuesToBoard(issues, Object.values(columns));
+
+    for(const issue of issueFixtures) {
+        t.true(repo.board.addCard.calledWith(issues.get(issue.number), columns[issue.column], true));
+    }
+});
+
+test('add no issues to board', async (t) => {
+    const client = getGithubClient();
+    client.misc.getRateLimit.rejects();
+    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+
+    await t.throws(repo.ready);
+
+    repo.board = getBoard({
+        Test: '1',
+        Other: '2'
+    });
+    repo.board.addCard.resolves();
+    const columns = await repo.board.columns;
+    const issues = new Map();
+
+    for(const column of Object.values(columns)) {
+        column.hasIssue.resolves(false);
+    }
+
+    await repo.addIssuesToBoard(issues, Object.values(columns));
+
+    t.false(repo.board.addCard.called);
+});
+
 test.todo('setup');
