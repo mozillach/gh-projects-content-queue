@@ -4,6 +4,7 @@ import Board from '../lib/board';
 import UpdateManager from '../lib/update-manager';
 import sinon from 'sinon';
 import Column from '../lib/column';
+import { NoProjectsError, ProjectNotFoundError } from '../lib/board-errors';
 
 // Ensure update manager never calls update during tests unless we explicitly want it to.
 let clock;
@@ -99,7 +100,7 @@ test('get board id throws when there are no projects', async (t) => {
     });
     delete board.id;
 
-    return t.throws(board.getBoardID());
+    return t.throws(board.getBoardID(), NoProjectsError);
 });
 
 test('get board id throws when the project does not exist', async (t) => {
@@ -116,7 +117,7 @@ test('get board id throws when the project does not exist', async (t) => {
     });
     delete board.id;
 
-    return t.throws(board.getBoardID());
+    return t.throws(board.getBoardID(), ProjectNotFoundError);
 });
 
 test('board exists', async (t) => {
