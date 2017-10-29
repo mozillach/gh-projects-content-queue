@@ -1,6 +1,6 @@
 import test from 'ava';
 import Repository from '../lib/repo';
-import { getGithubClient, getTwitterAccount, getConfig } from './_stubs';
+import { getGithubClient, getTwitterAccount, getConfig, getColumn } from './_stubs';
 import sinon from 'sinon';
 
 test('replace placeholder', (t) => {
@@ -349,7 +349,168 @@ test('ensure labels', async (t) => {
     }));
 });
 
-test.todo('create card');
+test('create card without position', async (t) => {
+    const client = getGithubClient();
+    const config = getConfig();
+
+    // Repo setup
+    client.misc.getRateLimit.resolves({
+        meta: {
+            'x-oauth-scopes': 'public_repo, org:read'
+        }
+    });
+    client.repos.getContent.resolves();
+    client.issues.getLabel.resolves();
+    client.repos.get.resolves({
+        data: {
+            owner: {
+                type: "User"
+            }
+        }
+    });
+    // Board setup
+    client.projects.getProjectColumns.resolves({
+        data: []
+    });
+    client.projects.getRepoProjects.resolves({
+        data: [
+            {
+                name: config.projectName,
+                id: 1
+            }
+        ]
+    });
+    // Issues setup
+    client.issues.getForRepo.resolves({
+        data: []
+    });
+
+    // Issue setup
+    client.issues.addLabels.resolves();
+
+    const repo = new Repository(client, getTwitterAccount('test'), config);
+
+    await repo.ready;
+
+    const title = 'lorem ipsum';
+    const content = 'foo bar';
+    client.issues.create.resolves({
+        data: {
+            id: '2',
+            number: 1,
+            updated_at: Date.now(),
+            body: content,
+            title,
+            state: 'open'
+        }
+    });
+    const column = getColumn('1', 'test');
+    const cardResult = {
+        id: '4'
+    };
+    column.addCard.resolves(cardResult);
+
+    const card = await repo.createCard(title, content, column);
+
+    t.deepEqual(card, cardResult);
+    client.issues.create.argumentsValid((a, m) => t.true(a, m));
+    t.true(client.issues.create.calledWithMatch({
+        title,
+        body: content
+    }));
+    t.true(column.addCard.calledWithMatch({
+        issue: {
+            id: '2',
+            number: 1,
+            content,
+            title
+        },
+        config
+    }, false));
+});
+
+test('create card with position', async (t) => {
+    const client = getGithubClient();
+    const config = getConfig();
+
+    // Repo setup
+    client.misc.getRateLimit.resolves({
+        meta: {
+            'x-oauth-scopes': 'public_repo, org:read'
+        }
+    });
+    client.repos.getContent.resolves();
+    client.issues.getLabel.resolves();
+    client.repos.get.resolves({
+        data: {
+            owner: {
+                type: "User"
+            }
+        }
+    });
+    // Board setup
+    client.projects.getProjectColumns.resolves({
+        data: []
+    });
+    client.projects.getRepoProjects.resolves({
+        data: [
+            {
+                name: config.projectName,
+                id: 1
+            }
+        ]
+    });
+    // Issues setup
+    client.issues.getForRepo.resolves({
+        data: []
+    });
+
+    // Issue setup
+    client.issues.addLabels.resolves();
+
+    const repo = new Repository(client, getTwitterAccount('test'), config);
+
+    await repo.ready;
+
+    const title = 'lorem ipsum';
+    const content = 'foo bar';
+    client.issues.create.resolves({
+        data: {
+            id: '2',
+            number: 1,
+            updated_at: Date.now(),
+            body: content,
+            title,
+            state: 'open'
+        }
+    });
+    const column = getColumn('1', 'test');
+    const cardResult = {
+        id: '4'
+    };
+    column.addCard.resolves(cardResult);
+    column.moveCard.resolves();
+
+    const card = await repo.createCard(title, content, column, 'top');
+
+    t.deepEqual(card, cardResult);
+    client.issues.create.argumentsValid((a, m) => t.true(a, m));
+    t.true(client.issues.create.calledWithMatch({
+        title,
+        body: content
+    }));
+    t.true(column.addCard.calledWithMatch({
+        issue: {
+            id: '2',
+            number: 1,
+            content,
+            title
+        },
+        config
+    }, false));
+    t.true(column.moveCard.calledWithMatch(cardResult, 'top'));
+});
+
 test.todo('belongs to user');
 test.todo('get users in team');
 test.todo('add issues to board');

@@ -53,7 +53,8 @@ const getColumn = (id, name) => ({
     githubClient: getGithubClient(),
     addCard: sinon.stub(),
     removeCard: sinon.stub(),
-    hasIssue: sinon.stub()
+    hasIssue: sinon.stub(),
+    moveCard: sinon.stub()
 });
 
 const getColumns = (columns) => {
