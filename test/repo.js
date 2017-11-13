@@ -1,6 +1,6 @@
 import test from 'ava';
 import Repository from '../lib/repo';
-import { getGithubClient, getTwitterAccount, getConfig, getColumn, getBoard } from './_stubs';
+import { getGithubClient, getTwitterAccount, getConfig, getColumn, getBoard, getCard } from './_stubs';
 import sinon from 'sinon';
 
 test('replace placeholder', (t) => {
@@ -825,6 +825,75 @@ test('add no issues to board', async (t) => {
     await repo.addIssuesToBoard(issues, Object.values(columns));
 
     t.false(repo.board.addCard.called);
+});
+
+test('update card', async (t) => {
+    const client = getGithubClient();
+    const config = getConfig();
+    // Repo setup
+    client.misc.getRateLimit.resolves({
+        meta: {
+            'x-oauth-scopes': 'public_repo, org:read'
+        }
+    });
+    client.repos.getContent.resolves();
+    client.issues.getLabel.resolves();
+    client.repos.get.resolves({
+        data: {
+            owner: {
+                type: "User"
+            }
+        }
+    });
+    // Board setup
+    client.projects.getProjectColumns.resolves({
+        data: []
+    });
+    client.projects.getRepoProjects.resolves({
+        data: [
+            {
+                name: config.projectName,
+                id: 1
+            }
+        ]
+    });
+    // Issues setup
+    client.issues.getForRepo.resolves({
+        data: []
+    });
+    const repo = new Repository(client, getTwitterAccount('test'), config);
+
+    await t.notThrows(repo.ready);
+
+    const card = getCard();
+    const newContent = `${card.issue.content} dolor sit amet`;
+    card.checkValidity.resolves();
+    const openIssues = await repo.issues.issues;
+    openIssues.set(card.issue.number, card.issue);
+
+    client.issues.get.resolves({
+        data: {
+            id: card.issue.id,
+            number: card.issue.number,
+            updated_at: new Date().toString(),
+            body: newContent,
+            title: 'test',
+            state: 'open',
+            assignee: {
+                login: 'bar'
+            },
+            labels: [
+                {
+                    name: 'baz'
+                }
+            ]
+        }
+    });
+
+    await repo.updateCard(card);
+
+    t.is(card.issue.content, newContent);
+    t.true(card.checkValidity.called);
 });
 
 test.todo('setup');

@@ -77,15 +77,22 @@ const getBoard = (columns) => ({
     addCard: sinon.stub()
 });
 
-const getIssue = (content = 'lorem ipsum') => {
+const getIssue = (content = 'lorem ipsum', number = 1) => {
     const labels = new Set();
     return {
+        number,
+        id: 'foo',
         content,
         addLabel: sinon.spy((label) => labels.add(label)),
         hasLabel: sinon.spy((label) => labels.has(label)),
         removeLabel: sinon.spy((label) => labels.delete(label)),
         comment: sinon.stub(),
-        assign: sinon.stub()
+        assign: sinon.stub(),
+        update(data) {
+            if(data.content) {
+                this.content = data.content;
+            }
+        }
     };
 };
 
@@ -120,6 +127,13 @@ const getTwitterAccount = (username, tweets = []) => ({
     uploadMedia: sinon.stub()
 });
 
+const getCard = (issue = getIssue(), column = getColumn()) => ({
+    issue,
+    column,
+    id: 'bar',
+    checkValidity: sinon.stub()
+});
+
 export {
     getConfig,
     getDataStoreHolder,
@@ -132,5 +146,6 @@ export {
     getIssues,
     getRepo,
     getTwitterClient,
-    getTwitterAccount
+    getTwitterAccount,
+    getCard
 };
