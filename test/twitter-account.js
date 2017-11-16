@@ -320,7 +320,7 @@ test("tweet reply with explicit mentions", async (t) => {
         screen_name: 'test'
     });
     const account = new TwitterAccount(client);
-    const tweet = '@baz lorem ipsum';
+    const tweet = '@Baz lorem ipsum';
     const reply = 'https://twitter.com/baz/status/1234';
 
     client.post.resolves({
