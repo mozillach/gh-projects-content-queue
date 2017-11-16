@@ -55,6 +55,41 @@ test('don\'t get a tweet id from a non-tweet url', (t) => {
     t.is(TwitterAccount.getTweetIDFromURL('foo bart'), null);
 });
 
+test('get tweet author from url with http', (t) => {
+    const TWEET_AUTHOR = "mozillach";
+    const TWEET_URL = `http://twitter.com/${TWEET_AUTHOR}/status/1234567890`;
+
+    t.is(TwitterAccount.getUserFromURL(TWEET_URL), TWEET_AUTHOR);
+});
+
+test('get tweet author from url with https', (t) => {
+    const TWEET_AUTHOR = "mozillach";
+    const TWEET_URL = `https://twitter.com/${TWEET_AUTHOR}/status/1234567890`;
+
+    t.is(TwitterAccount.getUserFromURL(TWEET_URL), TWEET_AUTHOR);
+});
+
+test('get tweet author from url with http and www', (t) => {
+    const TWEET_AUTHOR = "mozillach";
+    const TWEET_URL = `http://www.twitter.com/${TWEET_AUTHOR}/status/1234567890`;
+
+    t.is(TwitterAccount.getUserFromURL(TWEET_URL), TWEET_AUTHOR);
+});
+
+test('get tweet author from url with https and www', (t) => {
+    const TWEET_AUTHOR = "mozillach";
+    const TWEET_URL = `https://www.twitter.com/${TWEET_AUTHOR}/status/1234567890`;
+
+    t.is(TwitterAccount.getUserFromURL(TWEET_URL), TWEET_AUTHOR);
+});
+
+test('don\'t get a tweet author from a non-tweet url', (t) => {
+    t.is(TwitterAccount.getUserFromURL('https://twitter.com/freaktechnik/status/824753300985769984/photo/1'), null);
+    t.is(TwitterAccount.getUserFromURL('https://twitter.com/freaktechnik/status/'), null);
+    t.is(TwitterAccount.getUserFromURL('https://example.com'), null);
+    t.is(TwitterAccount.getUserFromURL('foo bart'), null);
+});
+
 // getRemainingChars()
 const getTweet = (length) => {
     const content = new Array(length);
@@ -262,6 +297,30 @@ test("tweet reply", async (t) => {
     });
     const account = new TwitterAccount(client);
     const tweet = 'lorem ipsum';
+    const reply = 'https://twitter.com/baz/status/1234';
+
+    client.post.resolves({
+        id_str: 'foo'
+    });
+
+    const url = await account.tweet(tweet, '', reply);
+
+    t.true(client.post.calledOnce);
+    t.true(client.post.calledWith('statuses/update', {
+        status: tweet,
+        in_reply_to_status_id: '1234',
+        auto_populate_reply_metadata: "true"
+    }));
+    t.is(url, 'https://twitter.com/test/status/foo');
+});
+
+test("tweet reply with explicit mentions", async (t) => {
+    const client = getTwitterClient();
+    client.get.resolves({
+        screen_name: 'test'
+    });
+    const account = new TwitterAccount(client);
+    const tweet = '@baz lorem ipsum';
     const reply = 'https://twitter.com/baz/status/1234';
 
     client.post.resolves({
