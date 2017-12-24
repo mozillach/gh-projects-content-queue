@@ -96,48 +96,48 @@ const getTweet = (length) => {
     return content.fill('a').join("");
 };
 test('remaining characters with a too long tweet', (t) => {
-    t.is(TwitterAccount.getRemainingChars(getTweet(144)), -4);
+    t.is(TwitterAccount.getRemainingChars(getTweet(284)), -4);
 });
 
 test('remaining characters for short text tweet', (t) => {
-    t.is(TwitterAccount.getRemainingChars(getTweet(23)), 117);
+    t.is(TwitterAccount.getRemainingChars(getTweet(23)), 257);
 });
 
 test('remaining characters with mention at start', (t) => {
-    t.is(TwitterAccount.getRemainingChars(`@mention ${getTweet(23)}`), 108);
+    t.is(TwitterAccount.getRemainingChars(`@mention ${getTweet(23)}`), 248);
 });
 
 test('remaining characters with link', (t) => {
-    t.is(TwitterAccount.getRemainingChars(`${getTweet(23)} https://example.com`), 93);
+    t.is(TwitterAccount.getRemainingChars(`${getTweet(23)} https://example.com`), 233);
 });
 
 // tweetTooLong()
 test('tweet not too long just text', (t) => {
-    t.false(TwitterAccount.tweetTooLong(getTweet(139)));
+    t.false(TwitterAccount.tweetTooLong(getTweet(279)));
 });
 
-test('140 chars fit into a tweet', (t) => {
-    t.false(TwitterAccount.tweetTooLong(getTweet(140)));
+test('280 chars fit into a tweet', (t) => {
+    t.false(TwitterAccount.tweetTooLong(getTweet(280)));
 });
 
 test('tweet too long with just text', (t) => {
-    t.true(TwitterAccount.tweetTooLong(getTweet(144)));
+    t.true(TwitterAccount.tweetTooLong(getTweet(284)));
 });
 
 test('tweet not too long with link', (t) => {
-    t.false(TwitterAccount.tweetTooLong(`${getTweet(116)} https://example.com`));
+    t.false(TwitterAccount.tweetTooLong(`${getTweet(256)} https://example.com`));
 });
 
 test('tweet too long with link', (t) => {
-    t.true(TwitterAccount.tweetTooLong(`${getTweet(140)} https://example.com`));
+    t.true(TwitterAccount.tweetTooLong(`${getTweet(280)} https://example.com`));
 });
 
 test('reply not too long', (t) => {
-    t.false(TwitterAccount.tweetTooLong(`@user ${getTweet(133)}`));
+    t.false(TwitterAccount.tweetTooLong(`@user ${getTweet(273)}`));
 });
 
 test('reply too long', (t) => {
-    t.true(TwitterAccount.tweetTooLong(`@user ${getTweet(135)}`));
+    t.true(TwitterAccount.tweetTooLong(`@user ${getTweet(275)}`));
 });
 
 test('get media and content', (t) => {
@@ -236,7 +236,7 @@ test('too long tweet', (t) => {
         screen_name: 'test'
     });
     const account = new TwitterAccount(client);
-    const tweet = getTweet(144);
+    const tweet = getTweet(284);
 
     client.post.resolves({
         id_str: 'foo'
