@@ -5,7 +5,7 @@
  */
 "use strict";
 
-const GitHub = require("github");
+const GitHub = require("@octokit/rest");
 const Twitter = require("twitter");
 const path = require("path");
 

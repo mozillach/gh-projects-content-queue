@@ -46,10 +46,10 @@
     "temp-write": "^3.3.0"
   },
   "dependencies": {
+    "@octokit/rest": "^14.0.3",
     "ajv": "^6.0.0",
     "discourse-sdk": "^1.0.3",
     "fetch-base64": "^2.0.0",
-    "github": "^13.0.1",
     "ical": "^0.5.0",
     "mz": "^2.7.0",
     "tweet.md": "^2.1.0",
