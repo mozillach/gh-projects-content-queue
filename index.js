@@ -5,21 +5,15 @@
  */
 "use strict";
 
-const GitHub = require("@octokit/rest");
-const Twitter = require("twitter");
 const path = require("path");
 
 const { loadConfig } = require("./lib/config");
 const ContentQueue = require("./lib/content-queue");
+const AccountManager = require("./lib/accounts/manager");
 
 loadConfig(path.join(__dirname, "./config.json")).then((config) => {
-    for(const project of config) {
-        const ghClient = new GitHub();
-        ghClient.authenticate({
-            type: "token",
-            token: project.githubToken
-        });
-        const twitterClient = new Twitter(project.twitter);
-        new ContentQueue(ghClient, twitterClient, project);
+    const accountManager = new AccountManager(config.accounts);
+    for(const project of config.boards) {
+        new ContentQueue(accountManager, project);
     }
 }).catch((e) => console.error(e));
