@@ -1,6 +1,6 @@
 {
   "name": "gh-projects-content-queue",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Twitter content curation queue based on GitHub projects",
   "main": "index.js",
   "scripts": {
