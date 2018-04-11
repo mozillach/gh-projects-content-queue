@@ -1,5 +1,5 @@
 import test from 'ava';
-import * as pagination from '../lib/pagination';
+import * as pagination from '../lib/accounts/pagination';
 import { getGithubClient } from './_stubs';
 import sinon from 'sinon';
 
