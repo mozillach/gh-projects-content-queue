@@ -61,7 +61,7 @@ test('constructor', async (t) => {
 });
 
 test('not ready', (t) => {
-    t.context.gh.projects.getProjectColumns.reset();
+    t.context.gh.projects.getProjectColumns.resetHistory();
     t.context.gh.projects.getProjectColumns.rejects(new Error());
     const board = new Board(t.context.gh, t.context.config);
 

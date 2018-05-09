@@ -153,7 +153,7 @@ test('fetch issues', async (t) => {
     });
     const issues = new Issues(client, getConfig());
 
-    client.issues.getForRepo.reset();
+    client.issues.getForRepo.resetHistory();
     const issueData = [
         {
             id: 123,
@@ -182,7 +182,7 @@ test('fetch issues with old issues', async (t) => {
     });
     const issues = new Issues(client, getConfig());
 
-    client.issues.getForRepo.reset();
+    client.issues.getForRepo.resetHistory();
     const issueData = [
         {
             id: 123,
@@ -232,7 +232,7 @@ test('fetch issues with old issue that is not updated', async (t) => {
     });
     const issues = new Issues(client, getConfig());
 
-    client.issues.getForRepo.reset();
+    client.issues.getForRepo.resetHistory();
     const issueData = [
         {
             id: 123,

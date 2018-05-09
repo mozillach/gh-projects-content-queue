@@ -103,7 +103,7 @@ test('remind', async (t) => {
     const issue = getIssue();
     const card = new TweetCard(issue, getConfig());
 
-    issue.comment.reset();
+    issue.comment.resetHistory();
     issue.comment.resolves();
     const msg = 'foo';
     await card.remind(msg);
@@ -116,7 +116,7 @@ test('comment', async (t) => {
     const issue = getIssue();
     const card = new TweetCard(issue, getConfig());
 
-    issue.comment.reset();
+    issue.comment.resetHistory();
     issue.comment.resolves();
     const msg = 'foo';
     await card.comment(msg);
@@ -194,7 +194,7 @@ test('report errors', async (t) => {
         'bar',
         'baz'
     ];
-    issue.comment.reset();
+    issue.comment.resetHistory();
     issue.comment.resolves();
 
     await card.reportErrors(errors);
@@ -211,7 +211,7 @@ test('report error Error instance', async (t) => {
 
     const action = 'foo';
     const error = new Error('test');
-    issue.comment.reset();
+    issue.comment.resetHistory();
     issue.comment.resolves();
 
     await card.reportError(action, error);
@@ -229,7 +229,7 @@ test('report error Object instance', async (t) => {
     const error = {
         test: 'lorem ipsum'
     };
-    issue.comment.reset();
+    issue.comment.resetHistory();
     issue.comment.resolves();
 
     await card.reportError(action, error);
@@ -245,7 +245,7 @@ test('report error String instance', async (t) => {
 
     const action = 'foo';
     const error = 'test';
-    issue.comment.reset();
+    issue.comment.resetHistory();
     issue.comment.resolves();
 
     await card.reportError(action, error);

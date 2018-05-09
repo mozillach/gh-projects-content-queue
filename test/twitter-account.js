@@ -410,7 +410,7 @@ test('tweets', async (t) => {
         'tweet3'
     ];
 
-    client.get.reset();
+    client.get.resetHistory();
     client.get.resolves(tweets);
 
     const allTweets = await account.tweets;
@@ -441,7 +441,7 @@ test.serial('tweets with existing tweets stored', async (t) => {
         }
     ];
 
-    client.get.reset();
+    client.get.resetHistory();
     client.get.resolves(tweets);
 
     await account.tweets;
@@ -477,7 +477,7 @@ test('tweets without any results', async (t) => {
 
     const tweets = [];
 
-    client.get.reset();
+    client.get.resetHistory();
     client.get.resolves(tweets);
 
     const allTweets = await account.tweets;
@@ -503,7 +503,7 @@ test('last mention', async (t) => {
 
     await account.tweets;
 
-    client.get.reset();
+    client.get.resetHistory();
     client.get.resolves([
         {
             in_reply_to_status_id_str: 'asdf',
@@ -553,7 +553,7 @@ test('last mention second run', async (t) => {
 
     await account.lastMention;
 
-    client.get.reset();
+    client.get.resetHistory();
     client.get.resolves([]);
     clock.tick(UpdateManager.UPDATE_INTERVAL + 1);
 
