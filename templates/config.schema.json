@@ -20,8 +20,7 @@
                         },
                         "required": [
                             "token"
-                        ],
-                        "additionalProperties": false
+                        ]
                     },
                     "minItems": 1,
                     "uniqueItems": true
@@ -42,8 +41,7 @@
                             "consumer_secret",
                             "access_token_key",
                             "access_token_secret"
-                        ],
-                        "additionalProperties": false
+                        ]
                     },
                     "uniqueItems": true
                 }
@@ -54,100 +52,104 @@
             "items": {
                 "title": "Instances of the tool",
                 "type": "object",
-                "repo": {
-                    "type": "string",
-                    "pattern": "^[^/]+/[^/]+$"
-                },
-                "githubAccount": {
-                    "description": "Name of the GitHub account to use",
-                    "type": "string"
-                },
-                "projectName": {
-                    "type": "string",
-                    "minLength": 1
-                },
-                "labels": {
-                    "title": "Label names for labels used by the queue",
-                    "type": "object",
-                    "properties": {
-                        "retweet": {
-                            "type": "string",
-                            "minLength": 1,
-                            "default": "Reweet",
-                            "title": "Label on issues that are retweets"
-                        },
-                        "ready": {
-                            "type": "string",
-                            "minLength": 1,
-                            "default": "ready",
-                            "title": "Label on issues that can be tweeted"
-                        },
-                        "invalid": {
-                            "type": "string",
-                            "minLength": 1,
-                            "default": "invalid",
-                            "title": "Label on issues that can not be tweeted"
-                        }
+                "properties": {
+                    "repo": {
+                        "type": "string",
+                        "pattern": "^[^/]+/[^/]+$"
                     },
-                    "additionalProperties": false
-                },
-                "schedulingTime": {
-                    "type": "object",
-                    "description": "If left out the dates for scheduling will not work, but the configuration is not required",
-                    "properties": {
-                        "format": {
-                            "type": "string",
-                            "pattern": "[YMDHmTZ :.-]+"
-                        },
-                        "timezone": {
-                            "type": "number",
-                            "minimum": -11,
-                            "maximum": 13,
-                            "title": "Offset to UTC of dates in issues"
-                        }
+                    "githubAccount": {
+                        "description": "Name of the GitHub account to use",
+                        "type": "string"
                     },
-                    "required": [
-                        "format",
-                        "timezone"
-                    ],
-                    "additionalProperties": false
-                },
-                "sources": {
-                    "type": "array",
-                    "items": {
+                    "projectName": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "labels": {
+                        "title": "Label names for labels used by the queue",
                         "type": "object",
                         "properties": {
-                            "columns": {
-                                "type": "object",
-                                "patternProperties": {
-                                    "^(source|target)$": {
-                                        "type": "string"
-                                    }
-                                }
+                            "retweet": {
+                                "type": "string",
+                                "minLength": 1,
+                                "default": "Reweet",
+                                "title": "Label on issues that are retweets"
                             },
-                            "type": {
-                                "enum": [
-                                    "issues",
-                                    "mentions",
-                                    "tweeting",
-                                    "events",
-                                    "squad",
-                                    "reminder",
-                                    "discourse",
-                                    "validator"
-                                ]
+                            "ready": {
+                                "type": "string",
+                                "minLength": 1,
+                                "default": "ready",
+                                "title": "Label on issues that can be tweeted"
+                            },
+                            "invalid": {
+                                "type": "string",
+                                "minLength": 1,
+                                "default": "invalid",
+                                "title": "Label on issues that can not be tweeted"
                             }
-                        }
+                        },
+                        "additionalProperties": false
                     },
-                    "uniqueItems": true
-                }
+                    "schedulingTime": {
+                        "type": "object",
+                        "description": "If left out the dates for scheduling will not work, but the configuration is not required",
+                        "properties": {
+                            "format": {
+                                "type": "string",
+                                "pattern": "[YMDHmTZ :.-]+"
+                            },
+                            "timezone": {
+                                "type": "number",
+                                "minimum": -11,
+                                "maximum": 13,
+                                "title": "Offset to UTC of dates in issues"
+                            }
+                        },
+                        "required": [
+                            "format",
+                            "timezone"
+                        ],
+                        "additionalProperties": false
+                    },
+                    "sources": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "columns": {
+                                    "type": "object",
+                                    "patternProperties": {
+                                        "^(source|target)$": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": {
+                                    "enum": [
+                                        "issues",
+                                        "mentions",
+                                        "tweeting",
+                                        "events",
+                                        "squad",
+                                        "reminder",
+                                        "discourse",
+                                        "validator"
+                                    ]
+                                }
+                            }
+                        },
+                        "uniqueItems": true
+                    }
+                },
+                "required": [
+                    "repo",
+                    "githubAccount",
+                    "projectName"
+                ],
+                "additionalProperties": false
             },
-            "required": [
-                "repo",
-                "githubAccount",
-                "projectName"
-            ],
-            "additionalProperties": false
+            "minItems": 1,
+            "uniqueItems": true
         }
     },
     "required": [
@@ -165,7 +167,8 @@
             },
             "required": [
                 "name"
-            ]
+            ],
+            "additionalProperties": false
         }
     }
 }

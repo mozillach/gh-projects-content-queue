@@ -4,11 +4,11 @@ import DataStoreHolder from '../lib/data-store-holder';
 import getGithubClient from 'github-stub';
 import Source from '../lib/sources/source';
 
-const [ owner, repo ] = config[0].repo.split("/");
-config[0].owner = owner;
-config[0].repo = repo;
+const [ owner, repo ] = config.boards[0].repo.split("/");
+config.boards[0].owner = owner;
+config.boards[0].repo = repo;
 
-const getConfig = () => config[0];
+const getConfig = () => config.boards[0];
 
 const getDataStoreHolder = () => {
     const Dsh = class extends DataStoreHolder {
@@ -134,6 +134,17 @@ const getCard = (issue = getIssue(), column = getColumn()) => ({
     checkValidity: sinon.stub()
 });
 
+const getAccountManager = () => ({
+    getAccount(type) {
+        if(type == "twitter") {
+            return getTwitterAccount('lorem');
+        }
+        else if(type == "github") {
+            return getGithubClient();
+        }
+    }
+});
+
 export {
     getConfig,
     getDataStoreHolder,
@@ -147,5 +158,6 @@ export {
     getRepo,
     getTwitterClient,
     getTwitterAccount,
-    getCard
+    getCard,
+    getAccountManager
 };

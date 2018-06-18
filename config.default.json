@@ -1,74 +1,89 @@
-[
-    {
-        "githubToken": "yourGithubToken",
-        "repo": "yourUserName/yourRepoName",
-        "projectName": "Tweets",
-        "labels": {
-            "retweet": "Retweet",
-            "ready": "ready",
-            "invalid": "invalid"
-        },
-        "schedulingTime": {
-            "format": "DD.MM.YYYY HH:mm",
-            "timezone": 1
-        },
-        "twitter": {
-            "consumer_key": "yourTwitterConsumerKey",
-            "consumer_secret": "yourTwitterConsumerSecret",
-            "access_token_key": "yourTwitterAccessToken",
-            "access_token_secret": "yourTwitterAccessTokenSecret"
-        },
-        "sources": [
+{
+    "accounts": {
+        "github": [
             {
-                "columns": {
-                    "target": "Ideas"
-                },
-                "type": "issues"
-            },
+                "name": "firstGHAccount",
+                "token": "yourGithubToken"
+            }
+        ],
+        "twitter": [
             {
-                "columns": {
-                    "target": "Needs Reaction"
-                },
-                "type": "mentions"
-            },
-            {
-                "columns": {
-                    "target": "Needs Reaction"
-                },
-                "type": "squad",
-                "squad": []
-            },
-            {
-                "columns": {
-                    "source": "To Tweet",
-                    "target": "Tweeted"
-                },
-                "type": "tweeting",
-                "schedule": []
-            },
-            {
-                "columns": {
-                    "target": "Events"
-                },
-                "type": "events",
-                "query": "switzerland"
-            },
-            {
-                "columns": {
-                    "target": "To Tweet"
-                },
-                "type": "reminder"
-            },
-            {
-                "columns": {
-                    "target": "New Posts"
-                },
-                "type": "discourse",
-                "forum": "communities/switzerland",
-                "apiKey": "yourDiscourseAPIKey",
-                "apiUrl": "https://discourse.mozilla.org",
-                "username": "yourUserName"
+                "name": "firstTwitterAccount",
+                "consumer_key": "yourTwitterConsumerKey",
+                "consumer_secret": "yourTwitterConsumerSecret",
+                "access_token_key": "yourTwitterAccessToken",
+                "access_token_secret": "yourTwitterAccessTokenSecret"
             }
         ]
-    }
-]
+    },
+    "boards": [
+        {
+            "repo": "yourUserName/yourRepoName",
+            "projectName": "Tweets",
+            "githubAccount": "firstGHAccount",
+            "labels": {
+                "retweet": "Retweet",
+                "ready": "ready",
+                "invalid": "invalid"
+            },
+            "schedulingTime": {
+                "format": "DD.MM.YYYY HH:mm",
+                "timezone": 1
+            },
+            "sources": [
+                {
+                    "columns": {
+                        "target": "Ideas"
+                    },
+                    "type": "issues"
+                },
+                {
+                    "columns": {
+                        "target": "Needs Reaction"
+                    },
+                    "type": "mentions",
+                    "twitterAccount": "firstTwitterAccount"
+                },
+                {
+                    "columns": {
+                        "target": "Needs Reaction"
+                    },
+                    "type": "squad",
+                    "squad": []
+                },
+                {
+                    "columns": {
+                        "source": "To Tweet",
+                        "target": "Tweeted"
+                    },
+                    "type": "tweeting",
+                    "schedule": [],
+                    "twitterAccount": "firstTwitterAccount"
+                },
+                {
+                    "columns": {
+                        "target": "Events"
+                    },
+                    "type": "events",
+                    "query": "switzerland"
+                },
+                {
+                    "columns": {
+                        "target": "To Tweet"
+                    },
+                    "type": "reminder"
+                },
+                {
+                    "columns": {
+                        "target": "New Posts"
+                    },
+                    "type": "discourse",
+                    "forum": "communities/switzerland",
+                    "apiKey": "yourDiscourseAPIKey",
+                    "apiUrl": "https://discourse.mozilla.org",
+                    "username": "yourUserName"
+                }
+            ]
+        }
+    ]
+}

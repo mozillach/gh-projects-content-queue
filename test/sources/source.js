@@ -4,13 +4,13 @@ import { getRepo } from '../_stubs';
 
 test('constructor', (t) => {
     const repo = 'a';
-    const twitterAccount = 'b';
+    const accountManager = 'b';
     const config = 'c';
     const managedColumns = 'd';
-    const s = new Source(repo, twitterAccount, config, managedColumns);
+    const s = new Source(repo, accountManager, config, managedColumns);
 
     t.is(s._repo, repo);
-    t.is(s._twitterAccount, twitterAccount);
+    t.is(s._accountManager, accountManager);
     t.is(s._config, config);
     t.is(s._getManagedColumns, managedColumns);
 });

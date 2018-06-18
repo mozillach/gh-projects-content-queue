@@ -12,7 +12,7 @@ test('replace placeholder', (t) => {
 
 test('construction', (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.misc.getRateLimit.rejects('no ratelimit');
     const repo = new Repository(client, getTwitterAccount('test'), getConfig());
 
     t.true("githubClient" in repo);

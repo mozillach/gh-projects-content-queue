@@ -9,5 +9,11 @@
     "rules": {
         "node/no-unsupported-features": 0
     },
-    "extends": [ "plugin:ava/recommended" ]
+    "settings": {
+        "import/resolver": "node"
+    },
+    "extends": [
+        "plugin:ava/recommended",
+        "plugin:import/errors"
+    ]
 }

@@ -1,6 +1,6 @@
 import test from 'ava';
 import TweetingSource from '../../lib/sources/tweeting';
-import { getRepo, getTwitterAccount, getColumn } from '../_stubs';
+import { getRepo, getAccountManager, getColumn } from '../_stubs';
 import sinon from 'sinon';
 
 // Ensure update manager never calls update during tests unless we explicitly want it to.
@@ -19,7 +19,7 @@ const getArgs = () => {
             'Foo': 1,
             'Bar': 2
         }),
-        getTwitterAccount(),
+        getAccountManager(),
         {
             columns: {
                 target: 'Foo',

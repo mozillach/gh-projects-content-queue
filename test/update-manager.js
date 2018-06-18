@@ -100,7 +100,7 @@ test.serial("update gracefully handles rejections in data store updates", async 
     UpdateManager.register(dsh);
     UpdateManager.register(dsh2);
 
-    dsh.updateSpy.throws(new Error());
+    dsh.updateSpy.throws(new Error('no update'));
 
     await t.notThrows(UpdateManager.update());
 

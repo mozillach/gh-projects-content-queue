@@ -40,9 +40,7 @@ test('update fires updated event', async (t) => {
         store: updateStore
     });
 
-    const promise = new Promise((resolve) => {
-        h.once('storesupdated', resolve);
-    });
+    const promise = h.once('storesupdated');
 
     h.update();
 

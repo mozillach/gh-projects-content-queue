@@ -8,46 +8,48 @@ import path from 'path';
 const TEST_DATA = [
     {
         valid: true,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                projectName: "Tweets",
-                labels: {
-                    retweet: "RT",
-                    ready: "valid",
-                    invalid: "invalid"
-                },
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
-                }
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
             },
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                projectName: "baz",
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+            boards: [
+                {
+                    repo: "foo/bar",
+                    projectName: "Tweets",
+                    githubAccount: "gh",
+                    labels: {
+                        retweet: "RT",
+                        ready: "valid",
+                        invalid: "invalid"
+                    },
+                },
+                {
+                    repo: "foo/bar",
+                    projectName: "baz",
+                    githubAccount: "gh"
                 }
-            }
-        ],
+            ]
+        },
         name: "valid config"
     },
     {
-        valid: true,
-        config: [],
-        name: "valid empty config"
-    },
-    {
         valid: false,
-        config: {},
-        name: "invalid object config"
+        config: [],
+        name: "invalid array config"
     },
     {
         valid: false,
@@ -76,261 +78,481 @@ const TEST_DATA = [
     },
     {
         valid: false,
-        config: [
-            "string, because why not"
-        ],
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                "string, because why not"
+            ]
+        },
         name: "invalid project config type"
     },
     {
         valid: false,
-        config: [
-            null
-        ],
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                null
+            ]
+        },
         name: "invalid project config type"
     },
     {
         valid: false,
-        config: [
-            {
-                githubToken: "loremIpsum",
-                projectName: "foo bar",
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    projectName: "foo bar",
+                    githubAccount: "gh"
                 }
-            }
-        ],
+            ]
+        },
         name: "invalid project without repo field"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: null,
-                githubToken: "loremIpsum",
-                projectName: "foo bar",
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: null,
+                    projectName: "foo bar",
+                    githubAccount: "gh"
                 }
-            }
-        ],
+            ]
+        },
         name: "invalid project with repo field of wrong type"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: "",
-                githubToken: "loremIpsum",
-                projectName: "foo bar",
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "",
+                    projectName: "foo bar",
+                    githubAccount: "gh"
                 }
-            }
-        ],
+            ]
+        },
         name: "invalid project with empty repo name"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: "foo",
-                githubToken: "loremIpsum",
-                projectName: "foo bar",
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo",
+                    githubAccount: "gh",
+                    projectName: "foo bar"
                 }
-            }
-        ],
+            ]
+        },
         name: "invalid repo name when not in format user/reponame"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                projectName: "foo bar",
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    projectName: "foo bar"
                 }
-            }
-        ],
-        name: "invalid project without githubToken"
+            ]
+        },
+        name: "invalid project without githubAccount"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: null,
-                projectName: "foo bar",
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    githubAccount: null,
+                    projectName: "foo bar"
                 }
-            }
-        ],
-        name: "invalid project with githubToken of wrong type"
+            ]
+        },
+        name: "invalid project with githubAccount of wrong type"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "",
-                projectName: "foo bar",
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    githubToken: "",
+                    projectName: "foo bar"
                 }
-            }
-        ],
-        name: "invalud project with empty githubToken"
+            ]
+        },
+        name: "invalud project with empty githubAccount"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    githubAccount: "gh"
                 }
-            }
-        ],
+            ]
+        },
         name: "invalid project with no board name"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                projectName: null,
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    githubAccount: "gh",
+                    projectName: null
                 }
-            }
-        ],
+            ]
+        },
         name: "inavlid project with board name of wrong type"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                projectName: "",
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    githubAccount: "gh",
+                    projectName: ""
                 }
-            }
-        ],
+            ]
+        },
         name: "invalid project with empty board name"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                projectName: "baz",
-                labels: null,
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    githubAccount: "gh",
+                    projectName: "baz",
+                    labels: null
                 }
-            }
-        ],
+            ]
+        },
         name: "invalid project with null labels"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                projectName: "baz",
-                labels: {
-                    what: "no"
-                },
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    githubAccount: "gh",
+                    projectName: "baz",
+                    labels: {
+                        what: "no"
+                    }
                 }
-            }
-        ],
+            ]
+        },
         name: "inavlid project with unknown label"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                projectName: "baz",
-                labels: {
-                    retweet: null
-                },
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    githubAccount: "gh",
+                    projectName: "baz",
+                    labels: {
+                        retweet: null
+                    }
                 }
-            }
-        ],
+            ]
+        },
         name: "inavlid project with lable with invalid name"
     },
     {
         valid: false,
-        config: [
-            {
-                repo: "foo/bar",
-                githubToken: "loremIpsum",
-                projectName: "baz",
-                labels: {
-                    retweet: ""
-                },
-                twitter: {
-                    access_token_key: "asdf",
-                    access_token_secret: "asdf",
-                    consumer_key: "asdf",
-                    consumer_secret: "asdf"
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    githubAccount: "gh",
+                    projectName: "baz",
+                    labels: {
+                        retweet: ""
+                    }
                 }
-            }
-        ],
+            ]
+        },
         name: "inavlid project with lable with empty name"
     }
 ];

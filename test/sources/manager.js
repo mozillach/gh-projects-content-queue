@@ -60,8 +60,8 @@ test('construction with config without sources', (t) => {
         foo: 'bar'
     };
     const repo = 'lorem';
-    const twitter = 'ipsum';
-    const manager = new SourceManager(config, repo, twitter);
+    const accountManager = 'ipsum';
+    const manager = new SourceManager(config, repo, accountManager);
 
     t.is(manager.sources.size, 0);
     t.is(manager.sourceFactories.size, 0);
@@ -69,7 +69,7 @@ test('construction with config without sources', (t) => {
 
     t.deepEqual(manager._config, config);
     t.is(manager._repo, repo);
-    t.is(manager._twitterAccount, twitter);
+    t.is(manager._accountManager, accountManager);
 });
 
 test('constructor with config with empty sources', (t) => {
