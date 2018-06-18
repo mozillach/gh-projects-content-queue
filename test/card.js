@@ -1,13 +1,15 @@
 import test from 'ava';
-import TweetCard from '../lib/tweet-card';
+import Card from '../lib/card';
 import { getIssue, getConfig } from './_stubs';
-import TweetCardContent from '../lib/tweet-card-content';
+import CardContent from '../lib/card-content';
+import Formatter from '../lib/formatters/formatter';
+import TwitterFormatter from '../lib/formatters/twitter';
 import sinon from 'sinon';
 
 test('checkValidity', (t) => {
     const issue = getIssue();
     const config = getConfig();
-    const card = new TweetCard(issue, config);
+    const card = new Card(issue, config);
 
     t.true(issue.hasLabel(config.labels.invalid));
     t.false(issue.hasLabel(config.labels.ready));
@@ -19,31 +21,31 @@ test('checkValidity', (t) => {
 });
 
 test('updateContent', (t) => {
-    const issue = getIssue(TweetCardContent.createCard('bugs').toString());
+    const issue = getIssue(Formatter.Format(Formatter.TODO_PLACEHOLDER));
     const config = getConfig();
-    const card = new TweetCard(issue, config);
+    const card = new Card(issue, config);
 
-    t.is(card.content.tweet, '_todo_');
+    t.is(card.content.getSection(Formatter.META), Formatter.TODO_PLACEHOLDER);
     t.true(issue.hasLabel(config.labels.invalid));
     t.false(issue.hasLabel(config.labels.ready));
 
-    issue.content = issue.content.replace('_todo_', 'test');
+    issue.content = issue.content.replace(Formatter.TODO_PLACEHOLDER, 'test');
 
     card.updateContent();
 
-    t.is(card.content.tweet, 'test');
+    t.is(card.content.getSection(Formatter.META), 'test');
 });
 
 test('checkValidity updates content', (t) => {
     const issue = getIssue();
     const config = getConfig();
-    const card = new TweetCard(issue, config);
+    const card = new Card(issue, config);
 
     t.true(issue.hasLabel(config.labels.invalid));
     t.false(issue.hasLabel(config.labels.ready));
     t.false(issue.hasLabel(config.labels.retweet));
 
-    issue.content = TweetCardContent.createCard('bugs').toString().replace('_todo_', 'foo bar');
+    issue.content = Formatter.Format('bugs').replace(Formatter.META_PLACEHOLDER, 'foo bar');
 
     card.checkValidity();
 
@@ -55,9 +57,9 @@ test('checkValidity updates content', (t) => {
 });
 
 test('checkValidity adds retweet label', (t) => {
-    const issue = getIssue(TweetCardContent.createCard('bugs', true).toString());
+    const issue = getIssue(TwitterFormatter.Format('bugs'));
     const config = getConfig();
-    const card = new TweetCard(issue, config);
+    const card = new Card(issue, config);
 
     // card calls checkValidity in constructor, but let's make it obvious:
     card.checkValidity();
@@ -68,22 +70,22 @@ test('checkValidity adds retweet label', (t) => {
 });
 
 test('checkValidity removes retweet label', (t) => {
-    const issue = getIssue(TweetCardContent.createCard('bugs', true).toString());
+    const issue = getIssue(TwitterFormatter.Format('bugs', true));
     const config = getConfig();
-    const card = new TweetCard(issue, config);
+    const card = new Card(issue, config);
 
     t.true(issue.hasLabel(config.labels.retweet));
 
-    issue.content = TweetCardContent.createCard('bugs').toString();
+    issue.content = new CardContent(Formatter.Format('bugs'), getConfig());
     card.checkValidity();
 
     t.false(issue.hasLabel(config.labels.retweet));
 });
 
 test('checkValidty immediately adds ready', (t) => {
-    const issue = getIssue(TweetCardContent.createCard('bugs').toString().replace('_todo_', 'ready'));
+    const issue = getIssue(Formatter.Format('bugs').replace(Formatter.META_PLACEHOLDER, 'ready'));
     const config = getConfig();
-    const card = new TweetCard(issue, config);
+    const card = new Card(issue, config);
 
     card.checkValidity();
 
@@ -92,16 +94,16 @@ test('checkValidty immediately adds ready', (t) => {
 });
 
 test('to string', (t) => {
-    const content = TweetCardContent.createCard('test');
-    const issue = getIssue(content.toString());
-    const card = new TweetCard(issue, getConfig());
+    const content = Formatter.Format('test');
+    const issue = getIssue(content);
+    const card = new Card(issue, getConfig());
 
-    t.is(card.toString(), content.toString());
+    t.is(card.toString(), content);
 });
 
 test('remind', async (t) => {
     const issue = getIssue();
-    const card = new TweetCard(issue, getConfig());
+    const card = new Card(issue, getConfig());
 
     issue.comment.resetHistory();
     issue.comment.resolves();
@@ -114,7 +116,7 @@ test('remind', async (t) => {
 
 test('comment', async (t) => {
     const issue = getIssue();
-    const card = new TweetCard(issue, getConfig());
+    const card = new Card(issue, getConfig());
 
     issue.comment.resetHistory();
     issue.comment.resolves();
@@ -127,7 +129,7 @@ test('comment', async (t) => {
 
 test('assign', async (t) => {
     const issue = getIssue();
-    const card = new TweetCard(issue, getConfig());
+    const card = new Card(issue, getConfig());
 
     const user = 'foo';
     issue.assign.resolves();
@@ -138,11 +140,11 @@ test('assign', async (t) => {
 });
 
 test('flush content', (t) => {
-    const content = TweetCardContent.createCard('test');
-    const issue = getIssue(content.toString());
-    const card = new TweetCard(issue, getConfig());
+    const content = Formatter.Format('test');
+    const issue = getIssue(content);
+    const card = new Card(issue, getConfig());
 
-    card._content.setSection(TweetCardContent.TWEET_CONTENT, 'bar');
+    card._content.setSection(TwitterFormatter.TWEET_CONTENT, 'bar');
 
     card.flushContent();
 
@@ -150,24 +152,24 @@ test('flush content', (t) => {
 });
 
 test("can't tweet", (t) => {
-    const card = new TweetCard(getIssue(TweetCardContent.createCard('test').toString()), getConfig());
+    const card = new Card(getIssue(Formatter.Format('test')), getConfig());
 
     t.false(card.canTweet);
 });
 
 test("can't tweet due to scheduling", (t) => {
     const date = new Date(Date.now() + 6000000);
-    const content = TweetCardContent.createCard('test', false, date, getConfig());
-    content.setSection(TweetCardContent.TWEET_CONTENT, 'bar');
-    const card = new TweetCard(getIssue(content.toString()), getConfig());
+    const content = new CardContent(Formatter.Format('test', date, getConfig()), getConfig());
+    content.setSection(TwitterFormatter.TWEET_CONTENT, 'bar');
+    const card = new Card(getIssue(content.toString()), getConfig());
 
     t.false(card.canTweet);
 });
 
 test("can tweet", (t) => {
-    const content = TweetCardContent.createCard('test');
-    content.setSection(TweetCardContent.TWEET_CONTENT, 'bar');
-    const card = new TweetCard(getIssue(content.toString()), getConfig());
+    const content = new CardContent(Formatter.Format('test'), getConfig());
+    content.setSection(TwitterFormatter.TWEET_CONTENT, 'bar');
+    const card = new Card(getIssue(content.toString()), getConfig());
 
     t.true(card.canTweet);
 });
@@ -176,9 +178,9 @@ test.serial("can tweet with scheduling", (t) => {
     const clock = sinon.useFakeTimers();
 
     const date = new Date(Date.now() - 60);
-    const content = TweetCardContent.createCard('test', false, date, getConfig());
-    content.setSection(TweetCardContent.TWEET_CONTENT, 'bar');
-    const card = new TweetCard(getIssue(content.toString()), getConfig());
+    const content = new CardContent(Formatter.Format('test', date, getConfig()), getConfig());
+    content.setSection(TwitterFormatter.TWEET_CONTENT, 'bar');
+    const card = new Card(getIssue(content.toString()), getConfig());
 
     t.true(card.canTweet);
 
@@ -187,7 +189,7 @@ test.serial("can tweet with scheduling", (t) => {
 
 test('report errors', async (t) => {
     const issue = getIssue();
-    const card = new TweetCard(issue, getConfig());
+    const card = new Card(issue, getConfig());
 
     const errors = [
         'foo',
@@ -207,7 +209,7 @@ test('report errors', async (t) => {
 
 test('report error Error instance', async (t) => {
     const issue = getIssue();
-    const card = new TweetCard(issue, getConfig());
+    const card = new Card(issue, getConfig());
 
     const action = 'foo';
     const error = new Error('test');
@@ -223,7 +225,7 @@ test('report error Error instance', async (t) => {
 
 test('report error Object instance', async (t) => {
     const issue = getIssue();
-    const card = new TweetCard(issue, getConfig());
+    const card = new Card(issue, getConfig());
 
     const action = 'foo';
     const error = {
@@ -241,7 +243,7 @@ test('report error Object instance', async (t) => {
 
 test('report error String instance', async (t) => {
     const issue = getIssue();
-    const card = new TweetCard(issue, getConfig());
+    const card = new Card(issue, getConfig());
 
     const action = 'foo';
     const error = 'test';
