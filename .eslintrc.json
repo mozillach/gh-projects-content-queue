@@ -1,55 +1,55 @@
 {
-  "env": {
-    "es6": true,
-    "node": true
-  },
-  "parserOptions": {
-    "ecmaVersion": 8
-  },
-  "plugins": [
-    "node"
-  ],
-  "rules": {
-    "valid-jsdoc": 1,
-    "indent": ["error", 4],
-    "prefer-const": 1,
-    "strict": 2,
-    "no-loop-func": 1,
-    "no-tabs": 2,
-    "no-eval": 1,
-    "prefer-arrow-callback": 2,
-    "no-use-before-define": 2,
-    "block-scoped-var": 2,
-    "no-extra-label": 2,
-    "no-implied-eval": 2,
-    "no-invalid-this": 2,
-    "yoda": 1,
-    "eol-last": 2,
-    "no-trailing-spaces": 2,
-    "one-var-declaration-per-line": 2,
-    "no-console": 0,
-    "node/no-unsupported-features": [
-      "error",
-      {
-        "ignores": [
-          "asyncAwait"
-        ]
-      }
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 8
+    },
+    "plugins": [
+        "node"
     ],
-    "semi": 2
-  },
-  "settings": {
-      "jsdoc": {
-          "additionalTagNames": {
-              "customTags": [
-                  "async"
-              ]
-          }
-      }
-  },
-  "extends": [
-      "eslint:recommended",
-      "plugin:node/recommended",
-      "plugin:array-func/recommended"
-  ]
+    "rules": {
+        "valid-jsdoc": 1,
+        "indent": ["error", 4],
+        "prefer-const": 1,
+        "strict": 2,
+        "no-loop-func": 1,
+        "no-tabs": 2,
+        "no-eval": 1,
+        "prefer-arrow-callback": 2,
+        "no-use-before-define": 2,
+        "block-scoped-var": 2,
+        "no-extra-label": 2,
+        "no-implied-eval": 2,
+        "no-invalid-this": 2,
+        "yoda": 1,
+        "eol-last": 2,
+        "no-trailing-spaces": 2,
+        "one-var-declaration-per-line": 2,
+        "no-console": 0,
+        "node/no-unsupported-features": [
+            "error",
+            {
+                "ignores": [
+                    "asyncAwait"
+                ]
+            }
+        ],
+        "semi": 2
+    },
+    "settings": {
+        "jsdoc": {
+            "additionalTagNames": {
+                "customTags": [
+                    "async"
+                ]
+            }
+        }
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:node/recommended",
+        "plugin:array-func/recommended"
+    ]
 }
