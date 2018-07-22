@@ -10,7 +10,8 @@
     "lint:ec": "eclint $(git ls-files)",
     "lint": "npm run lint:js && npm run lint:docker",
     "coverage": "codecov --disable=gcov",
-    "start": "node index.js"
+    "start": "node index.js",
+    "migrate": "node scripts/migrate-v1-v2.js"
   },
   "repository": {
     "type": "git",
