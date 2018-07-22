@@ -44,6 +44,33 @@
                         ]
                     },
                     "uniqueItems": true
+                },
+                "discourse": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "$extends": "#/definitions/Account",
+                        "properties": {
+                            "url": {
+                                "type": "string"
+                            },
+                            "key": {
+                                "type": "string"
+                            },
+                            "username": {
+                                "type": "string"
+                            },
+                            "forum": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "url",
+                            "key",
+                            "username",
+                            "forum"
+                        ]
+                    }
                 }
             }
         },
