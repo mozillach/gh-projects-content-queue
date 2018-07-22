@@ -56,9 +56,10 @@
                         "source": "To Tweet",
                         "target": "Tweeted"
                     },
-                    "type": "tweeting",
+                    "type": "publish",
                     "schedule": [],
-                    "twitterAccount": "firstTwitterAccount"
+                    "accountType": "twitter",
+                    "twitterName": "firstTwitterAccount"
                 },
                 {
                     "columns": {

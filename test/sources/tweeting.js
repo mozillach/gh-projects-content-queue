@@ -52,7 +52,6 @@ test('constructor', (t) => {
 test.todo('events');
 test.todo('init');
 test.todo('tweet');
-test.todo('separateContentAndMedia');
 test.todo('getUTCHourMinuteDate with fictures');
 
 test.serial('getUTCHourMinuteDate', (t) => {

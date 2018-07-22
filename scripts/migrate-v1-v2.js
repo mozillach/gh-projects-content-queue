@@ -60,9 +60,16 @@ for(const board of oldConfig) {
         sources: board.sources.map((s) => {
             switch(s.type) {
                 case 'mentions':
-                case 'tweeting':
                     s.twitterAccount = twitterName;
                     return s;
+                case 'tweeting': {
+                    return {
+                        columns: s.columns,
+                        type: 'publish',
+                        accountType: 'twitter',
+                        accountName: twitterName
+                    };
+                }
                 case 'discourse': {
                     const discourseName = addAccount(board, 'discourse', {
                         forum: s.forum,
