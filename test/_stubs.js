@@ -72,9 +72,9 @@ const getBoard = (columns) => ({
     columnIds: Promise.resolve(columns),
     config: getConfig(),
     githubClient: getGithubClient(),
-    cardTweeted: sinon.stub(),
     on: sinon.stub(),
-    addCard: sinon.stub()
+    addCard: sinon.stub(),
+    moveCardToColumn: sinon.stub()
 });
 
 const getIssue = (content = 'lorem ipsum', number = 1) => {
