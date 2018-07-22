@@ -136,7 +136,10 @@
                                         "validator"
                                     ]
                                 }
-                            }
+                            },
+                            "required": [
+                                "type"
+                            ]
                         },
                         "uniqueItems": true
                     }
