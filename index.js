@@ -13,6 +13,7 @@ const AccountManager = require("./lib/accounts/manager");
 
 loadConfig(path.join(__dirname, "./config.json")).then((config) => {
     const accountManager = new AccountManager(config.accounts);
+    //TODO share repos accross boards
     for(const project of config.boards) {
         new ContentQueue(accountManager, project);
     }
