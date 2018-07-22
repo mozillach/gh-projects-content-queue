@@ -27,7 +27,7 @@ test('construction', (t) => {
 test('ready without repo scope', (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.resolves({
-        meta: {
+        headers: {
             'x-oauth-scopes': 'notifications'
         }
     });
@@ -41,7 +41,7 @@ test('construction ready', async (t) => {
     const config = getConfig();
     // Repo setup
     client.misc.getRateLimit.resolves({
-        meta: {
+        headers: {
             'x-oauth-scopes': 'public_repo, org:read'
         }
     });
@@ -355,7 +355,7 @@ test('create card without position', async (t) => {
 
     // Repo setup
     client.misc.getRateLimit.resolves({
-        meta: {
+        headers: {
             'x-oauth-scopes': 'public_repo, org:read'
         }
     });
@@ -435,7 +435,7 @@ test('create card with position', async (t) => {
 
     // Repo setup
     client.misc.getRateLimit.resolves({
-        meta: {
+        headers: {
             'x-oauth-scopes': 'public_repo, org:read'
         }
     });
@@ -678,7 +678,7 @@ test('has required permissions for user', async (t) => {
     await t.throws(repo.ready);
 
     client.misc.getRateLimit.resolves({
-        meta: {
+        headers: {
             'x-oauth-scopes': 'public_repo'
         }
     });
@@ -705,7 +705,7 @@ test('has required permissions for org', async (t) => {
     await t.throws(repo.ready);
 
     client.misc.getRateLimit.resolves({
-        meta: {
+        headers: {
             'x-oauth-scopes': 'public_repo, read:org'
         }
     });
@@ -732,7 +732,7 @@ test('does not have required permissions', async (t) => {
     await t.throws(repo.ready);
 
     client.misc.getRateLimit.resolves({
-        meta: {
+        headers: {
             'x-oauth-scopes': 'repo'
         }
     });
@@ -832,7 +832,7 @@ test('update card', async (t) => {
     const config = getConfig();
     // Repo setup
     client.misc.getRateLimit.resolves({
-        meta: {
+        headers: {
             'x-oauth-scopes': 'public_repo, org:read'
         }
     });

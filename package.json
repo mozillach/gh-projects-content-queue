@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/mozillach/gh-projects-content-queue#readme",
   "engines": {
-    "node": ">=7.7.1"
+    "node": ">=8.0.0"
   },
   "devDependencies": {
     "ava": "^0.25.0",

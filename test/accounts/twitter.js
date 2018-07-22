@@ -1,6 +1,6 @@
 import test from 'ava';
 import TwitterAccount from '../../lib/accounts/twitter';
-import { getTwitterClient } from '../_stubs';
+import { getTwitterClient, getConfig } from '../_stubs';
 import UpdateManager from '../../lib/update-manager';
 import sinon from 'sinon';
 
@@ -205,12 +205,12 @@ test('construction ready rejected', (t) => {
 
 test.todo('uploadMedia');
 
-test.skip('tweet', async (t) => {
+test('tweet', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         screen_name: 'test'
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
     const tweet = 'lorem ipsum';
 
     client.post.resolves({
@@ -226,12 +226,12 @@ test.skip('tweet', async (t) => {
     t.is(url, 'https://twitter.com/test/status/foo');
 });
 
-test.skip('too long tweet', (t) => {
+test('too long tweet', (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         screen_name: 'test'
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
     const tweet = getTweet(284);
 
     client.post.resolves({
@@ -241,12 +241,12 @@ test.skip('too long tweet', (t) => {
     return t.throws(account.tweet(tweet));
 });
 
-test.skip('tweet with media', async (t) => {
+test('tweet with media', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         screen_name: 'test'
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
     const tweet = 'lorem ipsum';
     const media = 'foo bar';
 
@@ -264,12 +264,12 @@ test.skip('tweet with media', async (t) => {
     t.is(url, 'https://twitter.com/test/status/foo');
 });
 
-test.skip("tweet reply that can't be replied to", async (t) => {
+test("tweet reply that can't be replied to", async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         screen_name: 'test'
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
     const tweet = 'lorem ipsum';
     const reply = 'foo bar';
 
@@ -286,12 +286,12 @@ test.skip("tweet reply that can't be replied to", async (t) => {
     t.is(url, 'https://twitter.com/test/status/foo');
 });
 
-test.skip("tweet reply", async (t) => {
+test("tweet reply", async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         screen_name: 'test'
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
     const tweet = 'lorem ipsum';
     const reply = 'https://twitter.com/baz/status/1234';
 
@@ -310,12 +310,12 @@ test.skip("tweet reply", async (t) => {
     t.is(url, 'https://twitter.com/test/status/foo');
 });
 
-test.skip("tweet reply with explicit mentions", async (t) => {
+test("tweet reply with explicit mentions", async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         screen_name: 'test'
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
     const tweet = '@Baz lorem ipsum';
     const reply = 'https://twitter.com/baz/status/1234';
 
@@ -333,10 +333,10 @@ test.skip("tweet reply with explicit mentions", async (t) => {
     t.is(url, 'https://twitter.com/test/status/foo');
 });
 
-test.skip('retweet', async (t) => {
+test('retweet', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({});
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
     const retweet = 'https://twitter.com/baz/status/1234';
 
     client.post.resolves({});
@@ -348,13 +348,13 @@ test.skip('retweet', async (t) => {
     t.true(client.post.calledWith('statuses/retweet/1234'));
 });
 
-test.skip('check login', async (t) => {
+test('check login', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         screen_name: 'test',
         id_str: '1234'
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
 
     client.get.resetHistory();
 
@@ -365,12 +365,12 @@ test.skip('check login', async (t) => {
     t.true(client.get.calledOnce);
 });
 
-test.skip('get username', async (t) => {
+test('get username', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         screen_name: 'test'
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
 
     const username = await account.getUsername();
 
@@ -378,13 +378,13 @@ test.skip('get username', async (t) => {
     t.is(username, 'test');
 });
 
-test.skip('get ID', async (t) => {
+test('get ID', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         screen_name: 'test',
         id_str: '1234'
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
 
     const id = await account.getID();
 
@@ -392,13 +392,13 @@ test.skip('get ID', async (t) => {
     t.is(id, '1234');
 });
 
-test.skip('tweets', async (t) => {
+test('tweets', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         id_str: '1234',
         created_at: Date.now()
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
 
     const tweets = [
         'tweet1',
@@ -418,13 +418,13 @@ test.skip('tweets', async (t) => {
     })));
 });
 
-test.serial.skip('tweets with existing tweets stored', async (t) => {
+test.serial('tweets with existing tweets stored', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         id_str: '1234',
         created_at: Date.now()
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
 
     const tweets = [
         {
@@ -463,13 +463,13 @@ test.serial.skip('tweets with existing tweets stored', async (t) => {
     })));
 });
 
-test.skip('tweets without any results', async (t) => {
+test('tweets without any results', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         id_str: '1234',
         created_at: Date.now()
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
 
     const tweets = [];
 
@@ -486,13 +486,13 @@ test.skip('tweets without any results', async (t) => {
     })));
 });
 
-test.skip('last mention', async (t) => {
+test('last mention', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         id_str: '1234',
         created_at: Date.now()
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
 
     const tweets = [];
     client.get.resolves(tweets);
@@ -521,13 +521,13 @@ test.skip('last mention', async (t) => {
     }));
 });
 
-test.skip('last mention second run', async (t) => {
+test('last mention second run', async (t) => {
     const client = getTwitterClient();
     client.get.resolves({
         id_str: '1234',
         created_at: Date.now()
     });
-    const account = new TwitterAccount(client);
+    const account = new TwitterAccount(getConfig(), client);
 
     const tweets = [];
     client.get.resolves(tweets);
