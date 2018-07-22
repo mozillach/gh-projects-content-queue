@@ -1,7 +1,7 @@
 {
   "name": "gh-projects-content-queue",
-  "version": "1.0.1",
-  "description": "A Twitter content curation queue based on GitHub projects",
+  "version": "2.0.0",
+  "description": "A content curation queue based on GitHub projects",
   "main": "index.js",
   "scripts": {
     "test": "npm run lint && nyc -r lcov -r text ava",

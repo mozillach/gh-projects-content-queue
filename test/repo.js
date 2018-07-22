@@ -867,7 +867,7 @@ test('update card', async (t) => {
 
     const card = getCard();
     const newContent = `${card.issue.content} dolor sit amet`;
-    card.checkValidity.resolves();
+    card.updateContent.resolves();
     const openIssues = await repo.issues.issues;
     openIssues.set(card.issue.number, card.issue);
 
@@ -893,7 +893,7 @@ test('update card', async (t) => {
     await repo.updateCard(card);
 
     t.is(card.issue.content, newContent);
-    t.true(card.checkValidity.called);
+    t.true(card.updateContent.called);
 });
 
 test.todo('setup');

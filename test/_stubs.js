@@ -130,8 +130,7 @@ const getTwitterAccount = (username, tweets = []) => ({
 const getCard = (issue = getIssue(), column = getColumn()) => ({
     issue,
     column,
-    id: 'bar',
-    checkValidity: sinon.stub()
+    id: 'bar'
 });
 
 const getAccountManager = () => ({

@@ -320,24 +320,6 @@ test('move card', async (t) => {
     })));
 });
 
-test('check cards', async (t) => {
-    const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
-    });
-    const column = new Column(client, 1, 'test', new Map());
-    const card = {
-        checkValidity: sinon.spy()
-    };
-
-    const cards = await column.cards;
-    cards.add(card);
-
-    await column.checkCards();
-
-    t.true(card.checkValidity.called);
-});
-
 test('has issue', async (t) => {
     const client = getGithubClient();
     client.projects.getProjectCards.resolves({

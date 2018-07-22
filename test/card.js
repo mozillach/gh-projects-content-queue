@@ -6,20 +6,6 @@ import Formatter from '../lib/formatters/formatter';
 import TwitterFormatter from '../lib/formatters/twitter';
 import sinon from 'sinon';
 
-test.failing('checkValidity', (t) => {
-    const issue = getIssue();
-    const config = getConfig();
-    const card = new Card(issue, config);
-
-    t.true(issue.hasLabel(config.labels.invalid));
-    t.false(issue.hasLabel(config.labels.ready));
-    t.false(issue.hasLabel(config.labels.retweet));
-
-    card.checkValidity();
-
-    t.true(issue.comment.calledOnce);
-});
-
 test('updateContent', (t) => {
     const issue = getIssue(Formatter.Format(Formatter.TODO_PLACEHOLDER));
     const config = getConfig();
@@ -36,58 +22,24 @@ test('updateContent', (t) => {
     t.is(card.content.getSection(Formatter.META), 'test');
 });
 
-test.failing('checkValidity updates content', (t) => {
-    const issue = getIssue();
-    const config = getConfig();
-    const card = new Card(issue, config);
-
-    t.true(issue.hasLabel(config.labels.invalid));
-    t.false(issue.hasLabel(config.labels.ready));
-    t.false(issue.hasLabel(config.labels.retweet));
-
-    issue.content = Formatter.Format('bugs').replace(Formatter.META_PLACEHOLDER, 'foo bar');
-
-    card.checkValidity();
-
-    t.true(issue.addLabel.calledTwice);
-    t.true(issue.comment.calledOnce);
-    t.true(issue.removeLabel.calledTwice);
-    t.false(issue.hasLabel(config.labels.invalid));
-    t.true(issue.hasLabel(config.labels.ready));
-});
-
-test.failing('checkValidity adds retweet label', (t) => {
+test('setValidity marks as invalid label', (t) => {
     const issue = getIssue(TwitterFormatter.Format('bugs'));
     const config = getConfig();
     const card = new Card(issue, config);
 
-    // card calls checkValidity in constructor, but let's make it obvious:
-    card.checkValidity();
+    card.setValidity([ 'some error' ]);
 
-    t.true(issue.hasLabel(config.labels.retweet));
+    //t.true(issue.hasLabel(config.labels.retweet));
     t.true(issue.hasLabel(config.labels.invalid));
     t.false(issue.hasLabel(config.labels.ready));
 });
 
-test.failing('checkValidity removes retweet label', (t) => {
-    const issue = getIssue(TwitterFormatter.Format('bugs', true));
-    const config = getConfig();
-    const card = new Card(issue, config);
-
-    t.true(issue.hasLabel(config.labels.retweet));
-
-    issue.content = new CardContent(Formatter.Format('bugs'), getConfig());
-    card.checkValidity();
-
-    t.false(issue.hasLabel(config.labels.retweet));
-});
-
-test.failing('checkValidty immediately adds ready', (t) => {
+test('setValidity immediately adds ready', (t) => {
     const issue = getIssue(Formatter.Format('bugs').replace(Formatter.META_PLACEHOLDER, 'ready'));
     const config = getConfig();
     const card = new Card(issue, config);
 
-    card.checkValidity();
+    card.setValidity([]);
 
     t.true(issue.hasLabel(config.labels.ready));
     t.false(issue.hasLabel(config.labels.invalid));
@@ -151,30 +103,30 @@ test('flush content', (t) => {
     t.is(issue.content, card._content.toString());
 });
 
-test.failing("can't tweet", (t) => {
+test("can't tweet", (t) => {
     const card = new Card(getIssue(Formatter.Format('test')), getConfig());
 
-    t.false(card.canTweet);
+    t.false(card.ready);
 });
 
-test.failing("can't tweet due to scheduling", (t) => {
+test("can't tweet due to scheduling", (t) => {
     const date = new Date(Date.now() + 6000000);
     const content = new CardContent(Formatter.Format('test', date, getConfig()), getConfig());
     content.setSection(TwitterFormatter.TWEET_CONTENT, 'bar');
     const card = new Card(getIssue(content.toString()), getConfig());
 
-    t.false(card.canTweet);
+    t.false(card.ready);
 });
 
-test.failing("can tweet", (t) => {
+test("can tweet", (t) => {
     const content = new CardContent(Formatter.Format('test'), getConfig());
     content.setSection(TwitterFormatter.TWEET_CONTENT, 'bar');
     const card = new Card(getIssue(content.toString()), getConfig());
 
-    t.true(card.canTweet);
+    t.true(card.ready);
 });
 
-test.serial.failing("can tweet with scheduling", (t) => {
+test.serial("can tweet with scheduling", (t) => {
     const clock = sinon.useFakeTimers();
 
     const date = new Date(Date.now() - 60);
@@ -182,7 +134,7 @@ test.serial.failing("can tweet with scheduling", (t) => {
     content.setSection(TwitterFormatter.TWEET_CONTENT, 'bar');
     const card = new Card(getIssue(content.toString()), getConfig());
 
-    t.true(card.canTweet);
+    t.true(card.ready);
 
     clock.restore();
 });
