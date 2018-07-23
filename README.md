@@ -17,8 +17,9 @@ creation, improves collaboration and gives better control over content quality.
 - Reaction squad system to ping people to react to a mention
 - Auto tweeting tweets from a column in certain spacing (à la buffer)
 - Reminder system for tweets that are due but not ready
-- Auto create tweets for events on Mozilla Reps for a given query
+- Auto create tweets for events from an ical feed
 - Auto create tweets for new discourse threads
+- Auto create tweets for posts in an Atom or RSS feed
 
 ### Planned
 - Tweet pinning management
