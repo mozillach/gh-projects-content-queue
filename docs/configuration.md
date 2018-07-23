@@ -1,8 +1,8 @@
 # Configuration
 
-- [By file](#By_file)
-- [By environment variables](#By_environment_variables)
-- [Basic anatomy](#Basic anatomy)
+- [By file](#by-file)
+- [By environment variables](#by-environment-variables)
+- [Basic anatomy](#basic-anatomy)
 
 ## By file
 The configuration is defined with JSON in the file `config.json` in the root directory of the project. This file does not exist by default. It is validated against the [config schema](templates/config.schema.json). The default config can be found in [`config.default.json`](config.default.json). Note that this is not a working config, as invalid values are provided for the authentication credentials for Twitter and GitHub. You can copy the [`config.default.json`](config.default.json) to `config.json` and edit it.
