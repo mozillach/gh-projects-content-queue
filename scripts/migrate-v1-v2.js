@@ -83,6 +83,12 @@ for(const board of oldConfig) {
                         discourseAccount: discourseName
                     };
                 }
+                case 'events':
+                    return {
+                        columns: s.columns,
+                        type: s.type,
+                        url: `https://reps.mozilla.org/events/period/future/search/${encodeURIComponent(s.query)}/ical/`
+                    };
                 default:
                     return s;
             }

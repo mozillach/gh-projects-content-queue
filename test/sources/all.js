@@ -5,7 +5,8 @@ import Issues from '../../lib/sources/issues';
 import Mentions from '../../lib/sources/mentions';
 import Reminder from '../../lib/sources/reminder';
 import Squad from '../../lib/sources/squad';
-import Tweeting from '../../lib/sources/tweeting';
+import Tweeting from '../../lib/sources/publish';
+import Feed from '../../lib/sources/feed';
 
 const sources = [
     Discourse,
@@ -14,7 +15,8 @@ const sources = [
     Mentions,
     Reminder,
     Squad,
-    Tweeting
+    Tweeting,
+    Feed
 ];
 
 const testRequiredConfig = (t, source) => {

@@ -1,5 +1,5 @@
 import test from 'ava';
-import TweetingSource from '../../lib/sources/tweeting';
+import PublishSource from '../../lib/sources/publish';
 import { getRepo, getAccountManager, getColumn } from '../_stubs';
 import sinon from 'sinon';
 
@@ -25,25 +25,27 @@ const getArgs = () => {
                 target: 'Foo',
                 source: 'Bar'
             },
-            schedule: []
+            schedule: [],
+            accountType: 'twitter',
+            accountName: 'lorem'
         },
         () => Promise.resolve([ getColumn(1, 'Foo') ])
     ];
 };
 
 test('columns', (t) => {
-    t.is(TweetingSource.requiredColumns.length, 2);
-    t.true(TweetingSource.requiredColumns.includes('target'));
-    t.true(TweetingSource.requiredColumns.includes('source'));
+    t.is(PublishSource.requiredColumns.length, 2);
+    t.true(PublishSource.requiredColumns.includes('target'));
+    t.true(PublishSource.requiredColumns.includes('source'));
 });
 
 test('managed columns', (t) => {
-    t.is(TweetingSource.managedColumns.length, 1);
-    t.true(TweetingSource.managedColumns.includes('target'));
+    t.is(PublishSource.managedColumns.length, 1);
+    t.true(PublishSource.managedColumns.includes('target'));
 });
 
 test('constructor', (t) => {
-    const source = new TweetingSource(...getArgs());
+    const source = new PublishSource(...getArgs());
 
     t.true("lastUpdate" in source);
     t.is(source.lastUpdate, Date.now());
@@ -57,11 +59,11 @@ test.todo('getUTCHourMinuteDate with fictures');
 test.serial('getUTCHourMinuteDate', (t) => {
     const now = new Date();
 
-    t.is(TweetingSource.getUTCHourMinuteDate(now.getUTCHours(), now.getUTCMinutes()), now.getTime());
+    t.is(PublishSource.getUTCHourMinuteDate(now.getUTCHours(), now.getUTCMinutes()), now.getTime());
 });
 
 test('get current quota is infinite without schedule', (t) => {
-    const source = new TweetingSource(...getArgs());
+    const source = new PublishSource(...getArgs());
 
     source._config.schedule.length = 0;
 
@@ -71,7 +73,7 @@ test('get current quota is infinite without schedule', (t) => {
 });
 
 test.serial('get current quota', (t) => {
-    const source = new TweetingSource(...getArgs());
+    const source = new PublishSource(...getArgs());
 
     source._config.schedule.length = 0;
     const now = new Date();
@@ -87,9 +89,9 @@ test.serial('get current quota', (t) => {
     t.is(quota, 2);
 });
 
-test('card tweeted', async (t) => {
+test('card published', async (t) => {
     const args = getArgs();
-    const source = new TweetingSource(...args);
+    const source = new PublishSource(...args);
     args[0].board.moveCardToColumn.resolves();
     const column = getColumn("1", 'test');
     const url = 'https://example.com';
@@ -107,7 +109,7 @@ test('card tweeted', async (t) => {
     card.issue.close.resolves();
     column.addCard.resolves();
 
-    await source.cardTweeted(card, url, column);
+    await source.cardPublished(card, url, column);
 
     t.true(args[0].board.moveCardToColumn.called);
     t.true(card.comment.calledOnce);
@@ -116,9 +118,9 @@ test('card tweeted', async (t) => {
     t.true(column.addCard.calledWith(card));
 });
 
-test('card retweeted', async (t) => {
+test('retweet card published', async (t) => {
     const args = getArgs();
-    const source = new TweetingSource(...args);
+    const source = new PublishSource(...args);
     args[0].board.moveCardToColumn.resolves();
     const column = getColumn("1", 'test');
     const url = 'https://example.com';
@@ -136,7 +138,7 @@ test('card retweeted', async (t) => {
     card.issue.close.resolves();
     column.addCard.resolves();
 
-    await source.cardTweeted(card, url, column);
+    await source.cardPublished(card, url, column);
 
     t.true(args[0].board.moveCardToColumn.called);
     t.true(card.comment.calledOnce);

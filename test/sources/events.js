@@ -39,7 +39,7 @@ test('get title', (t) => {
 });
 
 test('required config', (t) => {
-    t.true(EventsSource.requiredConfig.includes('query'));
+    t.true(EventsSource.requiredConfig.includes('url'));
 });
 
 test('required columns', (t) => {
