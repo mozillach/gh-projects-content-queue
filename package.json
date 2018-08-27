@@ -8,7 +8,7 @@
     "test": "npm run lint && npm run test:js",
     "lint:js": "eslint index.js lib/ test/",
     "lint:docker": "dockerlint Dockerfile",
-    "lint:ec": "eclint $(git ls-files)",
+    "lint:ec": "eclint check $(git ls-files)",
     "lint": "npm run lint:js && npm run lint:docker",
     "coverage": "codecov --disable=gcov",
     "start": "node index.js",
