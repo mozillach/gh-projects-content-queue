@@ -36,7 +36,6 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "babel-plugin-istanbul": "^5.0.1",
     "codecov": "^3.1.0",
     "dockerlint": "^0.3.9",
     "eclint": "^2.8.0",
