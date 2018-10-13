@@ -155,7 +155,7 @@
                                     "enum": [
                                         "issues",
                                         "mentions",
-                                        "tweeting",
+                                        "publish",
                                         "events",
                                         "feed",
                                         "squad",
