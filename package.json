@@ -54,7 +54,7 @@
     "mz": "^2.7.0",
     "tweet.md": "^2.1.0",
     "twitter": "^1.7.1",
-    "twitter-text": "^2.0.4"
+    "twitter-text": "^3.0.0"
   },
   "nyc": {
     "exclude": [
