@@ -3,6 +3,7 @@ import config from '../config.default.json';
 import DataStoreHolder from '../lib/data-store-holder';
 import getGithubClient from 'github-stub';
 import Source from '../lib/sources/source';
+import TwitterAccount from '../lib/accounts/twitter';
 
 const [ owner, repo ] = config.boards[0].repo.split("/");
 config.boards[0].owner = owner;
@@ -118,19 +119,32 @@ const getTwitterClient = () => ({
     post: sinon.stub()
 });
 
-const getTwitterAccount = (username, tweets = []) => ({
-    username,
-    getUsername: sinon.spy(() => Promise.resolve(username)),
-    tweets: Promise.resolve(tweets),
-    retweet: sinon.stub(),
-    tweet: sinon.stub(),
-    uploadMedia: sinon.stub()
-});
+const getTwitterAccount = (username, tweets = []) => {
+    class StubAccount extends TwitterAccount {
+        constructor() {
+            const client = getTwitterClient();
+            client.get.resolves({});
+            super(getConfig(), client);
+            this.username = username;
+            this.getUsername = sinon.spy(() => Promise.resolve(username));
+            this.retweet = sinon.stub();
+            this.tweet = sinon.stub();
+            this.uploadMedia = sinon.stub();
+        }
+
+        get tweets() {
+            return Promise.resolve(tweets);
+        }
+    }
+    //TODO should probably just use sinon magic stubbing?
+    return new StubAccount();
+};
 
 const getCard = (issue = getIssue(), column = getColumn()) => ({
     issue,
     column,
-    id: 'bar'
+    id: 'bar',
+    updateContent: sinon.stub()
 });
 
 const getAccountManager = () => ({
@@ -141,6 +155,12 @@ const getAccountManager = () => ({
         else if(type == "github") {
             return getGithubClient();
         }
+    },
+
+    getContentAccounts() {
+        return [
+            this.getAccount("twitter")
+        ];
     }
 });
 

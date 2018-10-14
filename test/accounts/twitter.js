@@ -189,7 +189,12 @@ test('too much media throws', (t) => {
 });
 
 test('construction', (t) => {
-    const account = new TwitterAccount({});
+    const client = getTwitterClient();
+    client.get.resolves({
+        screen_name: 'test',
+        id_str: '1234'
+    });
+    const account = new TwitterAccount({}, client);
 
     t.true("_twitterClient" in account);
     t.true("then" in account.ready);
@@ -198,7 +203,9 @@ test('construction', (t) => {
 });
 
 test('construction ready rejected', (t) => {
-    const account = new TwitterAccount({});
+    const client = getTwitterClient();
+    client.get.rejects([]);
+    const account = new TwitterAccount({}, client);
 
     return t.throws(account.ready, Array);
 });
@@ -456,7 +463,7 @@ test.serial('tweets with existing tweets stored', async (t) => {
     const allTweets = await account.tweets;
 
     t.deepEqual(allTweets, newerTweets.concat(tweets));
-    t.true(client.get.calledThrice);
+    t.true(client.get.calledTwice);
     t.true(client.get.calledWith('statuses/user_timeline', sinon.match({
         user_id: '1234',
         since_id: 'foo'
@@ -482,7 +489,8 @@ test('tweets without any results', async (t) => {
     t.is(allTweets.length, 0);
     t.true(client.get.calledOnce);
     t.true(client.get.calledWith('statuses/user_timeline', sinon.match({
-        user_id: '1234'
+        user_id: '1234',
+        tweet_mode: "extended"
     })));
 });
 
@@ -517,7 +525,8 @@ test('last mention', async (t) => {
 
     t.is(lastMention, '1234');
     t.true(client.get.calledWith('statuses/mentions_timeline', {
-        count: 200
+        count: 200,
+        tweet_mode: "extended"
     }));
 });
 
@@ -558,7 +567,8 @@ test('last mention second run', async (t) => {
     t.is(lastMention, '1234');
     t.true(client.get.calledWith('statuses/mentions_timeline', {
         count: 200,
-        since_id: lastMention
+        since_id: lastMention,
+        tweet_mode: "extended"
     }));
 });
 

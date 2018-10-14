@@ -35,23 +35,27 @@ test.failing("Retweet", (t) => {
 test("Create due date", (t) => {
     const meta = "test";
     const dueDate = new Date(1503707700000);
-    const card = new CardContent(Formatter.Format(meta, dueDate, getConfig()), getConfig());
+    const card = new CardContent(Formatter.Format({
+        meta,
+        dueDate
+    }, getConfig()), getConfig());
 
     t.is(meta, card.getSection(Formatter.META));
     t.true(card.isScheduled);
     t.is(card.date.getTime(), dueDate.getTime());
-    t.false(card.isValid);
 });
 
 test.failing("Create reply", (t) => {
     const meta = "test";
     const replyTo = "lorem";
-    const card = new CardContent(TwitterFormatter.Format(meta, false, undefined, getConfig(), replyTo), getConfig());
+    const card = new CardContent(TwitterFormatter.Format({
+        meta,
+        replyTo
+    }, getConfig()), getConfig());
 
     t.is(meta, card.getSection(Formatter.META));
     t.true(card.isReply);
     t.is(card.replyTo, replyTo);
-    t.false(card.isValid);
 });
 
 test("toString is value", (t) => {
@@ -94,8 +98,8 @@ lorem ipsum`);
 });
 
 test('Tweet content', (t) => {
-    const card = new CardContent(TwitterFormatter.Format('test'), getConfig());
-    t.is(card.getSection(TwitterFormatter.TWEET_CONTENT), Formatter.META);
+    const card = new CardContent(TwitterFormatter.Format({ meta: 'test' }, getConfig()), getConfig());
+    t.is(card.getSection(TwitterFormatter.TWEET_CONTENT), Formatter.TODO_PLACEHOLDER);
 });
 
 test.failing('Working retweet', (t) =>  {

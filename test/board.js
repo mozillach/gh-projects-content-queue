@@ -182,8 +182,10 @@ test('missing columns', async (t) => {
 
     const allColumns = new Set();
     for(const source of t.context.config.sources) {
-        for(const column of Object.values(source.columns)) {
-            allColumns.add(column);
+        if(source.hasOwnProperty('columns')) {
+            for(const column of Object.values(source.columns)) {
+                allColumns.add(column);
+            }
         }
     }
 
@@ -222,13 +224,13 @@ test('create board', async (t) => {
     });
     t.context.gh.projects.createRepoProject.resolves({
         data: {
-            id: 'foo'
+            id: 100
         }
     });
     const board = new Board(t.context.gh, t.context.config);
     await board.ready;
 
-    t.is(board.id, 'foo');
+    t.is(board.id, 100);
     t.true(t.context.gh.projects.createRepoProject.calledWith(sinon.match({
         owner: t.context.config.owner,
         repo: t.context.config.repo,
@@ -299,7 +301,7 @@ test('move card to column', async (t) => {
     t.true(board.cards.has(card.id));
 
     t.true(t.context.gh.projects.moveProjectCard.calledWith(sinon.match({
-        id: card.id,
+        card_id: card.id,
         position: 'bottom',
         column_id: newColumn.id
     })));

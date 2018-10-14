@@ -101,9 +101,7 @@ test('card published', async (t) => {
         issue: {
             close: sinon.stub()
         },
-        content: {
-            isRetweet: false
-        }
+        content: {}
     };
     card.comment.resolves();
     card.issue.close.resolves();
@@ -115,34 +113,4 @@ test('card published', async (t) => {
     t.true(card.comment.calledOnce);
     t.true(card.comment.lastCall.args[0].includes(url));
     t.true(card.issue.close.called);
-    t.true(column.addCard.calledWith(card));
-});
-
-test('retweet card published', async (t) => {
-    const args = getArgs();
-    const source = new PublishSource(...args);
-    args[0].board.moveCardToColumn.resolves();
-    const column = getColumn("1", 'test');
-    const url = 'https://example.com';
-    const card = {
-        id: "2",
-        comment: sinon.stub(),
-        issue: {
-            close: sinon.stub()
-        },
-        content: {
-            isRetweet: true
-        }
-    };
-    card.comment.resolves();
-    card.issue.close.resolves();
-    column.addCard.resolves();
-
-    await source.cardPublished(card, url, column);
-
-    t.true(args[0].board.moveCardToColumn.called);
-    t.true(card.comment.calledOnce);
-    t.false(card.comment.lastCall.args[0].includes(url));
-    t.true(card.issue.close.called);
-    t.true(column.addCard.calledWith(card));
 });

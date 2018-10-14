@@ -1,7 +1,9 @@
 import test from 'ava';
 import Repository from '../lib/repo';
-import { getGithubClient, getTwitterAccount, getConfig, getColumn, getBoard, getCard } from './_stubs';
+import { getGithubClient, getConfig, getColumn, getBoard, getCard } from './_stubs';
 import sinon from 'sinon';
+
+const ACCOUNT_LIST = `- https://example.com/account on Example`;
 
 test('replace placeholder', (t) => {
     const str = 'foo{test}bar';
@@ -13,10 +15,9 @@ test('replace placeholder', (t) => {
 test('construction', (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects('no ratelimit');
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     t.true("githubClient" in repo);
-    t.true("twitterAccount" in repo);
     t.true("config" in repo);
     t.true("ready" in repo);
 
@@ -31,7 +32,7 @@ test('ready without repo scope', (t) => {
             'x-oauth-scopes': 'notifications'
         }
     });
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     return t.throws(repo.ready);
 });
@@ -70,7 +71,7 @@ test('construction ready', async (t) => {
     client.issues.getForRepo.resolves({
         data: []
     });
-    const repo = new Repository(client, getTwitterAccount('test'), config);
+    const repo = new Repository(client, config, ACCOUNT_LIST);
     await repo.ready;
 
     t.true("board" in repo);
@@ -80,7 +81,7 @@ test('construction ready', async (t) => {
 test('has file', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -96,7 +97,7 @@ test('has file', async (t) => {
 test('add file', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -113,7 +114,7 @@ test('add file', async (t) => {
 test('add file with custom msg', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -132,8 +133,7 @@ test('add readme', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
     client.misc.getRateLimit.rejects();
-    const twitterAccount = getTwitterAccount('test');
-    const repo = new Repository(client, twitterAccount, config);
+    const repo = new Repository(client, config, ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -153,17 +153,18 @@ test('add issue tempalte', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), config);
+    client.repos.getContent.rejects();
+    const repo = new Repository(client, config, ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
     client.repos.createFile.resolves();
 
-    await repo.addIssueTemplate();
+    await repo.addIssueTemplates();
 
     t.true(client.repos.createFile.calledWithMatch({
-        path: "ISSUE_TEMPLATE.md",
-        message: "Issue template for content queue"
+        path: ".github/ISSUE_TEMPLATE/tweet.md",
+        message: "Tweet issue template for content queue"
     }));
     client.repos.createFile.argumentsValid((assertion, message) => t.true(assertion, message));
     //TODO test template content
@@ -172,7 +173,7 @@ test('add issue tempalte', async (t) => {
 test('add files without any content', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -185,7 +186,7 @@ test('add files without any content', async (t) => {
         path: "README.md"
     }));
     t.true(client.repos.createFile.calledWithMatch({
-        path: "ISSUE_TEMPLATE.md"
+        path: ".github/ISSUE_TEMPLATE/tweet.md"
     }));
     client.repos.createFile.allArgumentsValid((assertion, message) => t.true(assertion, message));
 });
@@ -193,7 +194,7 @@ test('add files without any content', async (t) => {
 test('add files without all content', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -206,21 +207,21 @@ test('add files without all content', async (t) => {
         path: "README.md"
     }));
     t.false(client.repos.createFile.calledWithMatch({
-        path: "ISSUE_TEMPLATE.md"
+        path: ".github/ISSUE_TEMPLATE/tweet.md"
     }));
 });
 
 test('add files with issue tempalte', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
     client.repos.getContent.resolves();
     client.repos.getContent.withArgs(sinon.match({
-        path: ".github/ISSUE_TEMPLATE.md"
-    })).rejects();
+        path: ".github/ISSUE_TEMPLATE/tweet.md"
+    })).resolves();
     client.repos.createFile.resolves();
 
     await repo._addFiles();
@@ -229,37 +230,14 @@ test('add files with issue tempalte', async (t) => {
         path: "README.md"
     }));
     t.false(client.repos.createFile.calledWithMatch({
-        path: "ISSUE_TEMPLATE.md"
-    }));
-});
-
-test('add files with .github issue tempalte', async (t) => {
-    const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
-
-    await t.throws(repo.ready);
-
-    client.repos.getContent.resolves();
-    client.repos.getContent.withArgs(sinon.match({
-        path: "ISSUE_TEMPLATE.md"
-    })).rejects();
-    client.repos.createFile.resolves();
-
-    await repo._addFiles();
-
-    t.false(client.repos.createFile.calledWithMatch({
-        path: "README.md"
-    }));
-    t.false(client.repos.createFile.calledWithMatch({
-        path: "ISSUE_TEMPLATE.md"
+        path: ".github/ISSUE_TEMPLATE/tweet.md"
     }));
 });
 
 test('has label', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -275,7 +253,7 @@ test('has label', async (t) => {
 test('does not have label', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -293,7 +271,7 @@ test('does not have label', async (t) => {
 test('has label network error', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -306,7 +284,7 @@ test('add label', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
     const config = getConfig();
-    const repo = new Repository(client, getTwitterAccount('test'), config);
+    const repo = new Repository(client, config, ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -327,7 +305,7 @@ test('ensure labels', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
     const config = getConfig();
-    const repo = new Repository(client, getTwitterAccount('test'), config);
+    const repo = new Repository(client, config, ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -388,7 +366,7 @@ test('create card without position', async (t) => {
     // Issue setup
     client.issues.addLabels.resolves();
 
-    const repo = new Repository(client, getTwitterAccount('test'), config);
+    const repo = new Repository(client, config, ACCOUNT_LIST);
 
     await repo.ready;
 
@@ -468,7 +446,7 @@ test('create card with position', async (t) => {
     // Issue setup
     client.issues.addLabels.resolves();
 
-    const repo = new Repository(client, getTwitterAccount('test'), config);
+    const repo = new Repository(client, config, ACCOUNT_LIST);
 
     await repo.ready;
 
@@ -515,7 +493,7 @@ test('belongs to user', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), config);
+    const repo = new Repository(client, config, ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -540,7 +518,7 @@ test('belongs to orga', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), config);
+    const repo = new Repository(client, config, ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -566,7 +544,7 @@ test('get users in team', async (t) => {
     const config = getConfig();
     client.misc.getRateLimit.rejects();
 
-    const repo = new Repository(client, getTwitterAccount('test'), config);
+    const repo = new Repository(client, config, ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -612,7 +590,7 @@ test('get users in team', async (t) => {
         org: config.owner
     }));
     t.true(client.orgs.getTeamMembers.calledWithMatch({
-        id: teamId
+        team_id: teamId
     }));
 });
 
@@ -621,7 +599,7 @@ test('get users of team that does not exist', async (t) => {
     const config = getConfig();
     client.misc.getRateLimit.rejects();
 
-    const repo = new Repository(client, getTwitterAccount('test'), config);
+    const repo = new Repository(client, config, ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -651,7 +629,7 @@ test('get users of team that does not exist', async (t) => {
 test('can not get team members if repo belongs to user', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -673,7 +651,7 @@ test('can not get team members if repo belongs to user', async (t) => {
 test('has required permissions for user', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -700,7 +678,7 @@ test('has required permissions for user', async (t) => {
 test('has required permissions for org', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -727,7 +705,7 @@ test('has required permissions for org', async (t) => {
 test('does not have required permissions', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -754,7 +732,7 @@ test('does not have required permissions', async (t) => {
 test('add issues to board', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -806,7 +784,7 @@ test('add issues to board', async (t) => {
 test('add no issues to board', async (t) => {
     const client = getGithubClient();
     client.misc.getRateLimit.rejects();
-    const repo = new Repository(client, getTwitterAccount('test'), getConfig());
+    const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
     await t.throws(repo.ready);
 
@@ -861,13 +839,12 @@ test('update card', async (t) => {
     client.issues.getForRepo.resolves({
         data: []
     });
-    const repo = new Repository(client, getTwitterAccount('test'), config);
+    const repo = new Repository(client, config, ACCOUNT_LIST);
 
     await t.notThrows(repo.ready);
 
     const card = getCard();
     const newContent = `${card.issue.content} dolor sit amet`;
-    card.updateContent.resolves();
     const openIssues = await repo.issues.issues;
     openIssues.set(card.issue.number, card.issue);
 
@@ -893,7 +870,6 @@ test('update card', async (t) => {
     await repo.updateCard(card);
 
     t.is(card.issue.content, newContent);
-    t.true(card.updateContent.called);
 });
 
 test.todo('setup');

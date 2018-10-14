@@ -12,9 +12,6 @@ test('updateContent', (t) => {
     const card = new Card(issue, config);
 
     t.is(card.content.getSection(Formatter.META), Formatter.TODO_PLACEHOLDER);
-    t.true(issue.hasLabel(config.labels.invalid));
-    t.false(issue.hasLabel(config.labels.ready));
-
     issue.content = issue.content.replace(Formatter.TODO_PLACEHOLDER, 'test');
 
     card.updateContent();
@@ -23,8 +20,10 @@ test('updateContent', (t) => {
 });
 
 test('setValidity marks as invalid label', (t) => {
-    const issue = getIssue(TwitterFormatter.Format('bugs'));
     const config = getConfig();
+    const issue = getIssue(TwitterFormatter.Format({
+        content: 'bugs'
+    }, config));
     const card = new Card(issue, config);
 
     card.setValidity([ 'some error' ]);
@@ -92,11 +91,11 @@ test('assign', async (t) => {
 });
 
 test('flush content', (t) => {
-    const content = Formatter.Format('test');
+    const content = Formatter.Format({ meta: 'test' });
     const issue = getIssue(content);
     const card = new Card(issue, getConfig());
 
-    card._content.setSection(TwitterFormatter.TWEET_CONTENT, 'bar');
+    card._content.setSection(Formatter.CONTENT, 'bar');
 
     card.flushContent();
 
@@ -111,8 +110,11 @@ test("can't tweet", (t) => {
 
 test("can't tweet due to scheduling", (t) => {
     const date = new Date(Date.now() + 6000000);
-    const content = new CardContent(Formatter.Format('test', date, getConfig()), getConfig());
-    content.setSection(TwitterFormatter.TWEET_CONTENT, 'bar');
+    const content = new CardContent(Formatter.Format({
+        content: 'test',
+        dueDate: date
+    }, getConfig()), getConfig());
+    content.setSection(Formatter.CONTENT, 'bar');
     const card = new Card(getIssue(content.toString()), getConfig());
 
     t.false(card.ready);
@@ -120,8 +122,9 @@ test("can't tweet due to scheduling", (t) => {
 
 test("can tweet", (t) => {
     const content = new CardContent(Formatter.Format('test'), getConfig());
-    content.setSection(TwitterFormatter.TWEET_CONTENT, 'bar');
+    content.setSection(Formatter.CONTENT, 'bar');
     const card = new Card(getIssue(content.toString()), getConfig());
+    card.setValidity([], 'test');
 
     t.true(card.ready);
 });
@@ -131,8 +134,9 @@ test.serial("can tweet with scheduling", (t) => {
 
     const date = new Date(Date.now() - 60);
     const content = new CardContent(Formatter.Format('test', date, getConfig()), getConfig());
-    content.setSection(TwitterFormatter.TWEET_CONTENT, 'bar');
+    content.setSection(Formatter.CONTENT, 'bar');
     const card = new Card(getIssue(content.toString()), getConfig());
+    card.setValidity([], 'test');
 
     t.true(card.ready);
 

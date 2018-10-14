@@ -66,7 +66,7 @@
                         "target": "Events"
                     },
                     "type": "events",
-                    "query": "switzerland"
+                    "url": "https://reps.mozilla.org/events/period/future/search/switzerland/ical/"
                 },
                 {
                     "columns": {
@@ -83,6 +83,10 @@
                     "apiKey": "yourDiscourseAPIKey",
                     "apiUrl": "https://discourse.mozilla.org",
                     "username": "yourUserName"
+                },
+                {
+                    "type": "validator",
+                    "validator": "twitter"
                 }
             ]
         }
