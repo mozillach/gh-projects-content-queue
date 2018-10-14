@@ -94,6 +94,10 @@ for(const board of oldConfig) {
             }
         })
     };
+    newBoard.sources.push({
+        type: 'validator',
+        validator: 'twitter'
+    });
     newConfig.boards.push(newBoard);
 }
 fs.writeFile(path.join(__dirname, "../config.json"), JSON.stringify(newConfig, null, 2));
