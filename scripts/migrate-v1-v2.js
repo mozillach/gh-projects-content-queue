@@ -60,7 +60,7 @@ for(const board of oldConfig) {
         sources: board.sources.map((s) => {
             switch(s.type) {
                 case 'mentions':
-                    s.twitterAccount = twitterName;
+                    s.accountName = twitterName;
                     return s;
                 case 'tweeting': {
                     return {
@@ -80,7 +80,7 @@ for(const board of oldConfig) {
                     return {
                         columns: s.columns,
                         type: s.type,
-                        discourseAccount: discourseName
+                        accountName: discourseName
                     };
                 }
                 case 'events':

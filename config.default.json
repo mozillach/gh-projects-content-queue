@@ -42,7 +42,7 @@
                         "target": "Needs Reaction"
                     },
                     "type": "mentions",
-                    "twitterAccount": "firstTwitterAccount"
+                    "accountName": "firstTwitterAccount"
                 },
                 {
                     "columns": {
@@ -59,7 +59,7 @@
                     "type": "publish",
                     "schedule": [],
                     "accountType": "twitter",
-                    "twitterName": "firstTwitterAccount"
+                    "accountName": "firstTwitterAccount"
                 },
                 {
                     "columns": {
