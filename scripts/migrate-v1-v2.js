@@ -100,4 +100,4 @@ for(const board of oldConfig) {
     });
     newConfig.boards.push(newBoard);
 }
-fs.writeFile(path.join(__dirname, "../config.json"), JSON.stringify(newConfig, null, 2));
+fs.writeFile(path.join(__dirname, "../config.json"), JSON.stringify(newConfig, null, 2), function() {});
