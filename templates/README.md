@@ -1,6 +1,7 @@
 # {repo}
 This repo is used to plan content for the accounts listed below.
-All the planing happens in the project board "{board}".
+All the planing happens in these project boards:
+{board}
 
 ## Accounts
 {accounts}
