@@ -3,7 +3,7 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/mozillach/gh-projects-content-queue.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/mozillach/gh-projects-content-queue.svg?branch=master)](https://travis-ci.org/mozillach/gh-projects-content-queue) [![codecov](https://codecov.io/gh/mozillach/gh-projects-content-queue/branch/master/graph/badge.svg)](https://codecov.io/gh/mozillach/gh-projects-content-queue) [![docker hub](https://img.shields.io/docker/build/mozillach/content-queue.svg)](https://hub.docker.com/r/mozillach/content-queue/builds)
 
-A Twitter content curation queue based on GitHub projects. Crowd sources tweet
+A content curation queue based on GitHub projects. Originally built for tweeting. Crowd sources content
 creation, improves collaboration and gives better control over content quality.
 
 ## Features
@@ -43,7 +43,7 @@ creation, improves collaboration and gives better control over content quality.
 - Node >= 8.0.0
 
 ### Issue template
-An issue template is generated in the repository if none is found. See the documentation for GitHub issue templates.
+Issue templates are generated in the repository. See the documentation for GitHub issue templates.
 
 ### Configuration
 [configuration.md](docs/configuration.md)
