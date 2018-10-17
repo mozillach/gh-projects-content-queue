@@ -66,18 +66,6 @@ const getColumns = (columns) => {
     return columnInstances;
 };
 
-const getBoard = (columns) => ({
-    cards: allCards,
-    ready: Promise.resolve(),
-    columns: Promise.resolve(getColumns(columns)),
-    columnIds: Promise.resolve(columns),
-    config: getConfig(),
-    githubClient: getGithubClient(),
-    on: sinon.stub(),
-    addCard: sinon.stub(),
-    moveCardToColumn: sinon.stub()
-});
-
 const getIssue = (content = 'lorem ipsum', number = 1) => {
     const labels = new Set();
     return {
@@ -105,13 +93,25 @@ const getIssues = () => ({
     on: sinon.stub()
 });
 
-const getRepo = (columns) => ({
+const getRepo = () => ({
     ready: Promise.resolve(),
-    board: getBoard(columns),
     issues: getIssues(),
     config: getConfig(),
     githubClient: getGithubClient(),
     getUsersInTeam: sinon.stub()
+});
+
+const getBoard = (columns) => ({
+    cards: allCards,
+    ready: Promise.resolve(),
+    columns: Promise.resolve(getColumns(columns)),
+    columnIds: Promise.resolve(columns),
+    config: getConfig(),
+    githubClient: getGithubClient(),
+    on: sinon.stub(),
+    addCard: sinon.stub(),
+    moveCardToColumn: sinon.stub(),
+    repo: getRepo()
 });
 
 const getTwitterClient = () => ({

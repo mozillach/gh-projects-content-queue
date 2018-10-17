@@ -44,7 +44,7 @@ test('handle card in no column', async (t) => {
 
 test('handle card in column', async (t) => {
     const source = new IssuesSource(...getArgs());
-    const targetColumn = (await source._repo.board.columns)['1'];
+    const targetColumn = (await source._board.columns)['1'];
     targetColumn.hasIssue.returns(true);
     const column = await source.handleCard({
         number: 1
@@ -56,45 +56,45 @@ test.todo('handle card does not return managed column');
 
 test('add issue already in column', async (t) => {
     const source = new IssuesSource(...getArgs());
-    const targetColumn = (await source._repo.board.columns)['1'];
+    const targetColumn = (await source._board.columns)['1'];
     targetColumn.hasIssue.returns(true);
-    source._repo.board.addCard.resolves('card');
+    source._board.addCard.resolves('card');
 
     const card = await source.addIssue({
         number: 1
     });
 
     t.is(card, 'card');
-    t.true(source._repo.board.addCard.calledWith(sinon.match({
+    t.true(source._board.addCard.calledWith(sinon.match({
         number: 1
     }), targetColumn));
 });
 
 test('add new issue', async (t) => {
     const source = new IssuesSource(...getArgs());
-    const targetColumn = (await source._repo.board.columns)['1'];
+    const targetColumn = (await source._board.columns)['1'];
     targetColumn.hasIssue.returns(false);
-    source._repo.board.addCard.resolves('card');
+    source._board.addCard.resolves('card');
 
     const card = await source.addIssue({
         number: 1
     }, false);
 
     t.is(card, 'card');
-    t.true(source._repo.board.addCard.calledWith(sinon.match({
+    t.true(source._board.addCard.calledWith(sinon.match({
         number: 1
     }), targetColumn));
 });
 
 test('does not add new closed issue', async (t) => {
     const source = new IssuesSource(...getArgs());
-    const targetColumn = (await source._repo.board.columns)['1'];
+    const targetColumn = (await source._board.columns)['1'];
     targetColumn.hasIssue.returns(false);
-    source._repo.board.addCard.resolves('card');
+    source._board.addCard.resolves('card');
 
     await source.addIssue({
         number: 1
     }, true);
 
-    t.false(source._repo.board.addCard.called);
+    t.false(source._board.addCard.called);
 });
