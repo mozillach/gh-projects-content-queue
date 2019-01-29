@@ -1,13 +1,30 @@
 import sinon from 'sinon';
 import config from '../config.default.json';
 import DataStoreHolder from '../lib/data-store-holder';
-import getGithubClient from 'github-stub';
+import Octokit from '@octokit/rest';
 import Source from '../lib/sources/source';
 import TwitterAccount from '../lib/accounts/twitter';
 
 const [ owner, repo ] = config.boards[0].repo.split("/");
 config.boards[0].owner = owner;
 config.boards[0].repo = repo;
+
+const getGithubClient = () => {
+    const inst = new Octokit();
+    const responseQueue = [];
+    inst.queueResponse = (resp) => {
+        responseQueue.push(resp);
+    };
+    inst.hook.wrap('request', async () => {
+        if(responseQueue.length) {
+            return responseQueue.shift();
+        }
+        else {
+            return {};
+        }
+    });
+    return inst;
+};
 
 const getConfig = () => config.boards[0];
 

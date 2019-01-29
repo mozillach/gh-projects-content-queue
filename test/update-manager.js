@@ -7,7 +7,7 @@ test.serial.beforeEach((t) => {
     t.context.clock = sinon.useFakeTimers();
 });
 
-test.serial.always.afterEach((t) => {
+test.serial.afterEach((t) => {
     t.context.clock.restore();
 });
 

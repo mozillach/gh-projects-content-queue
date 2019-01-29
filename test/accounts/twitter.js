@@ -207,7 +207,7 @@ test('construction ready rejected', (t) => {
     client.get.rejects([]);
     const account = new TwitterAccount({}, client);
 
-    return t.throws(account.ready, Array);
+    return t.throwsAsync(account.ready, Array);
 });
 
 test.todo('uploadMedia');
@@ -245,7 +245,7 @@ test('too long tweet', (t) => {
         id_str: 'foo'
     });
 
-    return t.throws(account.tweet(tweet));
+    return t.throwsAsync(account.tweet(tweet));
 });
 
 test('tweet with media', async (t) => {

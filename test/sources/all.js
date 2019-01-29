@@ -23,15 +23,18 @@ const testRequiredConfig = (t, source) => {
     t.true(Array.isArray(source.requiredConfig));
     t.is(source.requiredConfig.includes('columns'), source.requiredColumns.length > 0);
 };
+testRequiredConfig.title = (title, source) => `${title}: ${source.name}`;
 
 const testRequiredColumns = (t, source) => {
     t.true(Array.isArray(source.requiredColumns));
     t.is(source.requiredColumns.length > 0, source.requiredConfig.includes('columns'));
 };
+testRequiredColumns.title = (title, source) => `${title}: ${source.name}`;
 
 const testManagedColumns = (t, source) => {
     t.true(Array.isArray(source.managedColumns));
 };
+testManagedColumns.title = (title, source) => `${title}: ${source.name}`;
 
 for(const source of sources) {
     test('required config', testRequiredConfig, source);

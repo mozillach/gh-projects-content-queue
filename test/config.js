@@ -100,7 +100,7 @@ const TEST_DATA = [
                 "string, because why not"
             ]
         },
-        name: "invalid project config type"
+        name: "invalid project config of type string"
     },
     {
         valid: false,
@@ -126,7 +126,7 @@ const TEST_DATA = [
                 null
             ]
         },
-        name: "invalid project config type"
+        name: "invalid project config of type null"
     },
     {
         valid: false,
@@ -520,7 +520,7 @@ const TEST_DATA = [
                 }
             ]
         },
-        name: "inavlid project with lable with invalid name"
+        name: "inavlid project with label with invalid name"
     },
     {
         valid: false,
@@ -553,7 +553,7 @@ const TEST_DATA = [
                 }
             ]
         },
-        name: "inavlid project with lable with empty name"
+        name: "inavlid project with label with empty name"
     }
 ];
 
@@ -573,13 +573,13 @@ testConfig.title = (providedTitle) => `Validating config that is ${providedTitle
 const testLoadConfig = async (t, data, i) => {
     const path = await tempWrite(JSON.stringify(data.config), `config${i}.json`);
     if(data.valid) {
-        return t.notThrows(async () => {
+        return t.notThrowsAsync(async () => {
             const config = await loadConfig(path);
             t.deepEqual(config, data.config);
         });
     }
     else {
-        return t.throws(loadConfig(path));
+        return t.throwsAsync(loadConfig(path));
     }
 };
 testLoadConfig.title = (providedTitle) => `Loading config that is ${providedTitle}`;
@@ -607,7 +607,7 @@ test.serial('load env config', async (t) => {
 });
 
 test('no env config to load', (t) => {
-    return t.throws(loadConfig());
+    return t.throwsAsync(loadConfig());
 });
 
 test.todo('prefers file over env');

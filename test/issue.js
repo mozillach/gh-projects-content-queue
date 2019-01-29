@@ -8,10 +8,6 @@ test.beforeEach((t) => {
     t.context.issue = new Issue(t.context.gh, t.context.data);
 });
 
-test.afterEach((t) => {
-    t.context.gh.argumentsValid((assertion, message) => t.true(assertion, message));
-});
-
 test('constructor and update', (t) => {
     const issue = t.context.issue;
     const data = t.context.data;
@@ -45,7 +41,6 @@ test('set content', async (t) => {
     const newContent = 'foo bar';
     const lastUpdate = t.context.issue.lastUpdate;
 
-    t.context.gh.issues.edit.resolves();
     t.context.issue.content = newContent;
 
     t.true(t.context.gh.issues.edit.calledOnce);
@@ -76,7 +71,6 @@ test('has label', (t) => {
 });
 
 test('add label', async (t) => {
-    t.context.gh.issues.addLabels.resolves();
     await t.context.issue.addLabel('test');
 
     t.true(t.context.gh.issues.addLabels.calledOnce);
@@ -93,7 +87,6 @@ test('add label', async (t) => {
 });
 
 test('remove label', async (t) => {
-    t.context.gh.issues.removeLabel.resolves();
     t.context.issue.labels = [
         'test',
         'foo'
@@ -116,12 +109,10 @@ test('remove label', async (t) => {
 });
 
 test('assign user', async (t) => {
-    t.context.gh.issues.addAssigneesToIssue.resolves();
-
     await t.context.issue.assign('baz');
 
-    t.true(t.context.gh.issues.addAssigneesToIssue.calledOnce);
-    t.deepEqual(t.context.gh.issues.addAssigneesToIssue.lastCall.args[0], {
+    t.true(t.context.gh.issues.addAssignees.calledOnce);
+    t.deepEqual(t.context.gh.issues.addAssignees.lastCall.args[0], {
         owner: t.context.data.owner,
         repo: t.context.data.repo,
         number: t.context.data.number,
@@ -130,7 +121,7 @@ test('assign user', async (t) => {
     t.is(t.context.issue.assignee, 'baz');
 
     await t.context.issue.assign('baz');
-    t.true(t.context.gh.issues.addAssigneesToIssue.calledOnce);
+    t.true(t.context.gh.issues.addAssignees.calledOnce);
 });
 
 test('api object', (t) => {
@@ -143,9 +134,6 @@ test('api object', (t) => {
 });
 
 test('test optional api object props', async (t) => {
-    t.context.gh.issues.addAssigneesToIssue.resolves();
-    t.context.gh.issues.addLabels.resolves();
-
     const expected = {
         title: t.context.data.title,
         body: t.context.data.content,
@@ -167,7 +155,7 @@ test('test optional api object props', async (t) => {
 });
 
 test('close', async (t) => {
-    t.context.gh.issues.edit.resolves({
+    t.context.gh.queueResponse({
         data: 'asdf'
     });
 

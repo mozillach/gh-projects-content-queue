@@ -43,8 +43,6 @@ test('Constructor with team squad', async (t) => {
     t.is(squad.size, 1);
     t.is(squad.getNext(), 'baz');
     t.true(repo.getUsersInTeam.calledWith('foo'));
-
-    repo.githubClient.argumentsValid((assertion, message) => t.true(assertion, message));
 });
 
 test.todo('Test squad team data store keeps position');

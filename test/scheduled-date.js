@@ -115,7 +115,7 @@ const patternTest = (t, data) => {
         t.is(splitPattern.length, 0);
     }
 };
-patternTest.title = (title, data) => `${title} for ${data.pattern}`;
+patternTest.title = (title, data) => `${title} for ${data.pattern} (${data.date})`;
 
 const dateTest = (t, data) => {
     const date = new ScheduledDate(data.date, {

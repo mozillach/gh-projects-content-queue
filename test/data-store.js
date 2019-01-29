@@ -133,6 +133,6 @@ test('Throwing fetcher aborts current loading', async (t) => {
 
     fetcher.resolves();
 
-    await t.notThrows(ds.getData());
+    await t.notThrowsAsync(ds.getData());
     t.true(fetcher.calledTwice);
 });

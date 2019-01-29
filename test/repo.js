@@ -1,7 +1,6 @@
 import test from 'ava';
 import Repository from '../lib/repo';
 import { getGithubClient, getConfig, getColumn, getBoard, getCard } from './_stubs';
-import sinon from 'sinon';
 
 const ACCOUNT_LIST = `- https://example.com/account on Example`;
 
@@ -83,7 +82,7 @@ test('has file', async (t) => {
     client.misc.getRateLimit.rejects();
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
     client.repos.getContent.resolves();
 
@@ -99,13 +98,12 @@ test('add file', async (t) => {
     client.misc.getRateLimit.rejects();
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
     client.repos.createFile.resolves();
 
     await repo.addFile('index.js', 'void');
 
-    client.repos.createFile.argumentsValid((assertion, message) => t.true(assertion, message));
     t.true(client.repos.createFile.calledWithMatch({
         path: 'index.js'
     }));
@@ -116,13 +114,12 @@ test('add file with custom msg', async (t) => {
     client.misc.getRateLimit.rejects();
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
     client.repos.createFile.resolves();
 
     await repo.addFile('index.js', 'void', 'foo bar');
 
-    client.repos.createFile.argumentsValid((assertion, message) => t.true(assertion, message));
     t.true(client.repos.createFile.calledWithMatch({
         path: 'index.js',
         message: 'foo bar'
@@ -132,12 +129,10 @@ test('add file with custom msg', async (t) => {
 test('add readme', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, config, ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
-
-    client.repos.createFile.resolves();
+    await t.throwsAsync(repo.ready);
 
     await repo.addReadme();
 
@@ -145,20 +140,17 @@ test('add readme', async (t) => {
         path: "README.md",
         message: "Default content queue README.md"
     }));
-    client.repos.createFile.argumentsValid((assertion, message) => t.true(assertion, message));
     //TODO test readme content
 });
 
 test('add issue tempalte', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
-    client.misc.getRateLimit.rejects();
-    client.repos.getContent.rejects();
+    client.queueResponse(Promise.reject());
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, config, ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
-
-    client.repos.createFile.resolves();
+    await t.throwsAsync(repo.ready);
 
     await repo.addIssueTemplates();
 
@@ -166,19 +158,17 @@ test('add issue tempalte', async (t) => {
         path: ".github/ISSUE_TEMPLATE/tweet.md",
         message: "Tweet issue template for content queue"
     }));
-    client.repos.createFile.argumentsValid((assertion, message) => t.true(assertion, message));
     //TODO test template content
 });
 
 test('add files without any content', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
-    client.repos.getContent.rejects();
-    client.repos.createFile.resolves();
+    client.queueResponse(Promise.reject());
 
     await repo._addFiles();
 
@@ -188,18 +178,14 @@ test('add files without any content', async (t) => {
     t.true(client.repos.createFile.calledWithMatch({
         path: ".github/ISSUE_TEMPLATE/tweet.md"
     }));
-    client.repos.createFile.allArgumentsValid((assertion, message) => t.true(assertion, message));
 });
 
 test('add files without all content', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
-
-    client.repos.getContent.resolves();
-    client.repos.createFile.resolves();
+    await t.throwsAsync(repo.ready);
 
     await repo._addFiles();
 
@@ -213,16 +199,10 @@ test('add files without all content', async (t) => {
 
 test('add files with issue tempalte', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
-
-    client.repos.getContent.resolves();
-    client.repos.getContent.withArgs(sinon.match({
-        path: ".github/ISSUE_TEMPLATE/tweet.md"
-    })).resolves();
-    client.repos.createFile.resolves();
+    await t.throwsAsync(repo.ready);
 
     await repo._addFiles();
 
@@ -236,15 +216,12 @@ test('add files with issue tempalte', async (t) => {
 
 test('has label', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
-
-    client.issues.getLabel.resolves();
+    await t.throwsAsync(repo.ready);
 
     t.true(await repo.hasLabel('foo'));
-    client.issues.getLabel.argumentsValid((assertion, message) => t.true(assertion, message));
     t.true(client.issues.getLabel.calledWithMatch({
         name: 'foo'
     }));
@@ -252,17 +229,16 @@ test('has label', async (t) => {
 
 test('does not have label', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
-    client.issues.getLabel.rejects({
+    client.queueResponse(Promise.reject({
         code: 404
-    });
+    }));
 
     t.false(await repo.hasLabel('foo'));
-    client.issues.getLabel.argumentsValid((assertion, message) => t.true(assertion, message));
     t.true(client.issues.getLabel.calledWithMatch({
         name: 'foo'
     }));
@@ -270,29 +246,28 @@ test('does not have label', async (t) => {
 
 test('has label network error', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
-    client.issues.getLabel.rejects({});
+    client.queueResponse(Promise.reject({}));
 
     return t.throws(repo.hasLabel('foo'));
 });
 
 test('add label', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const config = getConfig();
     const repo = new Repository(client, config, ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
-    client.issues.createLabel.resolves();
+    client.queueResponse(Promise.reject());
 
     await repo.addLabel('foo', 'ffffff');
 
-    client.issues.createLabel.argumentsValid((assertion, message) => t.true(assertion, message));
     t.true(client.issues.createLabel.calledWithMatch({
         owner: config.owner,
         repo: config.repo,
@@ -303,25 +278,19 @@ test('add label', async (t) => {
 
 test('ensure labels', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const config = getConfig();
     const repo = new Repository(client, config, ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
-    client.issues.getLabel.resolves();
-    client.issues.getLabel
-        .withArgs(sinon.match({
-            name: config.labels.ready
-        }))
-        .rejects({
-            code: 404
-        });
-    client.issues.createLabel.resolves();
+
+    client.queueResponse(Promise.reject({
+        code: 404
+    }));
 
     await repo.ensureLabels();
 
-    client.allArgumentsValid((a, m) => t.true(a, m));
     t.true(client.issues.createLabel.calledWithMatch({
         name: config.labels.ready
     }));
@@ -332,14 +301,14 @@ test.failing('create card without position', async (t) => {
     const config = getConfig();
 
     // Repo setup
-    client.misc.getRateLimit.resolves({
+    client.queueResponse({
         headers: {
             'x-oauth-scopes': 'public_repo, org:read'
         }
     });
-    client.repos.getContent.resolves();
-    client.issues.getLabel.resolves();
-    client.repos.get.resolves({
+    client.queueResponse({});
+    client.queueResponse({});
+    client.queueResponse({
         data: {
             owner: {
                 type: "User"
@@ -347,10 +316,10 @@ test.failing('create card without position', async (t) => {
         }
     });
     // Board setup
-    client.projects.getProjectColumns.resolves({
+    client.queueResponse({
         data: []
     });
-    client.projects.getRepoProjects.resolves({
+    client.queueResponse({
         data: [
             {
                 name: config.projectName,
@@ -359,12 +328,9 @@ test.failing('create card without position', async (t) => {
         ]
     });
     // Issues setup
-    client.issues.getForRepo.resolves({
+    client.queueResponse({
         data: []
     });
-
-    // Issue setup
-    client.issues.addLabels.resolves();
 
     const repo = new Repository(client, config, ACCOUNT_LIST);
 
@@ -372,7 +338,7 @@ test.failing('create card without position', async (t) => {
 
     const title = 'lorem ipsum';
     const content = 'foo bar';
-    client.issues.create.resolves({
+    client.queueResponse({
         data: {
             id: '2',
             number: 1,
@@ -391,7 +357,6 @@ test.failing('create card without position', async (t) => {
     const card = await repo.createCard(title, content, column);
 
     t.deepEqual(card, cardResult);
-    client.issues.create.argumentsValid((a, m) => t.true(a, m));
     t.true(client.issues.create.calledWithMatch({
         title,
         body: content
@@ -412,14 +377,14 @@ test.failing('create card with position', async (t) => {
     const config = getConfig();
 
     // Repo setup
-    client.misc.getRateLimit.resolves({
+    client.queueResponse({
         headers: {
             'x-oauth-scopes': 'public_repo, org:read'
         }
     });
-    client.repos.getContent.resolves();
-    client.issues.getLabel.resolves();
-    client.repos.get.resolves({
+    client.queueResponse();
+    client.queueResponse();
+    client.queueResponse({
         data: {
             owner: {
                 type: "User"
@@ -427,10 +392,10 @@ test.failing('create card with position', async (t) => {
         }
     });
     // Board setup
-    client.projects.getProjectColumns.resolves({
+    client.queueResponse({
         data: []
     });
-    client.projects.getRepoProjects.resolves({
+    client.queueResponse({
         data: [
             {
                 name: config.projectName,
@@ -439,12 +404,9 @@ test.failing('create card with position', async (t) => {
         ]
     });
     // Issues setup
-    client.issues.getForRepo.resolves({
+    client.queueResponse({
         data: []
     });
-
-    // Issue setup
-    client.issues.addLabels.resolves();
 
     const repo = new Repository(client, config, ACCOUNT_LIST);
 
@@ -452,7 +414,7 @@ test.failing('create card with position', async (t) => {
 
     const title = 'lorem ipsum';
     const content = 'foo bar';
-    client.issues.create.resolves({
+    client.queueResponse({
         data: {
             id: '2',
             number: 1,
@@ -472,7 +434,6 @@ test.failing('create card with position', async (t) => {
     const card = await repo.createCard(title, content, column, 'top');
 
     t.deepEqual(card, cardResult);
-    client.issues.create.argumentsValid((a, m) => t.true(a, m));
     t.true(client.issues.create.calledWithMatch({
         title,
         body: content
@@ -492,12 +453,12 @@ test.failing('create card with position', async (t) => {
 test('belongs to user', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, config, ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
-    client.repos.get.resolves({
+    client.queueResponse({
         data: {
             owner: {
                 type: 'User'
@@ -507,7 +468,6 @@ test('belongs to user', async (t) => {
 
     const isUser = await repo.belongsToUser();
     t.true(isUser);
-    client.repos.get.argumentsValid((a, m) => t.true(a, m));
     t.true(client.repos.get.calledWithMatch({
         repo: config.repo,
         owner: config.owner
@@ -517,10 +477,10 @@ test('belongs to user', async (t) => {
 test('belongs to orga', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, config, ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
     client.repos.get.resolves({
         data: {
@@ -532,7 +492,6 @@ test('belongs to orga', async (t) => {
 
     const isUser = await repo.belongsToUser();
     t.false(isUser);
-    client.repos.get.argumentsValid((a, m) => t.true(a, m));
     t.true(client.repos.get.calledWithMatch({
         repo: config.repo,
         owner: config.owner
@@ -542,24 +501,24 @@ test('belongs to orga', async (t) => {
 test('get users in team', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
 
     const repo = new Repository(client, config, ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
     const team = 'baz';
     const member = 'lorem';
     const teamId = '1';
 
-    client.repos.get.resolves({
+    client.queueResponse({
         data: {
             owner: {
                 type: 'Organization'
             }
         }
     });
-    client.orgs.getTeams.resolves({
+    client.queueResponse({
         data: [
             {
                 name: 'owners',
@@ -571,7 +530,7 @@ test('get users in team', async (t) => {
             }
         ]
     });
-    client.orgs.getTeamMembers.resolves({
+    client.queueResponse({
         data: [
             {
                 login: member
@@ -584,8 +543,6 @@ test('get users in team', async (t) => {
     t.is(users.length, 1);
     t.true(users.includes(member));
 
-    client.argumentsValid((a, m) => t.true(a, m));
-
     t.true(client.orgs.getTeams.calledWithMatch({
         org: config.owner
     }));
@@ -597,29 +554,28 @@ test('get users in team', async (t) => {
 test('get users of team that does not exist', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
 
     const repo = new Repository(client, config, ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
     const team = 'baz';
 
-    client.repos.get.resolves({
+    client.queueResponse({
         data: {
             owner: {
                 type: 'Organization'
             }
         }
     });
-    client.orgs.getTeams.resolves({
+    client.queueResponse({
         data: []
     });
-    client.orgs.getTeamMembers.rejects();
+    client.queueResponse(Promise.reject());
 
     await t.throws(repo.getUsersInTeam(team), Error);
 
-    client.argumentsValid((a, m) => t.true(a, m));
     t.true(client.orgs.getTeams.calledWithMatch({
         org: config.owner
     }));
@@ -628,39 +584,37 @@ test('get users of team that does not exist', async (t) => {
 
 test('can not get team members if repo belongs to user', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
-    client.repos.get.resolves({
+    client.queueResponse({
         data: {
             owner: {
                 type: 'User'
             }
         }
     });
-    client.orgs.getTeams.rejects();
+    client.queueResponse(Promise.reject());
 
     await t.throws(repo.getUsersInTeam('baz'));
-
-    client.argumentsValid((a, m) => t.true(a, m));
     t.false(client.orgs.getTeams.called);
 });
 
 test('has required permissions for user', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
-    client.misc.getRateLimit.resolves({
+    client.queueResponse({
         headers: {
             'x-oauth-scopes': 'public_repo'
         }
     });
-    client.repos.get.resolves({
+    client.queueResponse({
         data: {
             owner: {
                 type: 'User'
@@ -672,22 +626,21 @@ test('has required permissions for user', async (t) => {
 
     t.true(hasPermissions);
     t.true(client.misc.getRateLimit.called);
-    client.argumentsValid((a, m) => t.true(a, m));
 });
 
 test('has required permissions for org', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
-    client.misc.getRateLimit.resolves({
+    client.queueResponse({
         headers: {
             'x-oauth-scopes': 'public_repo, read:org'
         }
     });
-    client.repos.get.resolves({
+    client.queueResponse({
         data: {
             owner: {
                 type: 'Organization'
@@ -699,22 +652,21 @@ test('has required permissions for org', async (t) => {
 
     t.true(hasPermissions);
     t.true(client.misc.getRateLimit.called);
-    client.argumentsValid((a, m) => t.true(a, m));
 });
 
 test('does not have required permissions', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
-    client.misc.getRateLimit.resolves({
+    client.queueResponse({
         headers: {
             'x-oauth-scopes': 'repo'
         }
     });
-    client.repos.get.resolves({
+    client.queueResponse({
         data: {
             owner: {
                 type: 'Organization'
@@ -726,15 +678,14 @@ test('does not have required permissions', async (t) => {
 
     t.false(hasPermissions);
     t.true(client.misc.getRateLimit.called);
-    client.argumentsValid((a, m) => t.true(a, m));
 });
 
 test.failing('add issues to board', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
     repo.board = getBoard({
         Test: '1',
@@ -783,16 +734,15 @@ test.failing('add issues to board', async (t) => {
 
 test.failing('add no issues to board', async (t) => {
     const client = getGithubClient();
-    client.misc.getRateLimit.rejects();
+    client.queueResponse(Promise.reject());
     const repo = new Repository(client, getConfig(), ACCOUNT_LIST);
 
-    await t.throws(repo.ready);
+    await t.throwsAsync(repo.ready);
 
     repo.board = getBoard({
         Test: '1',
         Other: '2'
     });
-    repo.board.addCard.resolves();
     const columns = await repo.board.columns;
     const issues = new Map();
 
@@ -809,14 +759,14 @@ test('update card', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
     // Repo setup
-    client.misc.getRateLimit.resolves({
+    client.queueResponse({
         headers: {
             'x-oauth-scopes': 'public_repo, org:read'
         }
     });
-    client.repos.getContent.resolves();
-    client.issues.getLabel.resolves();
-    client.repos.get.resolves({
+    client.queueResponse({});
+    client.queueResponse({});
+    client.queueResponse({
         data: {
             owner: {
                 type: "User"
@@ -824,10 +774,10 @@ test('update card', async (t) => {
         }
     });
     // Board setup
-    client.projects.getProjectColumns.resolves({
+    client.queueResponse({
         data: []
     });
-    client.projects.getRepoProjects.resolves({
+    client.queueResponse({
         data: [
             {
                 name: config.projectName,
@@ -836,7 +786,7 @@ test('update card', async (t) => {
         ]
     });
     // Issues setup
-    client.issues.getForRepo.resolves({
+    client.queueResponse({
         data: []
     });
     const repo = new Repository(client, config, ACCOUNT_LIST);
@@ -848,7 +798,7 @@ test('update card', async (t) => {
     const openIssues = await repo.issues.issues;
     openIssues.set(card.issue.number, card.issue);
 
-    client.issues.get.resolves({
+    client.queueResponse({
         data: {
             id: card.issue.id,
             number: card.issue.number,

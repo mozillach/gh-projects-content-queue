@@ -37,10 +37,6 @@ test.beforeEach((t) => {
     });
 });
 
-test.afterEach((t) => {
-    t.context.gh.argumentsValid((assertion, message) => t.true(assertion, message));
-});
-
 test('constructor', async (t) => {
     const board = new Board(t.context.gh, t.context.config);
 

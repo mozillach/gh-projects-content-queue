@@ -276,7 +276,7 @@ test('fetch issues with old issue that is not updated', async (t) => {
 
 test('get new issue', async (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
+    client.queueResponse({
         data: []
     });
     const issues = new Issues(client, getConfig());
@@ -285,7 +285,7 @@ test('get new issue', async (t) => {
         issues.closedIssues
     ]);
 
-    client.issues.get.resolves({
+    client.queueResponse({
         data: {
             id: 'foo',
             number: 1,
@@ -306,7 +306,6 @@ test('get new issue', async (t) => {
     const issue = await issues.getIssue(1);
     t.is(issue.number, 1);
     t.is(issue.id, 'foo');
-    client.issues.get.argumentsValid((a, m) => t.true(a, m));
 
     const openIssues = await issues.issues;
     t.true(openIssues.has(issue.number));
@@ -331,7 +330,7 @@ test('get existing issue', async (t) => {
             }
         ]
     };
-    client.issues.getForRepo.resolves({
+    client.queueResponse({
         data: [
             issueData
         ]
@@ -343,14 +342,13 @@ test('get existing issue', async (t) => {
     ]);
 
     issueData.body = 'foo bar';
-    client.issues.get.resolves({
+    client.queueResponse({
         data: issueData
     });
     const issue = await issues.getIssue(issueData.number);
     t.is(issue.number, issueData.number);
     t.is(issue.id, issueData.id);
     t.is(issue.content, issueData.body);
-    client.issues.get.argumentsValid((a, m) => t.true(a, m));
 
     const openIssues = await issues.issues;
     t.true(openIssues.has(issue.number));
@@ -359,7 +357,7 @@ test('get existing issue', async (t) => {
 
 test('get new closed issue', async (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
+    client.queueResponse({
         data: []
     });
     const issues = new Issues(client, getConfig());
@@ -368,7 +366,7 @@ test('get new closed issue', async (t) => {
         issues.closedIssues
     ]);
 
-    client.issues.get.resolves({
+    client.queueResponse({
         data: {
             id: 'foo',
             number: 1,
@@ -389,7 +387,6 @@ test('get new closed issue', async (t) => {
     const issue = await issues.getIssue(1);
     t.is(issue.number, 1);
     t.is(issue.id, 'foo');
-    client.issues.get.argumentsValid((a, m) => t.true(a, m));
 
     const closedIssues = await issues.closedIssues;
     t.true(closedIssues.has(issue.number));
@@ -414,7 +411,7 @@ test('get existing closed issue', async (t) => {
             }
         ]
     };
-    client.issues.getForRepo.resolves({
+    client.queueResponse({
         data: [
             issueData
         ]
@@ -426,14 +423,13 @@ test('get existing closed issue', async (t) => {
     ]);
 
     issueData.body = 'foo bar';
-    client.issues.get.resolves({
+    client.queueResponse({
         data: issueData
     });
     const issue = await issues.getIssue(issueData.number);
     t.is(issue.number, issueData.number);
     t.is(issue.id, issueData.id);
     t.is(issue.content, issueData.body);
-    client.issues.get.argumentsValid((a, m) => t.true(a, m));
 
     const closedIssues = await issues.closedIssues;
     t.true(closedIssues.has(issue.number));
@@ -458,14 +454,12 @@ test('get existing issue that changed state', async (t) => {
             }
         ]
     };
-    client.issues.getForRepo.withArgs(sinon.match({
-        state: "open"
-    })).resolves({
+    client.queueResponse({
         data: [
             issueData
         ]
     });
-    client.issues.getForRepo.resolves({
+    client.queueResponse({
         data: []
     });
     const issues = new Issues(client, getConfig());
@@ -477,14 +471,13 @@ test('get existing issue that changed state', async (t) => {
 
     issueData.body = 'foo bar';
     issueData.state = 'closed';
-    client.issues.get.resolves({
+    client.queueResponse({
         data: issueData
     });
     const issue = await issues.getIssue(issueData.number);
     t.is(issue.number, issueData.number);
     t.is(issue.id, issueData.id);
     t.is(issue.content, issueData.body);
-    client.issues.get.argumentsValid((a, m) => t.true(a, m));
 
     const closedIssues = await issues.closedIssues;
     t.true(closedIssues.has(issue.number));

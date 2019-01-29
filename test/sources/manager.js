@@ -45,10 +45,12 @@ const testConfigs = [
 const testCheckConfig = (t, data) => {
     t.is(SourceManager.checkConfigArray(data.required, data.config), data.missing.length === 0);
 };
+testCheckConfig.title = (title, data) => `${title}: ${data.required.join(',')}-${data.missing.join(',')}`;
 
 const testMissingConfig = (t, data) => {
     t.deepEqual(SourceManager.missingConfig(data.required, data.config), data.missing);
 };
+testMissingConfig.title = (title, data) => `${title}: ${data.required.join(',')}-${data.missing.join(',')}`;
 
 for(const data of testConfigs) {
     test('check config array', testCheckConfig, data);
