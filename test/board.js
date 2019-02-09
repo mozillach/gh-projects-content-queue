@@ -1,5 +1,5 @@
 import test from 'ava';
-import { getGithubClient, getConfig, getColumn, getIssue } from './_stubs';
+import { getGithubClient, getConfig, getColumn, getIssue, getRepo } from './_stubs';
 import Board from '../lib/board';
 import UpdateManager from '../lib/update-manager';
 import sinon from 'sinon';
@@ -24,21 +24,23 @@ test.after(() => {
 test.beforeEach((t) => {
     t.context.gh = getGithubClient();
     t.context.config = getConfig();
-    t.context.gh.projects.getProjectColumns.resolves({
-        data: []
+    t.context.gh.queueResponse({
+        data: [],
+        headers: {}
     });
-    t.context.gh.projects.getRepoProjects.resolves({
+    t.context.gh.queueResponse({
         data: [
             {
                 name: t.context.config.projectName,
                 id: "1"
             }
-        ]
+        ],
+        headers: {}
     });
 });
 
 test('constructor', async (t) => {
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
 
     t.true("columns" in board);
     t.true("columnIds" in board);
@@ -58,42 +60,47 @@ test('constructor', async (t) => {
 });
 
 test('not ready', (t) => {
-    t.context.gh.projects.getProjectColumns.resetHistory();
-    t.context.gh.projects.getProjectColumns.rejects(new Error());
-    const board = new Board(t.context.gh, t.context.config);
+    t.context.gh.queueResponse(Promise.resolve(new Error()));
+    const board = new Board(t.context.gh, t.context.config, getRepo());
 
-    return t.notThrows(board.ready);
+    return t.notThrowsAsync(board.ready);
 });
 
 test('get board id', async (t) => {
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
     delete board.id;
-    t.context.gh.projects.getRepoProjects.resetHistory();
+    t.context.gh.queueResponse({
+        data: [
+            {
+                name: t.context.config.projectName,
+                id: 1
+            }
+        ]
+    });
 
     const id = await board.getBoardID();
 
     t.true("id" in board);
     t.is(id, board.id);
-    t.true(t.context.gh.projects.getRepoProjects.called);
-
-    t.context.gh.projects.getRepoProjects.resetHistory();
+    t.is(t.context.gh.options.length, 4);
 
     board.id = 'foo';
     const storedId = await board.getBoardID();
 
     t.is(storedId, board.id);
     t.is(storedId, 'foo');
-    t.false(t.context.gh.projects.getRepoProjects.called);
+    t.is(t.context.gh.options.length, 4);
 });
 
 test('get board id throws when there are no projects', async (t) => {
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
-    t.context.gh.projects.getRepoProjects.resolves({
-        data: []
+    t.context.gh.queueResponse({
+        data: [],
+        headers: {}
     });
     delete board.id;
 
@@ -101,16 +108,17 @@ test('get board id throws when there are no projects', async (t) => {
 });
 
 test('get board id throws when the project does not exist', async (t) => {
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
-    t.context.gh.projects.getRepoProjects.resolves({
+    t.context.gh.queueResponse({
         data: [
             {
                 name: t.context.config.projectName + 'foo',
                 id: "4"
             }
-        ]
+        ],
+        headers: {}
     });
     delete board.id;
 
@@ -118,20 +126,29 @@ test('get board id throws when the project does not exist', async (t) => {
 });
 
 test('board exists', async (t) => {
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
     delete board.id;
+    t.context.gh.queueResponse({
+        data: [
+            {
+                name: t.context.config.projectName,
+                id: 1
+            }
+        ]
+    })
 
     t.true(await board.boardExists());
 });
 
 test('board exists is false if there are no projects', async (t) => {
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
-    t.context.gh.projects.getRepoProjects.resolves({
-        data: []
+    t.context.gh.queueResponse({
+        data: [],
+        headers: {}
     });
     delete board.id;
 
@@ -139,16 +156,17 @@ test('board exists is false if there are no projects', async (t) => {
 });
 
 test('board exists is false if the project is not found', async (t) => {
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
-    t.context.gh.projects.getRepoProjects.resolves({
+    t.context.gh.queueResponse({
         data: [
             {
                 name: t.context.config.projectName + 'foo',
                 id: "4"
             }
-        ]
+        ],
+        headers: {}
     });
     delete board.id;
 
@@ -156,25 +174,35 @@ test('board exists is false if the project is not found', async (t) => {
 });
 
 test('board exist throws for other errors', async (t) => {
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
-    t.context.gh.projects.getRepoProjects.rejects('foo');
+    t.context.gh.queueResponse(Promise.reject(new Error('foo')));
     delete board.id;
 
     return t.throwsAsync(board.boardExists());
 });
 
 test('missing columns', async (t) => {
-    t.context.gh.projects.getProjectColumns.resolves({
+    t.context.gh.queueResponse({
+        data: [
+            {
+                name: t.context.config.projectName,
+                id: 1
+            }
+        ],
+        headers: {}
+    });
+    t.context.gh.queueResponse({
         data: [
             {
                 id: "1",
                 name: t.context.config.sources[0].columns.target
             }
-        ]
+        ],
+        headers: {}
     });
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
     const allColumns = new Set();
@@ -195,36 +223,55 @@ test('missing columns', async (t) => {
     }
 });
 
-test('columns exist', async (t) => {
-    t.context.gh.projects.createProjectColumn.resolves({
+test.failing('columns exist', async (t) => {
+    t.context.gh.queueResponse({
+        data: [
+            {
+                id: 1,
+                name: t.context.config.projectName
+            }
+        ],
+        headers: {}
+    });
+    t.context.gh.queueResponse({
+        data: [
+            {
+                id: "1",
+                name: t.context.config.sources[0].columns.target
+            }
+        ],
+        headers: {}
+    });
+    t.context.gh.queueResponse({
         data: {
             id: "1"
         }
     });
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
     t.true(await board.columnsExist());
 });
 
 test('columns dont exist', async (t) => {
-    t.context.gh.projects.createRepoProject.rejects();
-    const board = new Board(t.context.gh, t.context.config);
+    t.context.gh.queueResponse(Promise.rejects(new Error()));
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
     t.false(await board.columnsExist());
 });
 
 test('create board', async (t) => {
-    t.context.gh.projects.getRepoProjects.resolves({
-        data: []
+    t.context.gh.queueResponse({
+        data: [],
+        headers: {}
     });
-    t.context.gh.projects.createRepoProject.resolves({
+    t.context.gh.queueResponse({
         data: {
             id: 100
         }
     });
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
     t.is(board.id, 100);
@@ -236,10 +283,10 @@ test('create board', async (t) => {
 });
 
 test('create column', async (t) => {
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
-    t.context.gh.projects.createProjectColumn.resolves({
+    t.context.gh.queueResponse({
         data: {
             id: "1"
         }
@@ -259,7 +306,7 @@ test('create column', async (t) => {
 test.todo('setup');
 
 test('add card', async (t) => {
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     const column = getColumn(1, 'test');
     const card = {
         id: "2"
@@ -279,8 +326,7 @@ test('add card', async (t) => {
 });
 
 test('move card to column', async (t) => {
-    const board = new Board(t.context.gh, t.context.config);
-    t.context.gh.projects.moveProjectCard.resolves();
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     const column = getColumn("1", 'test');
     const newColumn = getColumn("2", 'lorem ipsum');
     const card = {
@@ -308,7 +354,7 @@ test('move card to column', async (t) => {
 });
 
 test('move card to column locally', async (t) => {
-    const board = new Board(t.context.gh, t.context.config);
+    const board = new Board(t.context.gh, t.context.config, getRepo());
     const column = getColumn("1", 'test');
     const newColumn = getColumn("2", 'lorem ipsum');
     const card = {

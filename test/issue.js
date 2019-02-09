@@ -42,14 +42,14 @@ test('set content', async (t) => {
     const lastUpdate = t.context.issue.lastUpdate;
 
     t.context.issue.content = newContent;
+    await Promise.resolve(); // wait for promise loop
 
-    t.true(t.context.gh.issues.edit.calledOnce);
-    t.deepEqual(t.context.gh.issues.edit.lastCall.args[0], {
-        owner: t.context.data.owner,
-        repo: t.context.data.repo,
-        number: t.context.data.number,
-        body: newContent
-    });
+    t.is(t.context.gh.options.length, 1);
+    const opts = t.context.gh.options.pop();
+    t.is(opts.owner, t.context.data.owner);
+    t.is(opts.repo, t.context.data.repo);
+    t.is(opts.number, t.context.data.number);
+    t.is(opts.body, newContent);
 
     await t.context.gh.issues.update({
         owner: t.context.data.owner,
@@ -73,17 +73,17 @@ test('has label', (t) => {
 test('add label', async (t) => {
     await t.context.issue.addLabel('test');
 
-    t.true(t.context.gh.issues.addLabels.calledOnce);
-    t.deepEqual(t.context.gh.issues.addLabels.lastCall.args[0], {
-        owner: t.context.data.owner,
-        repo: t.context.data.repo,
-        number: t.context.data.number,
-        labels: [ 'test' ]
-    });
+    t.is(t.context.gh.options.length, 1);
+    const opts = t.context.gh.options.pop();
+    t.log(opts);
+    t.is(opts.owner, t.context.data.owner);
+    t.is(opts.repo, t.context.data.repo);
+    t.is(opts.number, t.context.data.number);
+    t.deepEqual(opts.labels, [ 'test' ]);
     t.true(t.context.issue.hasLabel('test'));
 
     await t.context.issue.addLabel('test');
-    t.true(t.context.gh.issues.addLabels.calledOnce);
+    t.is(t.context.gh.options.length, 0);
 });
 
 test('remove label', async (t) => {
@@ -94,34 +94,32 @@ test('remove label', async (t) => {
 
     await t.context.issue.removeLabel('test');
 
-    t.true(t.context.gh.issues.removeLabel.calledOnce);
-    t.deepEqual(t.context.gh.issues.removeLabel.lastCall.args[0], {
-        owner: t.context.data.owner,
-        repo: t.context.data.repo,
-        number: t.context.data.number,
-        name: 'test'
-    });
+    t.is(t.context.gh.options.length, 1);
+    const opts = t.context.gh.options.pop();
+    t.is(opts.owner, t.context.data.owner);
+    t.is(opts.repo, t.context.data.repo);
+    t.is(opts.number, t.context.data.number);
+    t.is(opts.name, 'test');
     t.false(t.context.issue.hasLabel('test'));
     t.true(t.context.issue.hasLabel('foo'));
 
     await t.context.issue.removeLabel('test');
-    t.true(t.context.gh.issues.removeLabel.calledOnce);
+    t.is(t.context.gh.options.length, 0);
 });
 
 test('assign user', async (t) => {
     await t.context.issue.assign('baz');
 
-    t.true(t.context.gh.issues.addAssignees.calledOnce);
-    t.deepEqual(t.context.gh.issues.addAssignees.lastCall.args[0], {
-        owner: t.context.data.owner,
-        repo: t.context.data.repo,
-        number: t.context.data.number,
-        assignees: [ 'baz' ]
-    });
+    t.is(t.context.gh.options.length, 1);
+    const opts = t.context.gh.options.pop();
+    t.is(opts.owner, t.context.data.owner);
+    t.is(opts.repo, t.context.data.repo);
+    t.is(opts.number, t.context.data.number);
+    t.deepEqual(opts.assignees, [ 'baz' ]);
     t.is(t.context.issue.assignee, 'baz');
 
     await t.context.issue.assign('baz');
-    t.true(t.context.gh.issues.addAssignees.calledOnce);
+    t.is(t.context.gh.options.length, 0);
 });
 
 test('api object', (t) => {
@@ -163,16 +161,15 @@ test('close', async (t) => {
 
     const ret = await t.context.issue.close();
 
-    t.true(t.context.gh.issues.edit.calledOnce);
-    t.deepEqual(t.context.gh.issues.edit.lastCall.args[0], {
-        owner: t.context.data.owner,
-        repo: t.context.data.repo,
-        number: t.context.data.number,
-        state: 'closed'
-    });
+    t.is(t.context.gh.options.length, 1);
+    const opts = t.context.gh.options.pop();
+    t.is(opts.owner, t.context.data.owner);
+    t.is(opts.repo, t.context.data.repo);
+    t.is(opts.number, t.context.data.number);
+    t.is(opts.state, 'closed');
     t.false(t.context.issue.state);
     t.is(ret, 'asdf');
 
     await t.context.issue.close();
-    t.true(t.context.gh.issues.edit.calledOnce);
+    t.is(t.context.gh.options.length, 0);
 });
