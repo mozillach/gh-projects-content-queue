@@ -21,8 +21,9 @@ test.after(() => {
 
 test('constructor', (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const issues = new Issues(client, getConfig());
 
@@ -62,8 +63,9 @@ test('getIssueInfo', (t) => {
     };
 
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
 
     const issues = new Issues(client, config);
@@ -106,8 +108,9 @@ test('getIssueInfo with assignee and labels', (t) => {
     };
 
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
 
     const issues = new Issues(client, config);
@@ -118,9 +121,6 @@ test('getIssueInfo with assignee and labels', (t) => {
 
 test('create issue', async (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
-    });
     const issues = new Issues(client, getConfig());
 
     const title = 'test';
@@ -133,8 +133,12 @@ test('create issue', async (t) => {
         title,
         state: 'open'
     };
-    client.issues.create.resolves({
+    client.queueResponse({
         data: issueData
+    });
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const newIssue = await issues.createIssue(title, content);
 
@@ -148,12 +152,8 @@ test('create issue', async (t) => {
 
 test('fetch issues', async (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
-    });
     const issues = new Issues(client, getConfig());
 
-    client.issues.getForRepo.resetHistory();
     const issueData = [
         {
             id: 123,
@@ -164,8 +164,9 @@ test('fetch issues', async (t) => {
             state: 'open'
         }
     ];
-    client.issues.getForRepo.resolves({
-        data: issueData
+    client.queueResponse({
+        data: issueData,
+        headers: {}
     });
 
     const allIssues = await issues.fetchIssues();
@@ -177,12 +178,8 @@ test('fetch issues', async (t) => {
 
 test('fetch issues with old issues', async (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
-    });
     const issues = new Issues(client, getConfig());
 
-    client.issues.getForRepo.resetHistory();
     const issueData = [
         {
             id: 123,
@@ -201,8 +198,9 @@ test('fetch issues with old issues', async (t) => {
             state: 'open'
         }
     ];
-    client.issues.getForRepo.resolves({
-        data: issueData
+    client.queueResponse({
+        data: issueData,
+        headers: {}
     });
 
     const oldIssue = {
@@ -227,12 +225,8 @@ test('fetch issues with old issues', async (t) => {
 
 test('fetch issues with old issue that is not updated', async (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
-    });
     const issues = new Issues(client, getConfig());
 
-    client.issues.getForRepo.resetHistory();
     const issueData = [
         {
             id: 123,
@@ -251,8 +245,9 @@ test('fetch issues with old issue that is not updated', async (t) => {
             state: 'open'
         }
     ];
-    client.issues.getForRepo.resolves({
-        data: issueData
+    client.queueResponse({
+        data: issueData,
+        headers: {}
     });
 
     const oldIssue = {
@@ -277,7 +272,12 @@ test('fetch issues with old issue that is not updated', async (t) => {
 test('get new issue', async (t) => {
     const client = getGithubClient();
     client.queueResponse({
-        data: []
+        data: [],
+        headers: {}
+    });
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const issues = new Issues(client, getConfig());
     await Promise.all([
@@ -333,7 +333,12 @@ test('get existing issue', async (t) => {
     client.queueResponse({
         data: [
             issueData
-        ]
+        ],
+        headers: {}
+    });
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const issues = new Issues(client, getConfig());
     await Promise.all([
@@ -358,7 +363,12 @@ test('get existing issue', async (t) => {
 test('get new closed issue', async (t) => {
     const client = getGithubClient();
     client.queueResponse({
-        data: []
+        data: [],
+        headers: {}
+    });
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const issues = new Issues(client, getConfig());
     await Promise.all([
@@ -414,7 +424,12 @@ test('get existing closed issue', async (t) => {
     client.queueResponse({
         data: [
             issueData
-        ]
+        ],
+        headers: {}
+    });
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const issues = new Issues(client, getConfig());
     await Promise.all([
@@ -457,10 +472,12 @@ test('get existing issue that changed state', async (t) => {
     client.queueResponse({
         data: [
             issueData
-        ]
+        ],
+        headers: {}
     });
     client.queueResponse({
-        data: []
+        data: [],
+        headers: {}
     });
     const issues = new Issues(client, getConfig());
 

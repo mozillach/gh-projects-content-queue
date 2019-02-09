@@ -128,7 +128,7 @@ test('Throwing fetcher aborts current loading', async (t) => {
 
     const ds = new DataStore(fetcher);
 
-    await t.throws(ds.getData());
+    await t.throwsAsync(ds.getData());
     t.true(fetcher.calledOnce);
 
     fetcher.resolves();

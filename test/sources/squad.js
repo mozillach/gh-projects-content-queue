@@ -20,7 +20,7 @@ test('Constructor with hard coded squad', async (t) => {
         'foo',
         'bar'
     ];
-    const source = new SquadSource(getRepo(), 'lorem', {
+    const source = new SquadSource(getRepo(), 'lorem', getBoard(), {
         squad
     });
 

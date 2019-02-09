@@ -43,6 +43,7 @@ test('constructor', async (t) => {
     t.true("columns" in board);
     t.true("columnIds" in board);
     t.true("config" in board);
+    t.true("repo" in board);
 
     t.is(board.githubClient, t.context.gh);
     t.true(board.cards instanceof Map);
@@ -96,7 +97,7 @@ test('get board id throws when there are no projects', async (t) => {
     });
     delete board.id;
 
-    return t.throws(board.getBoardID(), NoProjectsError);
+    return t.throwsAsync(board.getBoardID(), NoProjectsError);
 });
 
 test('get board id throws when the project does not exist', async (t) => {
@@ -113,7 +114,7 @@ test('get board id throws when the project does not exist', async (t) => {
     });
     delete board.id;
 
-    return t.throws(board.getBoardID(), ProjectNotFoundError);
+    return t.throwsAsync(board.getBoardID(), ProjectNotFoundError);
 });
 
 test('board exists', async (t) => {
@@ -161,7 +162,7 @@ test('board exist throws for other errors', async (t) => {
     t.context.gh.projects.getRepoProjects.rejects('foo');
     delete board.id;
 
-    return t.throws(board.boardExists());
+    return t.throwsAsync(board.boardExists());
 });
 
 test('missing columns', async (t) => {

@@ -1,16 +1,18 @@
 import test from 'ava';
 import IssuesSource from '../../lib/sources/issues';
-import { getRepo, getTwitterAccount } from '../_stubs';
+import { getBoard, getTwitterAccount } from '../_stubs';
 import sinon from 'sinon';
 
 const getArgs = () => {
     const managedColumns = sinon.stub();
     managedColumns.resolves([]);
+    const board = getBoard({
+        'Foo': '1'
+    });
     return [
-        getRepo({
-            'Foo': '1'
-        }),
+        board.repo,
         getTwitterAccount(),
+        board,
         {
             columns: {
                 target: 'Foo'

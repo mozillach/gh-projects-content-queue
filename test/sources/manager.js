@@ -1,6 +1,6 @@
 import test from 'ava';
 import SourceManager from '../../lib/sources/manager';
-import { getRepo } from '../_stubs';
+import { getBoard, getAccountManager } from '../_stubs';
 import Source from '../../lib/sources/source';
 
 test('invalid source names', (t) => {
@@ -84,11 +84,12 @@ test('constructor with config with empty sources', (t) => {
 });
 
 test('get managed columns', async (t) => {
-    const manager = new SourceManager({}, getRepo({
+    const board = getBoard({
         test: 1,
         foo: 2,
         bar: 3
-    }));
+    });
+    const manager = new SourceManager({}, board.repo, getAccountManager(), board);
     manager.managedColumns.add('test');
 
     const managedColumns = await manager.getManagedColumns();
@@ -199,7 +200,7 @@ test('construction', async (t) => {
         }
     };
 
-    const repo = getRepo({
+    const board = getBoard({
         'Target': 1
     });
     const source = {
@@ -212,19 +213,20 @@ test('construction', async (t) => {
         sources: [
             source
         ]
-    }, repo, 'bar');
+    }, board.repo, 'bar', board);
 
     t.is(manager.sourceType, 'test');
     t.is(manager.sources.size, 1);
 
     const sourceInstance = Array.from(manager.sources.values())[0];
 
-    t.is(sourceInstance.constructedWith.length, 4);
-    t.is(sourceInstance.constructedWith[0], repo);
+    t.is(sourceInstance.constructedWith.length, 5);
+    t.is(sourceInstance.constructedWith[0], board.repo);
     t.is(sourceInstance.constructedWith[1], 'bar');
-    t.deepEqual(sourceInstance.constructedWith[2], source);
+    t.is(sourceInstance.constructedWith[2], board);
+    t.deepEqual(sourceInstance.constructedWith[3], source);
 
-    const managedColumnsSource = await sourceInstance.constructedWith[3]();
+    const managedColumnsSource = await sourceInstance.constructedWith[4]();
     const managedColumns = await manager.getManagedColumns();
     t.is(managedColumns.length, 1);
     t.is(managedColumns.length, managedColumnsSource.length);
@@ -250,7 +252,7 @@ test('construction throwing for missing columns', (t) => {
         }
     };
 
-    const repo = getRepo({
+    const board = getBoard({
         'Target': 1
     });
     const source = {
@@ -262,7 +264,7 @@ test('construction throwing for missing columns', (t) => {
         sources: [
             source
         ]
-    }, repo, 'bar'));
+    }, board.repo, 'bar', board));
 });
 
 test('construction throwing for missing config keys', (t) => {
@@ -289,7 +291,7 @@ test('construction throwing for missing config keys', (t) => {
         }
     };
 
-    const repo = getRepo({
+    const board = getBoard({
         'Target': 1
     });
     const source = {
@@ -302,7 +304,7 @@ test('construction throwing for missing config keys', (t) => {
         sources: [
             source
         ]
-    }, repo, 'bar'));
+    }, board.repo, 'bar', board));
 });
 
 test('construction without managed columns', async (t) => {
@@ -324,7 +326,7 @@ test('construction without managed columns', async (t) => {
         }
     };
 
-    const repo = getRepo({
+    const board = getBoard({
         'Target': 1
     });
     const source = {
@@ -337,19 +339,20 @@ test('construction without managed columns', async (t) => {
         sources: [
             source
         ]
-    }, repo, 'bar');
+    }, board.repo, 'bar', board);
 
     t.is(manager.sourceType, 'test');
     t.is(manager.sources.size, 1);
 
     const sourceInstance = Array.from(manager.sources.values())[0];
 
-    t.is(sourceInstance.constructedWith.length, 4);
-    t.is(sourceInstance.constructedWith[0], repo);
+    t.is(sourceInstance.constructedWith.length, 5);
+    t.is(sourceInstance.constructedWith[0], board.repo);
     t.is(sourceInstance.constructedWith[1], 'bar');
-    t.deepEqual(sourceInstance.constructedWith[2], source);
+    t.is(sourceInstance.constructedWith[2], board);
+    t.deepEqual(sourceInstance.constructedWith[3], source);
 
-    const managedColumnsSource = await sourceInstance.constructedWith[3]();
+    const managedColumnsSource = await sourceInstance.constructedWith[4]();
     const managedColumns = await manager.getManagedColumns();
     t.is(managedColumns.length, 0);
     t.is(managedColumns.length, managedColumnsSource.length);
@@ -357,7 +360,7 @@ test('construction without managed columns', async (t) => {
 });
 
 test('load squad source without valid config', (t) => {
-    const repo = getRepo({
+    const board = getBoard({
         'Foo': 1
     });
     const source = {
@@ -370,5 +373,5 @@ test('load squad source without valid config', (t) => {
         sources: [
             source
         ]
-    }, repo, 'bar'));
+    }, board.repo, 'bar', board));
 });

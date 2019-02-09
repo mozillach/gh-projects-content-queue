@@ -15,12 +15,19 @@ const getGithubClient = () => {
     inst.queueResponse = (resp) => {
         responseQueue.push(resp);
     };
-    inst.hook.wrap('request', async () => {
+    inst.options = [];
+    inst.hook.wrap('request', async (r, options) => {
+        inst.options.push(options);
         if(responseQueue.length) {
-            return responseQueue.shift();
+            const resp = responseQueue.shift();
+            console.log(options.url, resp);
+            return resp;
         }
         else {
-            return {};
+            console.log(options.url, "MISS");
+            return {
+                headers: {}
+            };
         }
     });
     return inst;

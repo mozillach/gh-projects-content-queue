@@ -25,7 +25,7 @@ test('get title', (t) => {
 test('required config', (t) => {
     const requiredConfig = DiscourseSource.requiredConfig;
 
-    t.true(requiredConfig.includes('discourseAccount'));
+    t.true(requiredConfig.includes('accountName'));
 });
 
 test('required columns', (t) => {

@@ -24,17 +24,17 @@ test('constructor and update', (t) => {
     t.is(issue.state, data.state);
 });
 
-test('comment', (t) => {
+test('comment', async  (t) => {
     const commentContent = 'foo bar';
-    t.context.issue.comment(commentContent);
+    await t.context.issue.comment(commentContent);
 
-    t.true(t.context.gh.issues.createComment.calledOnce);
-    t.deepEqual(t.context.gh.issues.createComment.lastCall.args[0], {
-        owner: t.context.data.owner,
-        repo: t.context.data.repo,
-        number: t.context.data.number,
-        body: commentContent
-    });
+    const opts = t.context.gh.options.pop();
+    t.is(opts.url, '/repos/:owner/:repo/issues/:number/comments');
+    t.is(t.context.gh.options.length, 0);
+    t.is(opts.owner, t.context.data.owner);
+    t.is(opts.repo, t.context.data.repo);
+    t.is(opts.number, t.context.data.number);
+    t.is(opts.body, commentContent);
 });
 
 test('set content', async (t) => {
@@ -51,7 +51,7 @@ test('set content', async (t) => {
         body: newContent
     });
 
-    await t.context.gh.issues.edit({
+    await t.context.gh.issues.update({
         owner: t.context.data.owner,
         repo: t.context.data.repo,
         number: t.context.data.number

@@ -20,7 +20,9 @@ test('required columns', (t) => {
 test.serial('construction', (t) => {
     const source = new ReminderSource({
         ready: new Promise(() => {})
-    }, 'foo', 'bar');
+    }, 'foo', {
+        ready: Promise.resolve()
+    }, 'bar');
 
     t.is(source.lastRun, Date.now());
 });
@@ -28,7 +30,9 @@ test.serial('construction', (t) => {
 test('remind before', (t) => {
     const source = new ReminderSource({
         ready: new Promise(() => {})
-    }, 'bar', 'baz');
+    }, 'bar', {
+        ready: Promise.resolve()
+    }, 'baz');
 
     const second = 1000;
     const minute = 60 * second;
