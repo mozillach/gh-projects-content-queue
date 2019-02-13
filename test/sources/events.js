@@ -3,14 +3,12 @@ import EventsSource from '../../lib/sources/events';
 import { getConfig } from '../_stubs';
 import sinon from 'sinon';
 
-let clock;
-
-test.before(() => {
-    clock = sinon.useFakeTimers();
+test.before((t) => {
+    t.context.clock = sinon.useFakeTimers();
 });
 
-test.after(() => {
-    clock.restore();
+test.after((t) => {
+    t.context.clock.restore();
 });
 
 test.todo('get event card content');
@@ -31,7 +29,7 @@ test('get title', (t) => {
         start: date
     }, config));
 
-    clock.tick(60000);
+    t.context.clock.tick(60000);
     t.not(title, EventsSource.getTitle({
         summary: 'foo',
         start: new Date()

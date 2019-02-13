@@ -75,7 +75,6 @@ test('add label', async (t) => {
 
     t.is(t.context.gh.options.length, 1);
     const opts = t.context.gh.options.pop();
-    t.log(opts);
     t.is(opts.owner, t.context.data.owner);
     t.is(opts.repo, t.context.data.repo);
     t.is(opts.number, t.context.data.number);

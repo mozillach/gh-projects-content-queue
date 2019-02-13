@@ -7,9 +7,8 @@ import Column from '../lib/column';
 import { NoProjectsError, ProjectNotFoundError } from '../lib/board-errors';
 
 // Ensure update manager never calls update during tests unless we explicitly want it to.
-let clock;
-test.before(() => {
-    clock = sinon.useFakeTimers();
+test.before((t) => {
+    t.context.clock = sinon.useFakeTimers();
 });
 
 test.afterEach(() => {
@@ -17,8 +16,8 @@ test.afterEach(() => {
     UpdateManager.targets.clear();
 });
 
-test.after(() => {
-    clock.restore();
+test.after((t) => {
+    t.context.clock.restore();
 });
 
 test.beforeEach((t) => {
@@ -51,6 +50,10 @@ test('constructor', async (t) => {
     t.true(board.cards instanceof Map);
 
     t.true("then" in board.ready);
+    t.context.gh.queueResponse({
+        data: [],
+        headers: {}
+    });
     t.true("then" in board.columns);
     t.true("then" in board.columnIds);
 
@@ -137,7 +140,7 @@ test('board exists', async (t) => {
                 id: 1
             }
         ]
-    })
+    });
 
     t.true(await board.boardExists());
 });
@@ -223,7 +226,7 @@ test('missing columns', async (t) => {
     }
 });
 
-test.failing('columns exist', async (t) => {
+test('columns exist', async (t) => {
     t.context.gh.queueResponse({
         data: [
             {
@@ -242,11 +245,17 @@ test.failing('columns exist', async (t) => {
         ],
         headers: {}
     });
-    t.context.gh.queueResponse({
-        data: {
-            id: "1"
+    let currId = 0;
+    for(const source of t.context.config.sources) {
+        for(const c in source.columns) {
+            t.log("Creating", c);
+            t.context.gh.queueResponse({
+                data: {
+                    id: (++currId).toString()
+                }
+            });
         }
-    });
+    }
     const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
@@ -254,7 +263,20 @@ test.failing('columns exist', async (t) => {
 });
 
 test('columns dont exist', async (t) => {
-    t.context.gh.queueResponse(Promise.rejects(new Error()));
+    t.context.gh.queueResponse({
+        data: [
+            {
+                id: 1,
+                name: t.context.config.projectName
+            }
+        ],
+        headers: {}
+    });
+    t.context.gh.queueResponse({
+        data: [],
+        headers: {}
+    });
+    t.context.gh.queueResponse(Promise.reject(new Error()));
     const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
@@ -262,27 +284,40 @@ test('columns dont exist', async (t) => {
 });
 
 test('create board', async (t) => {
+    t.context.gh.resetQueue();
     t.context.gh.queueResponse({
         data: [],
         headers: {}
     });
     t.context.gh.queueResponse({
         data: {
-            id: 100
+            id: "100"
         }
     });
     const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
-    t.is(board.id, 100);
-    t.true(t.context.gh.projects.createRepoProject.calledWith(sinon.match({
-        owner: t.context.config.owner,
-        repo: t.context.config.repo,
-        name: t.context.config.projectName
-    })));
+    t.is(board.id, "100");
+    const [ , opts ] = t.context.gh.options;
+    t.is(opts.repo, t.context.config.repo);
+    t.is(opts.name, t.context.config.projectName);
+    t.is(opts.owner, t.context.config.owner);
 });
 
 test('create column', async (t) => {
+    t.context.gh.queueResponse({
+        data: [
+            {
+                name: t.context.config.projectName,
+                id: "1"
+            }
+        ],
+        headers: {}
+    });
+    t.context.gh.queueResponse({
+        data: [],
+        headers: {}
+    });
     const board = new Board(t.context.gh, t.context.config, getRepo());
     await board.ready;
 
@@ -326,7 +361,21 @@ test('add card', async (t) => {
 });
 
 test('move card to column', async (t) => {
+    t.context.gh.queueResponse({
+        data: [
+            {
+                name: t.context.config.projectName,
+                id: "1"
+            }
+        ],
+        headers: {}
+    });
+    t.context.gh.queueResponse({
+        data: [],
+        headers: {}
+    });
     const board = new Board(t.context.gh, t.context.config, getRepo());
+    await board.ready;
     const column = getColumn("1", 'test');
     const newColumn = getColumn("2", 'lorem ipsum');
     const card = {
@@ -343,18 +392,32 @@ test('move card to column', async (t) => {
 
     t.true(board.cards.has(card.id));
 
-    t.true(t.context.gh.projects.moveProjectCard.calledWith(sinon.match({
-        card_id: card.id,
-        position: 'bottom',
-        column_id: newColumn.id
-    })));
+    const opts = t.context.gh.options.pop();
+    t.is(opts.card_id, card.id);
+    t.is(opts.position, 'bottom');
+    t.is(opts.column_id, newColumn.id);
 
     t.true(column.removeCard.calledWith(card, true, true));
     t.true(newColumn.addCard.calledWith(card, true));
 });
 
 test('move card to column locally', async (t) => {
+    t.context.gh.queueResponse({
+        data: [
+            {
+                name: t.context.config.projectName,
+                id: "1"
+            }
+        ],
+        headers: {}
+    });
+    t.context.gh.queueResponse({
+        data: [],
+        headers: {}
+    });
     const board = new Board(t.context.gh, t.context.config, getRepo());
+    await board.ready;
+    t.context.gh.options.length = 0;
     const column = getColumn("1", 'test');
     const newColumn = getColumn("2", 'lorem ipsum');
     const card = {
@@ -371,7 +434,7 @@ test('move card to column locally', async (t) => {
 
     t.true(board.cards.has(card.id));
 
-    t.false(t.context.gh.projects.moveProjectCard.called);
+    t.falsy(t.context.gh.options.length);
 
     t.true(column.removeCard.calledWith(card, true, true));
     t.true(newColumn.addCard.calledWith(card, true));

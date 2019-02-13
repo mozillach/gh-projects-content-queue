@@ -16,6 +16,9 @@ const getGithubClient = () => {
         responseQueue.push(resp);
     };
     inst.options = [];
+    inst.resetQueue = () => {
+        responseQueue.length = 0;
+    };
     inst.hook.wrap('request', async (r, options) => {
         inst.options.push(options);
         if(responseQueue.length) {

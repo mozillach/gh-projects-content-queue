@@ -5,9 +5,8 @@ import UpdateManager from '../../lib/update-manager';
 import sinon from 'sinon';
 
 // Ensure update manager never calls update during tests unless we explicitly want it to.
-let clock;
-test.before(() => {
-    clock = sinon.useFakeTimers();
+test.before((t) => {
+    t.context.clock = sinon.useFakeTimers();
 });
 
 test.afterEach(() => {
@@ -15,8 +14,8 @@ test.afterEach(() => {
     UpdateManager.targets.clear();
 });
 
-test.after(() => {
-    clock.restore();
+test.after((t) => {
+    t.context.clock.restore();
 });
 
 // getTweetIDFromURL()
@@ -204,10 +203,10 @@ test('construction', (t) => {
 
 test('construction ready rejected', (t) => {
     const client = getTwitterClient();
-    client.get.rejects([]);
+    client.get.rejects(new Error());
     const account = new TwitterAccount({}, client);
 
-    return t.throwsAsync(account.ready, Array);
+    return t.throwsAsync(account.ready, Error);
 });
 
 test.todo('uploadMedia');
@@ -456,7 +455,7 @@ test.serial('tweets with existing tweets stored', async (t) => {
         }
     ];
     client.get.resolves(newerTweets);
-    clock.tick(UpdateManager.UPDATE_INTERVAL + 1);
+    t.context.clock.tick(UpdateManager.UPDATE_INTERVAL + 1);
 
     // Update manager updates the data store.
 
@@ -560,7 +559,7 @@ test('last mention second run', async (t) => {
 
     client.get.resetHistory();
     client.get.resolves([]);
-    clock.tick(UpdateManager.UPDATE_INTERVAL + 1);
+    t.context.clock.tick(UpdateManager.UPDATE_INTERVAL + 1);
 
     const lastMention = await account.lastMention;
 

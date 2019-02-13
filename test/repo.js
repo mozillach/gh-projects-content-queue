@@ -152,7 +152,6 @@ test.failing('add issue tempaltes', async (t) => {
     await repo.addIssueTemplates(config);
 
     const opts = client.options.pop();
-    t.log(opts);
     t.is(opts.path, ".github/ISSUE_TEMPLATE/retweet.md");
     t.is(opts.message, "Tweet issue template for content queue");
     //TODO test template content
@@ -169,6 +168,7 @@ test.failing('add files without any content', async (t) => {
 
     await repo._addFiles();
 
+    t.log(client.options);
     t.true(client.repos.createFile.calledWithMatch({
         path: "README.md"
     }));
@@ -288,6 +288,7 @@ test('ensure labels', async (t) => {
     t.is(opts.name, config.labels.ready);
 });
 
+//TODO move to board
 test.failing('create card without position', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
@@ -298,7 +299,13 @@ test.failing('create card without position', async (t) => {
             'x-oauth-scopes': 'public_repo, org:read'
         }
     });
-    client.queueResponse({});
+    client.queueResponse({
+        data: {
+            owner: {
+                type: 'User'
+            }
+        }
+    });
     client.queueResponse({});
     client.queueResponse({
         data: {
@@ -364,6 +371,7 @@ test.failing('create card without position', async (t) => {
     }, false));
 });
 
+//TODO move to board.
 test.failing('create card with position', async (t) => {
     const client = getGithubClient();
     const config = getConfig();
@@ -374,7 +382,13 @@ test.failing('create card with position', async (t) => {
             'x-oauth-scopes': 'public_repo, org:read'
         }
     });
-    client.queueResponse();
+    client.queueResponse({
+        data: {
+            owner: {
+                type: 'User'
+            }
+        }
+    });
     client.queueResponse();
     client.queueResponse({
         data: {
@@ -561,7 +575,6 @@ test('get users of team that does not exist', async (t) => {
         data: [],
         headers: {}
     });
-    client.queueResponse(Promise.reject(new Error()));
 
     await t.throwsAsync(repo.getUsersInTeam(team), Error);
 
@@ -582,7 +595,6 @@ test('can not get team members if repo belongs to user', async (t) => {
             }
         }
     });
-    client.queueResponse(Promise.reject(new Error()));
 
     await t.throwsAsync(repo.getUsersInTeam('baz'));
 });

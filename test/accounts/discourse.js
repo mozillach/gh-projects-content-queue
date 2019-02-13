@@ -5,9 +5,8 @@ import UpdateManager from '../../lib/update-manager';
 import DataStoreHolder from '../../lib/data-store-holder';
 
 // Ensure update manager never calls update during tests unless we explicitly want it to.
-let clock;
-test.before(() => {
-    clock = sinon.useFakeTimers();
+test.before((t) => {
+    t.context.clock = sinon.useFakeTimers();
 });
 
 test.afterEach(() => {
@@ -15,8 +14,8 @@ test.afterEach(() => {
     UpdateManager.targets.clear();
 });
 
-test.after(() => {
-    clock.restore();
+test.after((t) => {
+    t.context.clock.restore();
 });
 
 test('construction', (t) => {

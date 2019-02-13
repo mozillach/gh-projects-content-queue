@@ -5,9 +5,8 @@ import sinon from 'sinon';
 import UpdateManager from '../lib/update-manager';
 
 // Ensure update manager never calls update during tests unless we explicitly want it to.
-let clock;
-test.before(() => {
-    clock = sinon.useFakeTimers();
+test.before((t) => {
+    t.context.clock = sinon.useFakeTimers();
 });
 
 test.afterEach(() => {
@@ -15,12 +14,16 @@ test.afterEach(() => {
     UpdateManager.targets.clear();
 });
 
-test.after(() => {
-    clock.restore();
+test.after((t) => {
+    t.context.clock.restore();
 });
 
 test('constructor', (t) => {
     const client = getGithubClient();
+    client.queueResponse({
+        data: [],
+        headers: {}
+    });
     client.queueResponse({
         data: [],
         headers: {}

@@ -4,13 +4,11 @@ import Column from '../lib/column';
 import sinon from 'sinon';
 
 // Ensure data stores are not invalidated.
-let clock;
-
-test.before(() => {
-    clock = sinon.useFakeTimers();
+test.before((t) => {
+    t.context.clock = sinon.useFakeTimers();
 });
-test.after(() => {
-    clock.restore();
+test.after((t) => {
+    t.context.clock.restore();
 });
 
 test('constructor', (t) => {

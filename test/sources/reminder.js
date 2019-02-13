@@ -2,14 +2,12 @@ import test from 'ava';
 import ReminderSource from '../../lib/sources/reminder';
 import sinon from 'sinon';
 
-let clock;
-
-test.before(() => {
-    clock = sinon.useFakeTimers();
+test.before((t) => {
+    t.context.clock = sinon.useFakeTimers();
 });
 
-test.after(() => {
-    clock.restore();
+test.after((t) => {
+    t.context.clock.restore();
 });
 
 test('required columns', (t) => {

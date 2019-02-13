@@ -4,13 +4,12 @@ import { getBoard, getAccountManager, getColumn } from '../_stubs';
 import sinon from 'sinon';
 
 // Ensure update manager never calls update during tests unless we explicitly want it to.
-let clock;
-test.before(() => {
-    clock = sinon.useFakeTimers();
+test.before((t) => {
+    t.context.clock = sinon.useFakeTimers();
 });
 
-test.after(() => {
-    clock.restore();
+test.after((t) => {
+    t.context.clock.restore();
 });
 
 const getArgs = () => {
@@ -84,7 +83,7 @@ test.serial('get current quota', (t) => {
     source._config.schedule.push(`${now.getUTCHours() - 1}:${now.getUTCMinutes()}`);
     source._config.schedule.push(`${now.getUTCHours() - 1}:00}`);
 
-    clock.tick(3700001);
+    t.context.clock.tick(3700001);
 
     const quota = source.getCurrentQuota();
 
