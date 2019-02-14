@@ -71,6 +71,26 @@
                             "forum"
                         ]
                     }
+                },
+                "mastodon": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "$extends": "#/definitions/Account",
+                        "properties": {
+                            "accessToken": {
+                                "type": "string"
+                            },
+                            "url": {
+                                "type": "string",
+                                "description": "API base URL for the instance"
+                            }
+                        },
+                        "required": [
+                            "accessToken",
+                            "url"
+                        ]
+                    }
                 }
             }
         },
