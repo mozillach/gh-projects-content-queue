@@ -42,7 +42,7 @@ test('move', async (t) => {
     await column.move('start');
 
     const opts = client.options.pop();
-    t.is(opts.id, 1);
+    t.is(opts.column_id, 1);
     t.is(opts.position, 'start');
 });
 
@@ -273,7 +273,7 @@ test('remove card remotely and do not keep it', async (t) => {
     await column.removeCard(card);
 
     const opts = client.options.pop();
-    t.is(opts.id, card.id);
+    t.is(opts.card_id, card.id);
     t.is(opts.method, 'DELETE');
 
     t.false(allCards.has(card.id));
@@ -317,7 +317,7 @@ test('move card', async (t) => {
     await column.moveCard(card, 'start');
 
     const opts = client.options.pop();
-    t.is(opts.id, card.id);
+    t.is(opts.card_id, card.id);
     t.is(opts.position, 'start');
 });
 
