@@ -10,24 +10,29 @@ creation, improves collaboration and gives better control over content quality.
 
 - Represent tweets as GitHub issues
     - Supports replying and retweets
+    - Auto add unhandled mentions as new issues
 - Auto add issues to a column in a dedicated project board
-- Auto tweet issues from a column in the dedicated board
-- Validate issue content to be valid for tweeting
-- Scheduling of tweets to an exact time
+- Auto post issues from a column in the dedicated board
+- Validate issue content to be valid for posting
+- Scheduling of posts to an exact time
 - Reaction squad system to ping people to react to a mention
-- Auto tweeting tweets from a column in certain spacing (à la buffer)
-- Reminder system for tweets that are due but not ready
-- Auto create tweets for events from an ical feed
-- Auto create tweets for new discourse threads
-- Auto create tweets for posts in an Atom or RSS feed
+- Auto posting from a column in certain spacing (à la buffer)
+- Reminder system for posts that are due but not ready
+- Auto create posts for events from an ical feed
+- Auto create posts for new discourse threads
+- Auto create posts for posts in an Atom or RSS feed
+- Mastodon support
+    - Supports replying, reposts and spoilers
 
 ### Planned
-- Tweet pinning management
+
+- Tweet pinning management (will probably happen for Mastodon first, since there's actually an API for that there)
 - See all the issues with the enhancement tag...
 
 ## Set up a repo for use with this tool
 
 ### Requirements
+
 - GitHub user auth token (will use that to create issues and comment on them etc.)
     - Log in with your GitHub user
     - Go to your settings
@@ -40,6 +45,13 @@ creation, improves collaboration and gives better control over content quality.
     - Copy the consumer key and secret to the fields in the `config.json` file
     - Click on "Create access token"
     - Copy the access token key and secret to the fields in the `config.json` file
+- Mastodon OAuth access token (will toot to this account)
+    - In the following, replace `https://mastodoninstance.example.com` with the URL of your instance
+    - Create a new application at `https://mastodoninstance.example.com/settings/applications/new`
+    - Grant all read and write scopes. In theory the `read:accounts`, `read:statuses` and `write:statuses` should be enough at the moment, but this is untested
+    - Go to the application and copy the access token under "Your access token"
+    - The instance URL is probably `https://mastodoninstance.example.com/api/v1`
+    - Add both the access token and the instance URL to the fields in the `config.json` file
 - Node >= 8.0.0
 
 ### Issue template
