@@ -487,7 +487,7 @@ const TEST_DATA = [
                 }
             ]
         },
-        name: "inavlid project with unknown label"
+        name: "invalid project with unknown label"
     },
     {
         valid: false,
@@ -520,7 +520,7 @@ const TEST_DATA = [
                 }
             ]
         },
-        name: "inavlid project with label with invalid name"
+        name: "invalid project with label with invalid name"
     },
     {
         valid: false,
@@ -553,7 +553,108 @@ const TEST_DATA = [
                 }
             ]
         },
-        name: "inavlid project with label with empty name"
+        name: "invalid project with label with empty name"
+    },
+    {
+        valid: false,
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    githubAccount: "gh",
+                    projectName: "baz",
+                    schedulingTime: {
+                        format: "YYYY-MM-DD HH:mm:ss",
+                        region: "America/NewYork"
+                    }
+                }
+            ]
+        },
+        name: "invalid project with unknown region"
+    },
+    {
+        valid: false,
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    githubAccount: "gh",
+                    projectName: "baz",
+                    schedulingTime: {
+                        format: "YYYY-MM-DD HH:mm:ss"
+                    }
+                }
+            ]
+        },
+        name: "invalid project with neither region nor timezone"
+    },
+    {
+        valid: true,
+        config: {
+            accounts: {
+                github: [
+                    {
+                        name: "gh",
+                        token: "loremIpsum"
+                    }
+                ],
+                twitter: [
+                    {
+                        name: "t",
+                        access_token_key: "asdf",
+                        access_token_secret: "asdf",
+                        consumer_key: "asdf",
+                        consumer_secret: "asdf"
+                    }
+                ]
+            },
+            boards: [
+                {
+                    repo: "foo/bar",
+                    githubAccount: "gh",
+                    projectName: "baz",
+                    schedulingTime: {
+                        format: "YYYY-MM-DD HH:mm:ss",
+                        region: "America/New_York"
+                    }
+                }
+            ]
+        },
+        name: "valid project with region"
     }
 ];
 

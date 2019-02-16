@@ -150,11 +150,26 @@
                                 "minimum": -11,
                                 "maximum": 13,
                                 "title": "Offset to UTC of dates in issues"
+                            },
+                            "region": {
+                                "type": "string",
+                                "title": "Timezone region for localized dates"
                             }
                         },
                         "required": [
-                            "format",
-                            "timezone"
+                            "format"
+                        ],
+                        "oneOf": [
+                            {
+                                "required": [
+                                    "timezone"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "region"
+                                ]
+                            }
                         ],
                         "additionalProperties": false
                     },

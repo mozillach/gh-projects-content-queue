@@ -217,6 +217,25 @@ test("inverse mkohler date", (t) => {
     });
     t.is(date.getTime(), 1503707700000);
 });
+test("mkohler date with region", (t) => {
+    const date = new ScheduledDate("26.08.2017 02:35", {
+        schedulingTime: {
+            format: defaultConfig.boards[0].schedulingTime.format,
+            region: "Europe/Zurich"
+        }
+    });
+    t.is(date.getTime(), 1503707700000);
+});
+
+test("inverse mkohler date with region", (t) => {
+    const date = new ScheduledDate("25.08.2017 20:35", {
+        schedulingTime: {
+            format: defaultConfig.boards[0].schedulingTime.format,
+            region: "America/New_York"
+        }
+    });
+    t.is(date.getTime(), 1503707700000);
+});
 
 test('formatDate with a non-date', (t) => {
     const res = ScheduledDate.formatDate('foo', '');
@@ -235,6 +254,20 @@ test('format date formats to the proper timezone reverse', (t) => {
     const formatted = ScheduledDate.formatDate(date, defaultConfig.boards[0].schedulingTime.format, -2);
 
     t.is(formatted, "25.08.2017 22:35");
+});
+
+test('format date formats to the proper region', (t) => {
+    const date = new Date(1503707700000);
+    const formatted = ScheduledDate.formatDate(date, defaultConfig.boards[0].schedulingTime.format, undefined, "Europe/Zurich");
+
+    t.is(formatted, "26.08.2017 02:35");
+});
+
+test('format date formats to the proper region reverse', (t) => {
+    const date = new Date(1503707700000);
+    const formatted = ScheduledDate.formatDate(date, defaultConfig.boards[0].schedulingTime.format, undefined, "America/New_York");
+
+    t.is(formatted, "25.08.2017 20:35");
 });
 
 test('format date with and without timezone is the same for the local tz', (t) => {
