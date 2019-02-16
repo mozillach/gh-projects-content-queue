@@ -116,12 +116,6 @@
                         "title": "Label names for labels used by the queue",
                         "type": "object",
                         "properties": {
-                            "retweet": {
-                                "type": "string",
-                                "minLength": 1,
-                                "default": "Reweet",
-                                "title": "Label on issues that are retweets"
-                            },
                             "ready": {
                                 "type": "string",
                                 "minLength": 1,

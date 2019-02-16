@@ -22,7 +22,6 @@
             "projectName": "Tweets",
             "githubAccount": "firstGHAccount",
             "labels": {
-                "retweet": "Retweet",
                 "ready": "ready",
                 "invalid": "invalid"
             },
