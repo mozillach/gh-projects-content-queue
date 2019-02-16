@@ -581,7 +581,7 @@ const TEST_DATA = [
                     githubAccount: "gh",
                     projectName: "baz",
                     schedulingTime: {
-                        format: "YYYY-MM-DD HH:mm:ss",
+                        format: "YYYY-MM-DD HH:mm",
                         region: "America/NewYork"
                     }
                 }
@@ -615,7 +615,7 @@ const TEST_DATA = [
                     githubAccount: "gh",
                     projectName: "baz",
                     schedulingTime: {
-                        format: "YYYY-MM-DD HH:mm:ss"
+                        format: "YYYY-MM-DD HH:mm"
                     }
                 }
             ]
@@ -648,7 +648,7 @@ const TEST_DATA = [
                     githubAccount: "gh",
                     projectName: "baz",
                     schedulingTime: {
-                        format: "YYYY-MM-DD HH:mm:ss",
+                        format: "YYYY-MM-DD HH:mm",
                         region: "America/New_York"
                     }
                 }

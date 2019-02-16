@@ -61,7 +61,7 @@ class QueueManager {
             /**
             * @type {module:repo.Repository}
             */
-            const repository = new Repository(githubClient, {
+            const repository = new Repository(githubClient.client, {
                 owner,
                 repo
             }, await accountsList, boardList);

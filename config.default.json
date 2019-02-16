@@ -27,8 +27,8 @@
                 "invalid": "invalid"
             },
             "schedulingTime": {
-                "format": "DD.MM.YYYY HH:mm",
-                "timezone": 1
+                "format": "YYYY-MM-DD HH:mm",
+                "region": "Europe/Berlin"
             },
             "sources": [
                 {
