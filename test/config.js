@@ -32,7 +32,6 @@ const TEST_DATA = [
                     projectName: "Tweets",
                     githubAccount: "gh",
                     labels: {
-                        retweet: "RT",
                         ready: "valid",
                         invalid: "invalid"
                     },
@@ -515,7 +514,7 @@ const TEST_DATA = [
                     githubAccount: "gh",
                     projectName: "baz",
                     labels: {
-                        retweet: null
+                        invalid: null
                     }
                 }
             ]
@@ -548,7 +547,7 @@ const TEST_DATA = [
                     githubAccount: "gh",
                     projectName: "baz",
                     labels: {
-                        retweet: ""
+                        invalid: ""
                     }
                 }
             ]
