@@ -35,7 +35,6 @@ test('constructor with valid formatted date', (t) => {
         }
     });
     const referenceDate = new Date(2099, 0, 5, 4, 0);
-    t.log(tzOffset, date.getTime(), referenceDate.getTime(), date.config);
 
     t.true(date instanceof Date);
     t.is(date.rawDate, dateString);
