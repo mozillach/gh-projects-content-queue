@@ -42,7 +42,7 @@
     "eslint-plugin-node": "^6.0.1",
     "github-stub": "^2.0.3",
     "nyc": "^11.6.0",
-    "sinon": "^4.4.8",
+    "sinon": "^7.2.4",
     "temp-write": "^3.4.0"
   },
   "dependencies": {
