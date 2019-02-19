@@ -46,7 +46,7 @@
     "temp-write": "^3.4.0"
   },
   "dependencies": {
-    "@octokit/rest": "^15.2.5",
+    "@octokit/rest": "^16.15.1",
     "ajv": "^6.3.0",
     "discourse-sdk": "^1.0.3",
     "fetch-base64": "^2.0.0",
