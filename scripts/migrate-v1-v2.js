@@ -70,7 +70,7 @@ for(const board of oldConfig) {
                         accountName: twitterName
                     };
 
-                    if (s.schedule && s.schedule.length > 0) {
+                    if(s.schedule && s.schedule.length > 0) {
                         sourceDefinition.schedule = s.schedule;
                     }
 
