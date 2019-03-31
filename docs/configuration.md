@@ -3,6 +3,7 @@
 - [By file](#by-file)
 - [By environment variables](#by-environment-variables)
 - [Basic anatomy](#basic-anatomy)
+- [Migration](#migration)
 
 ## By file
 
@@ -13,6 +14,14 @@ You could also provide the configuartion via the environment, but if a config.js
 ## By environment variables
 
 The `CQ_CONFIG` environment variable should be set to a stringified version of the JSON configuration.
+
+## Migration
+
+### v1 to v2
+
+- Make sure you have your current config in `config.json`
+- Run `npm run migrate`
+- `config.json` now contains the new configuration you can use in production
 
 ## Basic anatomy
 
