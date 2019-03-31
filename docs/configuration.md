@@ -187,11 +187,11 @@ Date format for scheduling tweets.
 
 #### timezone
 
-Integer offset from UTC the tool should treat dates in issues as. `region` is recommended for localized times.
+Integer offset from UTC for dates in issues. `region` is recommended for localized times.
 
 #### region
 
-String to descripte the region the tool should treat dates in issues as being in. For example "Europe/Zurich" will use Swiss local time. This replaces `timezone`.
+String to describe the region for dates in issues. For example "Europe/Zurich" will use Swiss local time. This replaces `timezone`.
 
 ## Example
 

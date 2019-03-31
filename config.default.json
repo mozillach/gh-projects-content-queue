@@ -2,7 +2,7 @@
     "accounts": {
         "github": [
             {
-                "name": "firstGHAccount",
+                "name": "firstGitHubAccount",
                 "token": "yourGithubToken"
             }
         ],
@@ -20,7 +20,7 @@
         {
             "repo": "yourUserName/yourRepoName",
             "projectName": "Tweets",
-            "githubAccount": "firstGHAccount",
+            "githubAccount": "firstGitHubAccount",
             "labels": {
                 "ready": "ready",
                 "invalid": "invalid"
