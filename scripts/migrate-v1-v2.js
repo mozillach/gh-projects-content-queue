@@ -67,7 +67,8 @@ for(const board of oldConfig) {
                         columns: s.columns,
                         type: 'publish',
                         accountType: 'twitter',
-                        accountName: twitterName
+                        accountName: twitterName,
+                        schedule: s.schedule,
                     };
                 }
                 case 'discourse': {
