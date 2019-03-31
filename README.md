@@ -38,9 +38,10 @@ creation, improves collaboration and gives better control over content quality.
     - Go to your settings
     - Go to "Personal access token" and go click on the "Generate new token" button
     - Select the "public_repo" scope and if you are using it with an organization "read:org" and click save
-    - Add the resulting token to the `config.json` file (`githubToken` property)
+    - Add the resulting token to the `config.json` file (`accounts.github.token` property)
 - Twitter API credentials incl. OAuth tokens and secret (will tweet to this account)
-    - Create a new App through [apps.twitter.com](https://apps.twitter.com/)
+    - Create a new App through [developer.twitter.com/apps](https://developer.twitter.com/apps)
+    - Apply for a developer account if you don't have one yet
     - There is no need to define a redirect URL, just leave the field blank
     - Copy the consumer key and secret to the fields in the `config.json` file
     - Click on "Create access token"
