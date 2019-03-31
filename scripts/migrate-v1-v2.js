@@ -1,4 +1,4 @@
-"use strinct";
+"use strict";
 const path = require("path");
 const fs = require("fs");
 const oldConfig = require("../config.json");
@@ -51,6 +51,10 @@ for(const board of oldConfig) {
         token: board.githubToken
     });
     const twitterName = addAccount(board, 'twitter', board.twitter);
+    // Retweet label was removed.
+    if(board.labels.hasOwnProperty("retweet")) {
+        delete board.labels.retweet;
+    }
     const newBoard = {
         repo: board.repo,
         projectName: board.projectName,
