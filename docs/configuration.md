@@ -19,6 +19,7 @@ The `CQ_CONFIG` environment variable should be set to a stringified version of t
 
 ### v1 to v2
 
+- Make sure you have a backup of your current configuration
 - Make sure you have your current config in `config.json`
 - Run `npm run migrate`
 - `config.json` now contains the new configuration you can use in production
