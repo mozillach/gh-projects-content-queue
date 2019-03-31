@@ -5,9 +5,8 @@ import sinon from 'sinon';
 import UpdateManager from '../lib/update-manager';
 
 // Ensure update manager never calls update during tests unless we explicitly want it to.
-let clock;
-test.before(() => {
-    clock = sinon.useFakeTimers();
+test.before((t) => {
+    t.context.clock = sinon.useFakeTimers();
 });
 
 test.afterEach(() => {
@@ -15,14 +14,19 @@ test.afterEach(() => {
     UpdateManager.targets.clear();
 });
 
-test.after(() => {
-    clock.restore();
+test.after((t) => {
+    t.context.clock.restore();
 });
 
 test('constructor', (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
+    });
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const issues = new Issues(client, getConfig());
 
@@ -62,8 +66,9 @@ test('getIssueInfo', (t) => {
     };
 
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
 
     const issues = new Issues(client, config);
@@ -106,8 +111,9 @@ test('getIssueInfo with assignee and labels', (t) => {
     };
 
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
 
     const issues = new Issues(client, config);
@@ -118,9 +124,6 @@ test('getIssueInfo with assignee and labels', (t) => {
 
 test('create issue', async (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
-    });
     const issues = new Issues(client, getConfig());
 
     const title = 'test';
@@ -133,8 +136,12 @@ test('create issue', async (t) => {
         title,
         state: 'open'
     };
-    client.issues.create.resolves({
+    client.queueResponse({
         data: issueData
+    });
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const newIssue = await issues.createIssue(title, content);
 
@@ -148,12 +155,8 @@ test('create issue', async (t) => {
 
 test('fetch issues', async (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
-    });
     const issues = new Issues(client, getConfig());
 
-    client.issues.getForRepo.reset();
     const issueData = [
         {
             id: 123,
@@ -164,8 +167,9 @@ test('fetch issues', async (t) => {
             state: 'open'
         }
     ];
-    client.issues.getForRepo.resolves({
-        data: issueData
+    client.queueResponse({
+        data: issueData,
+        headers: {}
     });
 
     const allIssues = await issues.fetchIssues();
@@ -177,12 +181,8 @@ test('fetch issues', async (t) => {
 
 test('fetch issues with old issues', async (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
-    });
     const issues = new Issues(client, getConfig());
 
-    client.issues.getForRepo.reset();
     const issueData = [
         {
             id: 123,
@@ -201,8 +201,9 @@ test('fetch issues with old issues', async (t) => {
             state: 'open'
         }
     ];
-    client.issues.getForRepo.resolves({
-        data: issueData
+    client.queueResponse({
+        data: issueData,
+        headers: {}
     });
 
     const oldIssue = {
@@ -227,12 +228,8 @@ test('fetch issues with old issues', async (t) => {
 
 test('fetch issues with old issue that is not updated', async (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
-    });
     const issues = new Issues(client, getConfig());
 
-    client.issues.getForRepo.reset();
     const issueData = [
         {
             id: 123,
@@ -251,8 +248,9 @@ test('fetch issues with old issue that is not updated', async (t) => {
             state: 'open'
         }
     ];
-    client.issues.getForRepo.resolves({
-        data: issueData
+    client.queueResponse({
+        data: issueData,
+        headers: {}
     });
 
     const oldIssue = {
@@ -276,8 +274,13 @@ test('fetch issues with old issue that is not updated', async (t) => {
 
 test('get new issue', async (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
+    });
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const issues = new Issues(client, getConfig());
     await Promise.all([
@@ -285,7 +288,7 @@ test('get new issue', async (t) => {
         issues.closedIssues
     ]);
 
-    client.issues.get.resolves({
+    client.queueResponse({
         data: {
             id: 'foo',
             number: 1,
@@ -306,7 +309,6 @@ test('get new issue', async (t) => {
     const issue = await issues.getIssue(1);
     t.is(issue.number, 1);
     t.is(issue.id, 'foo');
-    client.issues.get.argumentsValid((a, m) => t.true(a, m));
 
     const openIssues = await issues.issues;
     t.true(openIssues.has(issue.number));
@@ -331,10 +333,15 @@ test('get existing issue', async (t) => {
             }
         ]
     };
-    client.issues.getForRepo.resolves({
+    client.queueResponse({
         data: [
             issueData
-        ]
+        ],
+        headers: {}
+    });
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const issues = new Issues(client, getConfig());
     await Promise.all([
@@ -343,14 +350,13 @@ test('get existing issue', async (t) => {
     ]);
 
     issueData.body = 'foo bar';
-    client.issues.get.resolves({
+    client.queueResponse({
         data: issueData
     });
     const issue = await issues.getIssue(issueData.number);
     t.is(issue.number, issueData.number);
     t.is(issue.id, issueData.id);
     t.is(issue.content, issueData.body);
-    client.issues.get.argumentsValid((a, m) => t.true(a, m));
 
     const openIssues = await issues.issues;
     t.true(openIssues.has(issue.number));
@@ -359,8 +365,13 @@ test('get existing issue', async (t) => {
 
 test('get new closed issue', async (t) => {
     const client = getGithubClient();
-    client.issues.getForRepo.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
+    });
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const issues = new Issues(client, getConfig());
     await Promise.all([
@@ -368,7 +379,7 @@ test('get new closed issue', async (t) => {
         issues.closedIssues
     ]);
 
-    client.issues.get.resolves({
+    client.queueResponse({
         data: {
             id: 'foo',
             number: 1,
@@ -389,7 +400,6 @@ test('get new closed issue', async (t) => {
     const issue = await issues.getIssue(1);
     t.is(issue.number, 1);
     t.is(issue.id, 'foo');
-    client.issues.get.argumentsValid((a, m) => t.true(a, m));
 
     const closedIssues = await issues.closedIssues;
     t.true(closedIssues.has(issue.number));
@@ -414,10 +424,15 @@ test('get existing closed issue', async (t) => {
             }
         ]
     };
-    client.issues.getForRepo.resolves({
+    client.queueResponse({
         data: [
             issueData
-        ]
+        ],
+        headers: {}
+    });
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const issues = new Issues(client, getConfig());
     await Promise.all([
@@ -426,14 +441,13 @@ test('get existing closed issue', async (t) => {
     ]);
 
     issueData.body = 'foo bar';
-    client.issues.get.resolves({
+    client.queueResponse({
         data: issueData
     });
     const issue = await issues.getIssue(issueData.number);
     t.is(issue.number, issueData.number);
     t.is(issue.id, issueData.id);
     t.is(issue.content, issueData.body);
-    client.issues.get.argumentsValid((a, m) => t.true(a, m));
 
     const closedIssues = await issues.closedIssues;
     t.true(closedIssues.has(issue.number));
@@ -458,15 +472,15 @@ test('get existing issue that changed state', async (t) => {
             }
         ]
     };
-    client.issues.getForRepo.withArgs(sinon.match({
-        state: "open"
-    })).resolves({
+    client.queueResponse({
         data: [
             issueData
-        ]
+        ],
+        headers: {}
     });
-    client.issues.getForRepo.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const issues = new Issues(client, getConfig());
 
@@ -477,14 +491,13 @@ test('get existing issue that changed state', async (t) => {
 
     issueData.body = 'foo bar';
     issueData.state = 'closed';
-    client.issues.get.resolves({
+    client.queueResponse({
         data: issueData
     });
     const issue = await issues.getIssue(issueData.number);
     t.is(issue.number, issueData.number);
     t.is(issue.id, issueData.id);
     t.is(issue.content, issueData.body);
-    client.issues.get.argumentsValid((a, m) => t.true(a, m));
 
     const closedIssues = await issues.closedIssues;
     t.true(closedIssues.has(issue.number));

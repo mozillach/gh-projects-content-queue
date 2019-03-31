@@ -1,32 +1,6 @@
 import test from 'ava';
-import * as pagination from '../lib/pagination';
-import { getGithubClient } from './_stubs';
+import * as pagination from '../lib/accounts/pagination';
 import sinon from 'sinon';
-
-test('github pagination', async (t) => {
-    const client = getGithubClient();
-    const firstPage = {
-        data: [
-            'foo'
-        ]
-    };
-    const secondPage = {
-        data: [
-            'bar'
-        ]
-    };
-    client.hasNextPage.returns(false);
-    client.hasNextPage.withArgs(sinon.match(firstPage)).returns(true);
-    client.getNextPage.resolves(secondPage);
-
-    const data = await pagination.github(client, firstPage);
-    t.deepEqual(data, [
-        'foo',
-        'bar'
-    ]);
-    t.true(client.hasNextPage.calledWith(firstPage));
-    t.true(client.hasNextPage.calledWith(secondPage));
-});
 
 test('twitter pagination', async (t) => {
     const method = sinon.stub();

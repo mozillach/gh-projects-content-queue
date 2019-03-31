@@ -4,19 +4,18 @@ import Column from '../lib/column';
 import sinon from 'sinon';
 
 // Ensure data stores are not invalidated.
-let clock;
-
-test.before(() => {
-    clock = sinon.useFakeTimers();
+test.before((t) => {
+    t.context.clock = sinon.useFakeTimers();
 });
-test.after(() => {
-    clock.restore();
+test.after((t) => {
+    t.context.clock.restore();
 });
 
 test('constructor', (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const id = 1;
     const name = 'test';
@@ -37,21 +36,19 @@ test('constructor', (t) => {
 
 test('move', async (t) => {
     const client = getGithubClient();
-    client.projects.moveProjectColumn.resolves();
 
     const column = new Column(client, 1);
 
     await column.move('start');
 
-    t.true(client.projects.moveProjectColumn.calledWith(sinon.match({
-        id: 1,
-        position: 'start'
-    })));
+    const opts = client.options.pop();
+    t.is(opts.column_id, 1);
+    t.is(opts.position, 'start');
 });
 
 test('create', async (t) => {
     const client = getGithubClient();
-    client.projects.createProjectColumn.resolves({
+    client.queueResponse({
         data: {
             id: 1
         }
@@ -68,16 +65,16 @@ test('create', async (t) => {
     t.is(column.allCards, cards);
     t.is(column.githubClient, client);
 
-    t.true(client.projects.createProjectColumn.calledWith(sinon.match({
-        project_id: projectId,
-        name
-    })));
+    const opts = client.options.pop();
+    t.is(opts.project_id, projectId);
+    t.is(opts.name, name);
 });
 
 test('add card localonly that does not exist remotely', async (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const allCards = new Map();
     allCards.isReady = true;
@@ -94,7 +91,7 @@ test('add card localonly that does not exist remotely', async (t) => {
 
     t.deepEqual(addedCard, card);
     t.is(card.column, column);
-    t.false(client.projects.createProjectCard.called);
+    t.is(client.options.length, 1);
 
     const cards = await column.cards;
 
@@ -107,8 +104,9 @@ test('add card localonly that does not exist remotely', async (t) => {
 
 test('add card that is already assigned to the column', async (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const allCards = new Map();
     allCards.isReady = true;
@@ -125,7 +123,7 @@ test('add card that is already assigned to the column', async (t) => {
     const addedCard = await column.addCard(card, true);
 
     t.deepEqual(addedCard, card);
-    t.false(client.projects.createProjectCard.called);
+    t.is(client.options.length, 0);
 
     const cards = await column.cards;
 
@@ -134,8 +132,9 @@ test('add card that is already assigned to the column', async (t) => {
 
 test('add card throws when card has no id and local only', (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const column = new Column(client, 1, 'test', new Map());
     const card = {
@@ -144,15 +143,16 @@ test('add card throws when card has no id and local only', (t) => {
         }
     };
 
-    return t.throws(column.addCard(card, true), Error);
+    return t.throwsAsync(column.addCard(card, true), Error);
 });
 
 test('add card remotely', async (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
-    client.projects.createProjectCard.resolves({
+    client.queueResponse({
         data: {
             id: 2
         }
@@ -174,11 +174,10 @@ test('add card remotely', async (t) => {
     t.deepEqual(addedCard, card);
     t.is(card.id, 2);
     t.is(card.column, column);
-    t.true(client.projects.createProjectCard.calledWith(sinon.match({
-        column_id: column.id,
-        content_id: card.issue.id,
-        content_type: 'Issue'
-    })));
+    const opts = client.options.pop();
+    t.is(opts.column_id, column.id);
+    t.is(opts.content_id, card.issue.id);
+    t.is(opts.content_type, 'Issue');
 
     const issues = await column.issues;
 
@@ -194,13 +193,14 @@ test('add card remotely', async (t) => {
 
 test('add card that is already in the column', async (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
+    client.queueResponse({
         data: [
             {
                 id: 2,
                 content_url: 'https://github.com/mozillach/gh-projects-content-queue/issues/3'
             }
-        ]
+        ],
+        headers: {}
     });
     const allCards = new Map();
     allCards.ready = Promise.resolve();
@@ -217,7 +217,7 @@ test('add card that is already in the column', async (t) => {
     t.deepEqual(addedCard, card);
     t.is(card.id, 2);
     t.is(card.column, column);
-    t.false(client.projects.createProjectCard.called);
+    t.is(client.options.length, 1);
 
     const cards = await column.cards;
 
@@ -226,8 +226,9 @@ test('add card that is already in the column', async (t) => {
 
 test('remove card locally and keep the card', async (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const allCards = new Map();
     const column = new Column(client, 1, 'test', allCards);
@@ -252,10 +253,10 @@ test('remove card locally and keep the card', async (t) => {
 
 test('remove card remotely and do not keep it', async (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
-    client.projects.deleteProjectCard.resolves();
     const allCards = new Map();
     const column = new Column(client, 1, 'test', allCards);
     const card = {
@@ -271,9 +272,9 @@ test('remove card remotely and do not keep it', async (t) => {
 
     await column.removeCard(card);
 
-    t.true(client.projects.deleteProjectCard.calledWith(sinon.match({
-        id: card.id
-    })));
+    const opts = client.options.pop();
+    t.is(opts.card_id, card.id);
+    t.is(opts.method, 'DELETE');
 
     t.false(allCards.has(card.id));
     t.false(cards.has(card));
@@ -281,8 +282,9 @@ test('remove card remotely and do not keep it', async (t) => {
 
 test('get card', async (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const column = new Column(client, 1, 'test', new Map());
     const card = {
@@ -302,10 +304,10 @@ test('get card', async (t) => {
 
 test('move card', async (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
-    client.projects.moveProjectCard.resolves();
     const column = new Column(client, 1, 'test', new Map());
     const card = {
         id: 2,
@@ -314,39 +316,21 @@ test('move card', async (t) => {
 
     await column.moveCard(card, 'start');
 
-    t.true(client.projects.moveProjectCard.calledWith(sinon.match({
-        id: card.id,
-        position: 'start'
-    })));
-});
-
-test('check cards', async (t) => {
-    const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
-    });
-    const column = new Column(client, 1, 'test', new Map());
-    const card = {
-        checkValidity: sinon.spy()
-    };
-
-    const cards = await column.cards;
-    cards.add(card);
-
-    await column.checkCards();
-
-    t.true(card.checkValidity.called);
+    const opts = client.options.pop();
+    t.is(opts.card_id, card.id);
+    t.is(opts.position, 'start');
 });
 
 test('has issue', async (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
+    client.queueResponse({
         data: [
             {
                 id: 2,
                 content_url: 'https://github.com/mozillach/gh-projects-content-queue/issues/3'
             }
-        ]
+        ],
+        headers: {}
     });
     const column = new Column(client, 1, 'test', new Map());
 
@@ -356,8 +340,9 @@ test('has issue', async (t) => {
 
 test('has card', (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const allCards = new Map();
     const column = new Column(client, 1, 'test', allCards);
@@ -373,8 +358,9 @@ test('has card', (t) => {
 
 test('get card by id', (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
-        data: []
+    client.queueResponse({
+        data: [],
+        headers: {}
     });
     const allCards = new Map();
     const column = new Column(client, 1, 'test', allCards);
@@ -394,7 +380,7 @@ test('get card by id', (t) => {
 
 test('issues', async (t) => {
     const client = getGithubClient();
-    client.projects.getProjectCards.resolves({
+    client.queueResponse({
         data: [
             {
                 id: 2,
@@ -404,7 +390,8 @@ test('issues', async (t) => {
                 id: 4,
                 content_url: 'https://github.com/mozillach/gh-projects-content-queue/pull-requests/5'
             }
-        ]
+        ],
+        headers: {}
     });
     const column = new Column(client, 1, 'test', new Map());
 

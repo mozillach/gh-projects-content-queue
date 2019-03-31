@@ -1,16 +1,17 @@
 import test from 'ava';
 import Source from '../../lib/sources/source';
-import { getRepo } from '../_stubs';
+import { getBoard } from '../_stubs';
 
 test('constructor', (t) => {
     const repo = 'a';
-    const twitterAccount = 'b';
+    const accountManager = 'b';
     const config = 'c';
     const managedColumns = 'd';
-    const s = new Source(repo, twitterAccount, config, managedColumns);
+    const board = 'e';
+    const s = new Source(repo, accountManager, board, config, managedColumns);
 
     t.is(s._repo, repo);
-    t.is(s._twitterAccount, twitterAccount);
+    t.is(s._accountManager, accountManager);
     t.is(s._config, config);
     t.is(s._getManagedColumns, managedColumns);
 });
@@ -38,10 +39,11 @@ test('getColumn', async (t) => {
             test: 'Foo'
         }
     };
-    const repo = getRepo({
+    const board = getBoard({
         Foo: "1"
     });
-    const source = new Source(repo, undefined, config);
+    const repo = board.repo;
+    const source = new Source(repo, undefined, board, config);
 
     const column = await source.getColumn('test');
 

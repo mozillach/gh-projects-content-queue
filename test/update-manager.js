@@ -7,7 +7,7 @@ test.serial.beforeEach((t) => {
     t.context.clock = sinon.useFakeTimers();
 });
 
-test.serial.always.afterEach((t) => {
+test.serial.afterEach((t) => {
     t.context.clock.restore();
 });
 
@@ -100,9 +100,9 @@ test.serial("update gracefully handles rejections in data store updates", async 
     UpdateManager.register(dsh);
     UpdateManager.register(dsh2);
 
-    dsh.updateSpy.throws(new Error());
+    dsh.updateSpy.throws(new Error('no update'));
 
-    await t.notThrows(UpdateManager.update());
+    await t.notThrowsAsync(UpdateManager.update());
 
     t.true(dsh.updateSpy.calledOnce);
     t.true(dsh2.updateSpy.calledOnce);

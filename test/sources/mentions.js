@@ -1,6 +1,6 @@
 import test from 'ava';
 import MentionsSource from '../../lib/sources/mentions';
-import TwitterAccount from '../../lib/twitter-account';
+import TwitterAccount from '../../lib/accounts/twitter';
 
 test('required columns', (t) => {
     t.true(MentionsSource.requiredColumns.includes('target'));

@@ -25,10 +25,7 @@ test('get title', (t) => {
 test('required config', (t) => {
     const requiredConfig = DiscourseSource.requiredConfig;
 
-    t.true(requiredConfig.includes('forum'));
-    t.true(requiredConfig.includes('apiUrl'));
-    t.true(requiredConfig.includes('apiKey'));
-    t.true(requiredConfig.includes('username'));
+    t.true(requiredConfig.includes('accountName'));
 });
 
 test('required columns', (t) => {

@@ -1,6 +1,6 @@
 import test from 'ava';
+import Emittery from 'emittery';
 import DataStoreHolder from '../lib/data-store-holder';
-import AsyncEventEmitter from '../lib/async-event-emitter';
 import sinon from 'sinon';
 import UpdateManager from '../lib/update-manager';
 
@@ -11,7 +11,7 @@ test('constructor', (t) => {
         [storeProp]: updateStore
     });
 
-    t.true(h instanceof AsyncEventEmitter);
+    t.true(h instanceof Emittery);
     t.true(storeProp in h);
 
     const storeDescriptor = Object.getOwnPropertyDescriptor(h, storeProp);
@@ -40,9 +40,7 @@ test('update fires updated event', async (t) => {
         store: updateStore
     });
 
-    const promise = new Promise((resolve) => {
-        h.once('storesupdated', resolve);
-    });
+    const promise = h.once('storesupdated');
 
     h.update();
 

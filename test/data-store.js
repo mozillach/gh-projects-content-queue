@@ -2,14 +2,12 @@ import test from 'ava';
 import DataStore from '../lib/data-store';
 import sinon from 'sinon';
 
-let clock;
-
-test.before(() => {
-    clock = sinon.useFakeTimers();
-    clock.tick(10000);
+test.before((t) => {
+    t.context.clock = sinon.useFakeTimers();
+    t.context.clock.tick(10000);
 });
-test.after(() => {
-    clock.restore();
+test.after((t) => {
+    t.context.clock.restore();
 });
 
 test('constructor', (t) => {
@@ -69,7 +67,7 @@ test.serial('get data from expired cache', async (t) => {
     t.true(fetcher.calledOnce);
     t.is(p, DATA);
 
-    clock.tick(CACHE_TIME + 1);
+    t.context.clock.tick(CACHE_TIME + 1);
 
     const q = await ds.getData();
     t.true(fetcher.calledTwice);
@@ -84,7 +82,7 @@ test.serial('cache expired due to time', async (t) => {
 
     await ds.getData();
 
-    clock.tick(CACHE_TIME + 1);
+    t.context.clock.tick(CACHE_TIME + 1);
 
     t.true(ds.cacheExpired);
 });
@@ -128,11 +126,11 @@ test('Throwing fetcher aborts current loading', async (t) => {
 
     const ds = new DataStore(fetcher);
 
-    await t.throws(ds.getData());
+    await t.throwsAsync(ds.getData());
     t.true(fetcher.calledOnce);
 
     fetcher.resolves();
 
-    await t.notThrows(ds.getData());
+    await t.notThrowsAsync(ds.getData());
     t.true(fetcher.calledTwice);
 });

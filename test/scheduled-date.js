@@ -115,7 +115,7 @@ const patternTest = (t, data) => {
         t.is(splitPattern.length, 0);
     }
 };
-patternTest.title = (title, data) => `${title} for ${data.pattern}`;
+patternTest.title = (title, data) => `${title} for ${data.pattern} (${data.date})`;
 
 const dateTest = (t, data) => {
     const date = new ScheduledDate(data.date, {
@@ -199,9 +199,9 @@ for(const data of FORMAT_DATA) {
 }
 
 test("mkohler date", (t) => {
-    const date = new ScheduledDate("26.08.2017 02:35", {
+    const date = new ScheduledDate("2017-08-26 02:35", {
         schedulingTime: {
-            format: defaultConfig[0].schedulingTime.format,
+            format: defaultConfig.boards[0].schedulingTime.format,
             timezone: 2
         }
     });
@@ -209,10 +209,29 @@ test("mkohler date", (t) => {
 });
 
 test("inverse mkohler date", (t) => {
-    const date = new ScheduledDate("25.08.2017 22:35", {
+    const date = new ScheduledDate("2017-08-25 22:35", {
         schedulingTime: {
-            format: defaultConfig[0].schedulingTime.format,
+            format: defaultConfig.boards[0].schedulingTime.format,
             timezone: -2
+        }
+    });
+    t.is(date.getTime(), 1503707700000);
+});
+test("mkohler date with region", (t) => {
+    const date = new ScheduledDate("2017-08-26 02:35", {
+        schedulingTime: {
+            format: defaultConfig.boards[0].schedulingTime.format,
+            region: "Europe/Zurich"
+        }
+    });
+    t.is(date.getTime(), 1503707700000);
+});
+
+test("inverse mkohler date with region", (t) => {
+    const date = new ScheduledDate("2017-08-25 20:35", {
+        schedulingTime: {
+            format: defaultConfig.boards[0].schedulingTime.format,
+            region: "America/New_York"
         }
     });
     t.is(date.getTime(), 1503707700000);
@@ -225,22 +244,36 @@ test('formatDate with a non-date', (t) => {
 
 test('format date formats to the proper timezone', (t) => {
     const date = new Date(1503707700000);
-    const formatted = ScheduledDate.formatDate(date, defaultConfig[0].schedulingTime.format, 2);
+    const formatted = ScheduledDate.formatDate(date, defaultConfig.boards[0].schedulingTime.format, 2);
 
-    t.is(formatted, "26.08.2017 02:35");
+    t.is(formatted, "2017-08-26 02:35");
 });
 
 test('format date formats to the proper timezone reverse', (t) => {
     const date = new Date(1503707700000);
-    const formatted = ScheduledDate.formatDate(date, defaultConfig[0].schedulingTime.format, -2);
+    const formatted = ScheduledDate.formatDate(date, defaultConfig.boards[0].schedulingTime.format, -2);
 
-    t.is(formatted, "25.08.2017 22:35");
+    t.is(formatted, "2017-08-25 22:35");
+});
+
+test('format date formats to the proper region', (t) => {
+    const date = new Date(1503707700000);
+    const formatted = ScheduledDate.formatDate(date, defaultConfig.boards[0].schedulingTime.format, undefined, "Europe/Zurich");
+
+    t.is(formatted, "2017-08-26 02:35");
+});
+
+test('format date formats to the proper region reverse', (t) => {
+    const date = new Date(1503707700000);
+    const formatted = ScheduledDate.formatDate(date, defaultConfig.boards[0].schedulingTime.format, undefined, "America/New_York");
+
+    t.is(formatted, "2017-08-25 20:35");
 });
 
 test('format date with and without timezone is the same for the local tz', (t) => {
     const date = new Date();
-    const formattedWithout = ScheduledDate.formatDate(date, defaultConfig[0].schedulingTime.format);
-    const formattedWith = ScheduledDate.formatDate(date, defaultConfig[0].schedulingTime.format, -tzOffset);
+    const formattedWithout = ScheduledDate.formatDate(date, defaultConfig.boards[0].schedulingTime.format);
+    const formattedWith = ScheduledDate.formatDate(date, defaultConfig.boards[0].schedulingTime.format, -tzOffset);
 
     t.is(formattedWithout, formattedWith);
 });

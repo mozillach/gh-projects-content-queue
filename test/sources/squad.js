@@ -1,6 +1,6 @@
 import test from 'ava';
 import SquadSource from '../../lib/sources/squad';
-import { getRepo } from '../_stubs';
+import { getRepo, getBoard } from '../_stubs';
 import RotatingList from '../../lib/rotating-list';
 import sinon from 'sinon';
 
@@ -12,7 +12,7 @@ test('required columns', (t) => {
 });
 
 test('Constructor fails without any squad config', (t) => {
-    t.throws(() => new SquadSource(getRepo(), 'foo', {}));
+    t.throws(() => new SquadSource(getRepo(), 'foo', getBoard(), {}));
 });
 
 test('Constructor with hard coded squad', async (t) => {
@@ -20,7 +20,7 @@ test('Constructor with hard coded squad', async (t) => {
         'foo',
         'bar'
     ];
-    const source = new SquadSource(getRepo(), 'lorem', {
+    const source = new SquadSource(getRepo(), 'lorem', getBoard(), {
         squad
     });
 
@@ -30,8 +30,9 @@ test('Constructor with hard coded squad', async (t) => {
 });
 
 test('Constructor with team squad', async (t) => {
-    const repo = getRepo();
-    const source = new SquadSource(repo, 'lorem', {
+    const board = getBoard();
+    const repo = board.repo;
+    const source = new SquadSource(repo, 'lorem', board, {
         squadTeam: 'foo'
     });
     repo.getUsersInTeam.resolves([
@@ -42,17 +43,15 @@ test('Constructor with team squad', async (t) => {
     t.is(squad.size, 1);
     t.is(squad.getNext(), 'baz');
     t.true(repo.getUsersInTeam.calledWith('foo'));
-
-    repo.githubClient.argumentsValid((assertion, message) => t.true(assertion, message));
 });
 
 test.todo('Test squad team data store keeps position');
 
 test('process cards', async (t) => {
-    const repo = getRepo({
+    const board = getBoard({
         'Target': 'foo'
     });
-    const columns = await repo.board.columns;
+    const columns = await board.columns;
     const assign = sinon.spy();
     columns.foo.cards.add({
         assign,
@@ -60,7 +59,7 @@ test('process cards', async (t) => {
             assignee: undefined
         }
     });
-    const source = new SquadSource(repo, 'foo', {
+    const source = new SquadSource(board.repo, 'foo', board, {
         columns: {
             target: 'Target'
         },
@@ -75,10 +74,10 @@ test('process cards', async (t) => {
 });
 
 test('process cards with user assigned', async (t) => {
-    const repo = getRepo({
+    const board = getBoard({
         'Target': 'foo'
     });
-    const columns = await repo.board.columns;
+    const columns = await board.columns;
     const assign = sinon.spy();
     columns.foo.cards.add({
         assign,
@@ -86,7 +85,7 @@ test('process cards with user assigned', async (t) => {
             assignee: 'lorem ipsum'
         }
     });
-    const source = new SquadSource(repo, 'foo', {
+    const source = new SquadSource(board.repo, 'foo', board, {
         columns: {
             target: 'Target'
         },
