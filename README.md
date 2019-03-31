@@ -63,7 +63,7 @@ Issue templates are generated in the repository. See the documentation for GitHu
 
 ### Run
 #### The tool
-The tool can be executed with `npm start`. Note that you should first run `npm install`.
+The tool can be executed with `npm start`. Note that you should first run `npm ci --production` or equivalent.
 
 #### The docker container
 Official Docker container: [`mozillach/content-queue`](https://hub.docker.com/r/mozillach/content-queue)
@@ -71,4 +71,4 @@ Official Docker container: [`mozillach/content-queue`](https://hub.docker.com/r/
 The latest tag corresponds to the master branch in this repository. Note that the docker container can only be configured via environment.
 
 #### The tests
-The test suite can be ran with the default `npm test`. It includes linting of the code using eslint and unit tests with ava. Tests require no prior configuration other than running `npm install` and that all files from this repository be present.
+The test suite can be ran with the default `npm test`. It includes linting of the code using eslint and unit tests with ava. Tests require no prior configuration other than running `npm ci` and that all files from this repository be present.
