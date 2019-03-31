@@ -2,8 +2,8 @@
 
 - [By file](#by-file)
 - [By environment variables](#by-environment-variables)
-- [Basic anatomy](#basic-anatomy)
 - [Migration](#migration)
+- [Basic anatomy](#basic-anatomy)
 
 ## By file
 
