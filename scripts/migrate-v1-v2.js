@@ -63,12 +63,18 @@ for(const board of oldConfig) {
                     s.accountName = twitterName;
                     return s;
                 case 'tweeting': {
-                    return {
+                    const sourceDefinition = {
                         columns: s.columns,
                         type: 'publish',
                         accountType: 'twitter',
                         accountName: twitterName
                     };
+
+                    if(s.schedule && s.schedule.length > 0) {
+                        sourceDefinition.schedule = s.schedule;
+                    }
+
+                    return sourceDefinition;
                 }
                 case 'discourse': {
                     const discourseName = addAccount(board, 'discourse', {
