@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:10-alpine
 RUN npm install pm2 -g
 COPY . .
 RUN npm ci --production
