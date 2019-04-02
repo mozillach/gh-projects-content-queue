@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:lts-stretch
 RUN npm install pm2 -g
 COPY . .
 RUN npm ci --production
