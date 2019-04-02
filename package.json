@@ -52,7 +52,7 @@
   "dependencies": {
     "@octokit/plugin-retry": "^2.2.0",
     "@octokit/plugin-throttling": "^2.4.0",
-    "@octokit/rest": "^16.22.0",
+    "@octokit/rest": "^16.23.1",
     "ajv": "^6.10.0",
     "discourse-sdk": "^1.0.3",
     "emittery": "^0.4.1",
