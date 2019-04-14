@@ -29,7 +29,7 @@ test('comment', async  (t) => {
     await t.context.issue.comment(commentContent);
 
     const opts = t.context.gh.options.pop();
-    t.is(opts.url, '/repos/:owner/:repo/issues/:number/comments');
+    t.is(opts.url, '/repos/:owner/:repo/issues/:issue_number/comments');
     t.is(t.context.gh.options.length, 0);
     t.is(opts.owner, t.context.data.owner);
     t.is(opts.repo, t.context.data.repo);
