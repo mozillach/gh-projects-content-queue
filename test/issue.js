@@ -33,7 +33,7 @@ test('comment', async  (t) => {
     t.is(t.context.gh.options.length, 0);
     t.is(opts.owner, t.context.data.owner);
     t.is(opts.repo, t.context.data.repo);
-    t.is(opts.number, t.context.data.number);
+    t.is(opts.issue_number, t.context.data.number);
     t.is(opts.body, commentContent);
 });
 
@@ -48,13 +48,13 @@ test('set content', async (t) => {
     const opts = t.context.gh.options.pop();
     t.is(opts.owner, t.context.data.owner);
     t.is(opts.repo, t.context.data.repo);
-    t.is(opts.number, t.context.data.number);
+    t.is(opts.issue_number, t.context.data.number);
     t.is(opts.body, newContent);
 
     await t.context.gh.issues.update({
         owner: t.context.data.owner,
         repo: t.context.data.repo,
-        number: t.context.data.number
+        issue_number: t.context.data.number
     });
 
     t.is(t.context.issue.content, newContent);
@@ -77,7 +77,7 @@ test('add label', async (t) => {
     const opts = t.context.gh.options.pop();
     t.is(opts.owner, t.context.data.owner);
     t.is(opts.repo, t.context.data.repo);
-    t.is(opts.number, t.context.data.number);
+    t.is(opts.issue_number, t.context.data.number);
     t.deepEqual(opts.labels, [ 'test' ]);
     t.true(t.context.issue.hasLabel('test'));
 
@@ -97,7 +97,7 @@ test('remove label', async (t) => {
     const opts = t.context.gh.options.pop();
     t.is(opts.owner, t.context.data.owner);
     t.is(opts.repo, t.context.data.repo);
-    t.is(opts.number, t.context.data.number);
+    t.is(opts.issue_number, t.context.data.number);
     t.is(opts.name, 'test');
     t.false(t.context.issue.hasLabel('test'));
     t.true(t.context.issue.hasLabel('foo'));
@@ -113,7 +113,7 @@ test('assign user', async (t) => {
     const opts = t.context.gh.options.pop();
     t.is(opts.owner, t.context.data.owner);
     t.is(opts.repo, t.context.data.repo);
-    t.is(opts.number, t.context.data.number);
+    t.is(opts.issue_number, t.context.data.number);
     t.deepEqual(opts.assignees, [ 'baz' ]);
     t.is(t.context.issue.assignee, 'baz');
 
@@ -164,7 +164,7 @@ test('close', async (t) => {
     const opts = t.context.gh.options.pop();
     t.is(opts.owner, t.context.data.owner);
     t.is(opts.repo, t.context.data.repo);
-    t.is(opts.number, t.context.data.number);
+    t.is(opts.issue_number, t.context.data.number);
     t.is(opts.state, 'closed');
     t.false(t.context.issue.state);
     t.is(ret, 'asdf');
