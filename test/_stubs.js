@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import config from '../config.default.json';
 import DataStoreHolder from '../lib/data-store-holder';
-import Octokit from '@octokit/rest';
+import Octokit from '@octokit/rest'; //eslint-disable-line ava/no-import-test-files
 import Source from '../lib/sources/source';
 import TwitterAccount from '../lib/accounts/twitter';
 
