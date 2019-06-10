@@ -64,7 +64,7 @@
     "megalodon": "^0.7.0",
     "mz": "^2.7.0",
     "node-fetch": "^2.3.0",
-    "timezone-support": "^1.8.1",
+    "timezone-support": "^2.0.0",
     "tweet.md": "^2.2.1",
     "twitter": "^1.7.1",
     "twitter-text": "^3.0.0"
