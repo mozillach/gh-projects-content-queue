@@ -61,7 +61,7 @@
     "form-data": "^2.3.3",
     "get-stream": "^5.1.0",
     "ical": "^0.6.0",
-    "megalodon": "^0.7.0",
+    "megalodon": "^0.8.0",
     "mz": "^2.7.0",
     "node-fetch": "^2.3.0",
     "timezone-support": "^2.0.2",
