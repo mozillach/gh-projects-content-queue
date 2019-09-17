@@ -55,7 +55,7 @@
     "@octokit/rest": "^16.27.3",
     "ajv": "^6.10.0",
     "discourse-sdk": "^1.0.3",
-    "emittery": "^0.4.1",
+    "emittery": "^0.5.0",
     "feedparser": "^2.2.9",
     "fetch-base64": "^2.1.2",
     "form-data": "^2.3.3",
