@@ -9,13 +9,13 @@ test.before((t) => {
     t.context.clock = sinon.useFakeTimers();
 });
 
+test.after((t) => {
+    t.context.clock.restore();
+});
+
 test.afterEach(() => {
     clearInterval(UpdateManager.interval);
     UpdateManager.targets.clear();
-});
-
-test.after((t) => {
-    t.context.clock.restore();
 });
 
 // getTweetIDFromURL()

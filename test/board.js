@@ -11,11 +11,6 @@ test.before((t) => {
     t.context.clock = sinon.useFakeTimers();
 });
 
-test.afterEach(() => {
-    clearInterval(UpdateManager.interval);
-    UpdateManager.targets.clear();
-});
-
 test.after((t) => {
     t.context.clock.restore();
 });
@@ -36,6 +31,11 @@ test.beforeEach((t) => {
         ],
         headers: {}
     });
+});
+
+test.afterEach(() => {
+    clearInterval(UpdateManager.interval);
+    UpdateManager.targets.clear();
 });
 
 test('constructor', async (t) => {
