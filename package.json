@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "@octokit/plugin-retry": "^2.2.0",
-    "@octokit/plugin-throttling": "^2.7.0",
+    "@octokit/plugin-throttling": "^3.0.0",
     "@octokit/rest": "^16.33.1",
     "ajv": "^6.10.2",
     "discourse-sdk": "^1.0.3",
