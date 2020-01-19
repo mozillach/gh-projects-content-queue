@@ -43,7 +43,7 @@
     "templates/*"
   ],
   "devDependencies": {
-    "ava": "^2.4.0",
+    "ava": "^3.0.0",
     "codecov": "^3.6.1",
     "dockerlint": "^0.3.9",
     "eclint": "^2.8.1",
