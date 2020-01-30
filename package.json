@@ -9,7 +9,7 @@
     "lint:js": "eslint index.js lib/ test/",
     "lint:docker": "dockerlint Dockerfile",
     "lint:ec": "eclint check $(git ls-files)",
-    "lint": "npm run lint:js && npm run lint:docker",
+    "lint": "npm run lint:js && npm run lint:docker && npm run lint:ec",
     "coverage": "codecov --disable=gcov",
     "start": "node index.js",
     "migrate": "node scripts/migrate-v1-v2.js"
@@ -80,8 +80,8 @@
   },
   "ava": {
     "babel": {
-			"compileAsTests": ["test/**/_*.js"]
-		}
+      "compileAsTests": ["test/**/_*.js"]
+    }
   },
   "nyc": {
     "exclude": [
