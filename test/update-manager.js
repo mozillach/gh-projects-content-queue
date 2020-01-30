@@ -76,7 +76,9 @@ test.serial("register accepts data-store-holder-likes", (t) => {
 test.serial("register doesn't accept non-data-store-holders", (t) => {
     const notDsh = {};
 
-    t.throws(() => UpdateManager.register(notDsh), TypeError);
+    t.throws(() => UpdateManager.register(notDsh), {
+        instanceOf: TypeError
+    });
 });
 
 test.serial("update calls update on all data store holders", async (t) => {

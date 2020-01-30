@@ -576,7 +576,9 @@ test('get users of team that does not exist', async (t) => {
         headers: {}
     });
 
-    await t.throwsAsync(repo.getUsersInTeam(team), Error);
+    await t.throwsAsync(repo.getUsersInTeam(team), {
+        instanceOf: Error
+    });
 
     t.is(client.options.pop().url, `https://api.github.com/orgs/${config.owner}/teams`);
 });

@@ -143,7 +143,9 @@ test('add card throws when card has no id and local only', (t) => {
         }
     };
 
-    return t.throwsAsync(column.addCard(card, true), Error);
+    return t.throwsAsync(column.addCard(card, true), {
+        instanceOf: Error
+    });
 });
 
 test('add card remotely', async (t) => {

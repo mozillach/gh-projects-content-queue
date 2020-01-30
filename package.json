@@ -43,14 +43,15 @@
     "templates/*"
   ],
   "devDependencies": {
-    "ava": "^2.4.0",
+    "@ava/babel": "^1.0.0",
+    "ava": "^3.1.0",
     "codecov": "^3.6.2",
     "dockerlint": "^0.3.9",
     "eclint": "^2.8.1",
     "eslint": "^6.8.0",
     "eslint-import-resolver-node": "^0.3.3",
     "eslint-plugin-array-func": "^3.1.3",
-    "eslint-plugin-ava": "^9.0.0",
+    "eslint-plugin-ava": "^10.0.0",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-node": "^11.0.0",
     "nyc": "^15.0.0",
@@ -76,6 +77,11 @@
     "tweet.md": "^2.2.1",
     "twitter": "^1.7.1",
     "twitter-text": "^3.0.1"
+  },
+  "ava": {
+    "babel": {
+			"compileAsTests": ["test/**/_*.js"]
+		}
   },
   "nyc": {
     "exclude": [
