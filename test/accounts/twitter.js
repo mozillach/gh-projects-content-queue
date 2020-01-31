@@ -182,9 +182,15 @@ test('too much media throws', (t) => {
 ![](https://example.com/image4.png)
 ![foo](https://example.com/image-too-much.png)`;
 
-    t.throws(() => TwitterAccount.getMediaAndContent(content), Error);
-    t.throws(() => TwitterAccount.tweetTooLong(content), Error);
-    t.throws(() => TwitterAccount.getRemainingChars(content), Error);
+    t.throws(() => TwitterAccount.getMediaAndContent(content), {
+        instanceOf: Error
+    });
+    t.throws(() => TwitterAccount.tweetTooLong(content), {
+        instanceOf: Error
+    });
+    t.throws(() => TwitterAccount.getRemainingChars(content), {
+        instanceOf: Error
+    });
 });
 
 test('construction', (t) => {
@@ -206,7 +212,9 @@ test('construction ready rejected', (t) => {
     client.get.rejects(new Error());
     const account = new TwitterAccount({}, client);
 
-    return t.throwsAsync(account.ready, Error);
+    return t.throwsAsync(account.ready, {
+        instanceOf: Error
+    });
 });
 
 test.todo('uploadMedia');

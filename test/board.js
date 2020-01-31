@@ -107,7 +107,9 @@ test('get board id throws when there are no projects', async (t) => {
     });
     delete board.id;
 
-    return t.throwsAsync(board.getBoardID(), NoProjectsError);
+    return t.throwsAsync(board.getBoardID(), {
+        instanceOf: NoProjectsError
+    });
 });
 
 test('get board id throws when the project does not exist', async (t) => {
@@ -125,7 +127,9 @@ test('get board id throws when the project does not exist', async (t) => {
     });
     delete board.id;
 
-    return t.throwsAsync(board.getBoardID(), ProjectNotFoundError);
+    return t.throwsAsync(board.getBoardID(), {
+        instanceOf: ProjectNotFoundError
+    });
 });
 
 test('board exists', async (t) => {
