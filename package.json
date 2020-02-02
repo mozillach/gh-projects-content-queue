@@ -74,7 +74,7 @@
     "mz": "^2.7.0",
     "node-fetch": "^2.6.0",
     "timezone-support": "^2.0.2",
-    "tweet.md": "^2.2.1",
+    "tweet.md": "^3.0.0",
     "twitter": "^1.7.1",
     "twitter-text": "^3.0.1"
   },
