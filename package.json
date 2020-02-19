@@ -55,7 +55,7 @@
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-node": "^11.0.0",
     "nyc": "^15.0.0",
-    "sinon": "^8.1.1",
+    "sinon": "^9.0.0",
     "temp-write": "^4.0.0"
   },
   "dependencies": {
