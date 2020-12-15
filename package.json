@@ -72,7 +72,7 @@
     "ical": "^0.6.0",
     "megalodon": "^2.1.1",
     "mz": "^2.7.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "timezone-support": "^2.0.2",
     "tweet.md": "^3.0.0",
     "twitter": "^1.7.1",
