@@ -1,5 +1,6 @@
 # gh-projects-content-queue
 
+> This project is superceded by [content-queue](https://github.com/content-queue). The aim is to achieve the same thing but using GitHub actions. This makes the tool much easier to install, configure and run.
 
 [![Build Status](https://travis-ci.org/mozillach/gh-projects-content-queue.svg?branch=master)](https://travis-ci.org/mozillach/gh-projects-content-queue) [![codecov](https://codecov.io/gh/mozillach/gh-projects-content-queue/branch/master/graph/badge.svg)](https://codecov.io/gh/mozillach/gh-projects-content-queue) [![docker hub](https://img.shields.io/docker/build/mozillach/content-queue.svg)](https://hub.docker.com/r/mozillach/content-queue/builds)
 
